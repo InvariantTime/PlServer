@@ -1,0 +1,10 @@
+services:
+  server-service:
+    build:
+      context: .
+      dockerfile: ./Services/Server/Dockerfile
+
+    container_name: server
+
+    ports:
+      - 5000:8080
