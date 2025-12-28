@@ -8,3 +8,22 @@ services:
 
     ports:
       - 5000:8080
+
+    networks:
+      - backend-net
+
+  coordinator-service:
+    build:
+      context: .
+      dockerfile: ./Services/coordinator/Dockerfile
+    
+    ports:
+      - 50051:50051
+
+    networks:
+      - backend-net
+
+
+networks:
+  backend-net:
+    driver: bridge
