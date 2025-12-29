@@ -7,6 +7,8 @@
     <Project Path="Services/Server/src/PlServer.Server.API/PlServer.Server.API.csproj" Id="0e2ab483-ef45-42ca-9c21-29ab21a9db14" />
     <Project Path="Services/Server/src/PlServer.Server.Infrastructure/PlServer.Server.Infrastructure.csproj" Id="c8b454ac-784e-4937-b9da-e85217a05509" />
   </Folder>
-  <Folder Name="/Services/Worker/" />
+  <Folder Name="/Services/Worker/">
+    <Project Path="Services/Worker/src/PlServer.Worker.API/PlServer.Worker.API.csproj" Id="96db114d-06ee-47f5-b6b1-b1b620a7e350" />
+  </Folder>
   <Folder Name="/Shared/" />
 </Solution>

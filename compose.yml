@@ -23,6 +23,17 @@ services:
     networks:
       - backend-net
 
+  worker:
+    build:
+      context: .
+      dockerfile: ./Services/worker/Dockerfile
+    
+    ports:
+      - 10000:10000
+
+    networks:
+      - backend-net
+
 
 networks:
   backend-net:
