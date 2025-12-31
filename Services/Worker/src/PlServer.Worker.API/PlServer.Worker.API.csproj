@@ -10,4 +10,9 @@
     <PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\PlServer.Domain\PlServer.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\PlServer.Protos\PlServer.Protos.csproj" />
+  </ItemGroup>
+
 </Project>

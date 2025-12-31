@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\PlServer.Domain\PlServer.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\PlServer.Protos\PlServer.Protos.csproj" />
+  </ItemGroup>
+
 </Project>

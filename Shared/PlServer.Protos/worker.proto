@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "PlServer.Protos";
+
+package workerProtos;
+
+//
+service WorkerBridge {
+  rpc SendWork (WorkRequest) returns (WorkResponse);
+}
+
+message WorkRequest {
+  int32 payload = 1;
+  string name = 2;
+}
+
+message WorkResponse {
+  string result = 1;
+}

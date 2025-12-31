@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: ./Services/Server/Dockerfile
+    
+    hostname: server-host
 
     container_name: server
 
@@ -12,28 +14,15 @@ services:
     networks:
       - backend-net
 
-  coordinator-service:
-    build:
-      context: .
-      dockerfile: ./Services/coordinator/Dockerfile
-    
-    ports:
-      - 50051:50051
-
-    networks:
-      - backend-net
-
   worker:
     build:
       context: .
       dockerfile: ./Services/worker/Dockerfile
     
-    ports:
-      - 10000:10000
+    hostname: worker-host
 
     networks:
       - backend-net
-
 
 networks:
   backend-net:
