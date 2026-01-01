@@ -6,7 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dcf6446e-18cf-4bb9-9201-1bc7e4cbe550</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\PlServer.Domain\PlServer.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\PlServer.Protos\PlServer.Protos.csproj" />
     <ProjectReference Include="..\PlServer.Server.Infrastructure\PlServer.Server.Infrastructure.csproj" />
   </ItemGroup>
 

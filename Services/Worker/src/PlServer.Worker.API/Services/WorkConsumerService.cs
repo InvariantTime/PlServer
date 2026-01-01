@@ -17,7 +17,7 @@ public class WorkConsumerService : WorkerBridge.WorkerBridgeBase
 
         return new WorkResponse
         {
-            Result = $"Work {request.Name} completed at {} seconds"
+            Result = $"Work {request.Name} completed in {watch.Elapsed.TotalSeconds} seconds"
         };
     }
 }

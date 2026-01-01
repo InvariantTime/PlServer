@@ -22,5 +22,7 @@ app.MapPost("/work", async ([FromBody]WorkRestRequest request, IWorkerCoordinato
     return result;
 });
 
+app.MapGet("ping", () => "pong");
+
 
 app.Run();

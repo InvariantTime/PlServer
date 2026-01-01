@@ -17,7 +17,7 @@ services:
   worker:
     build:
       context: .
-      dockerfile: ./Services/worker/Dockerfile
+      dockerfile: ./Services/Worker/Dockerfile
     
     hostname: worker-host
 
