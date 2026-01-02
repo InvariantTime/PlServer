@@ -1,20 +1,24 @@
 ﻿using PlServer.Domain;
 using PlServer.Protos;
+using PlServer.Server.Infrastructure.Services;
 
 namespace PlServer.Server.Infrastructure;
 
 public class WorkerCoordinator : IWorkerCoordinator
 {
-    private readonly WorkerBridge.WorkerBridgeClient _client;
+    private readonly IChannelProvider _channels;
 
-    public WorkerCoordinator(WorkerBridge.WorkerBridgeClient client)
+    public WorkerCoordinator(IChannelProvider channels)
     {
-        _client = client;
+        _channels = channels;
     }
 
     public async Task<WorkResult> ExecuteWorkAsync(Work work)
     {
-        var result = await _client.SendWorkAsync(new WorkRequest
+        var channel = _channels.GetGrpcChannel();
+        var client = new WorkerBridge.WorkerBridgeClient(channel);
+
+        var result = await client.SendWorkAsync(new WorkRequest
         {
             Payload = work.Payload,
             Name = work.Name,

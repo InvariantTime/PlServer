@@ -14,15 +14,31 @@ services:
     networks:
       - backend-net
 
-  worker:
+  worker-1:
     build:
       context: .
       dockerfile: ./Services/Worker/Dockerfile
     
-    hostname: worker-host
+    hostname: worker1-host
 
     networks:
       - backend-net
+
+    environment:
+      - WorkerOptions__Name=worker_1
+
+  worker-2:
+    build:
+      context: .
+      dockerfile: ./Services/Worker/Dockerfile
+    
+    hostname: worker2-host
+
+    networks:
+      - backend-net
+
+    environment:
+      - WorkerOptions__Name=worker_2
 
 networks:
   backend-net:

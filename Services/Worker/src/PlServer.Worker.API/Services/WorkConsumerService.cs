@@ -6,6 +6,13 @@ namespace PlServer.Worker.API.Services;
 
 public class WorkConsumerService : WorkerBridge.WorkerBridgeBase
 {
+    private readonly string _name; 
+
+    public WorkConsumerService(IConfiguration configuration)
+    {
+        _name = configuration.GetSection("WorkerOptions").GetValue<string>("Name") ?? string.Empty;
+    }
+
     public override async Task<WorkResponse> SendWork(WorkRequest request, ServerCallContext context)
     {
         Stopwatch watch = new Stopwatch();
@@ -17,7 +24,7 @@ public class WorkConsumerService : WorkerBridge.WorkerBridgeBase
 
         return new WorkResponse
         {
-            Result = $"Work {request.Name} completed in {watch.Elapsed.TotalSeconds} seconds"
+            Result = $"Work {request.Name} completed in {watch.Elapsed.TotalSeconds} seconds, by worker {_name}"
         };
     }
 }
