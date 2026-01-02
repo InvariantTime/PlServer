@@ -1,22 +1,39 @@
+using Grpc.Core;
 using Grpc.Net.Client;
+using Grpc.Net.Client.Balancer;
 using Microsoft.AspNetCore.Mvc;
 using PlServer.Domain;
 using PlServer.Protos;
 using PlServer.Server.API.Requests;
 using PlServer.Server.Infrastructure;
-using PlServer.Server.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddGrpc();
 
-builder.Services.AddSingleton<IChannelProvider>((_) =>
+builder.Services.AddSingleton<ResolverFactory>((scope) =>
 {
-    string[] hosts = ["http://worker1-host:20000", "http://worker2-host:20000"];
-    return new ChannelProvider(hosts);
+    var factory = new StaticResolverFactory(addr =>
+        {
+            return [
+                new BalancerAddress("worker1-host", 20000),
+                new BalancerAddress("worker2-host", 20000)
+            ];
+        });
+
+    return factory;
 });
 
+builder.Services.AddSingleton<LoadBalancerFactory>(_ =>
+{
+    return new RoundRobinBalancerFactory();
+});
+
+builder.Services.AddGrpcClient<WorkerBridge.WorkerBridgeClient>(op =>
+{
+    op.Address = new Uri("static:///worker-host");
+}).ConfigureChannel(o => o.Credentials = ChannelCredentials.Insecure);
 
 builder.Services.AddScoped<IWorkerCoordinator, WorkerCoordinator>();
 
@@ -29,6 +46,5 @@ app.MapPost("/work", async ([FromBody]WorkRestRequest request, IWorkerCoordinato
 });
 
 app.MapGet("ping", () => "pong");
-
 
 app.Run();

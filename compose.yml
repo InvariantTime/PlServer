@@ -19,6 +19,7 @@ services:
       context: .
       dockerfile: ./Services/Worker/Dockerfile
     
+    container_name: worker1
     hostname: worker1-host
 
     networks:
@@ -32,6 +33,7 @@ services:
       context: .
       dockerfile: ./Services/Worker/Dockerfile
     
+    container_name: worker2
     hostname: worker2-host
 
     networks:
