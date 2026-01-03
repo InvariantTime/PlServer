@@ -1,6 +1,7 @@
 using Grpc.Core;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Balancer;
+using Grpc.Net.Client.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using PlServer.Domain;
 using PlServer.Protos;
@@ -33,7 +34,15 @@ builder.Services.AddSingleton<LoadBalancerFactory>(_ =>
 builder.Services.AddGrpcClient<WorkerBridge.WorkerBridgeClient>(op =>
 {
     op.Address = new Uri("static:///worker-host");
-}).ConfigureChannel(o => o.Credentials = ChannelCredentials.Insecure);
+
+}).ConfigureChannel((ch) =>
+{
+    ch.Credentials = ChannelCredentials.Insecure;
+    ch.ServiceConfig = new ServiceConfig
+    {
+        LoadBalancingConfigs = { new RoundRobinConfig() }
+    };
+});
 
 builder.Services.AddScoped<IWorkerCoordinator, WorkerCoordinator>();
 
