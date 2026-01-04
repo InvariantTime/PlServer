@@ -9,6 +9,8 @@
   </Folder>
   <Folder Name="/Shared/">
     <Project Path="Shared/PlServer.Domain/PlServer.Domain.csproj" />
+    <Project Path="Shared/PlServer.Plugins.Loading/PlServer.Plugins.Loading.csproj" Id="ef57b92e-2d10-4b4a-891b-ff3adab3481c" />
+    <Project Path="Shared/PlServer.Plugins/PlServer.Plugins.csproj" Id="5d05be49-29bb-4dc6-bc5f-16740eb8121c" />
     <Project Path="Shared/PlServer.Protos/PlServer.Protos.csproj" />
   </Folder>
 </Solution>
