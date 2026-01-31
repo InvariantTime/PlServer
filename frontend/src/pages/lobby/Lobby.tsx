@@ -1,3 +1,4 @@
+import { HubConnectionBuilder } from "@microsoft/signalr";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
