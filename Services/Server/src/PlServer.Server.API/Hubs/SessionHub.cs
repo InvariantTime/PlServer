@@ -30,18 +30,6 @@ public class SessionHub : Hub<ISessionClient>
 
     public override async Task OnConnectedAsync()
     {
-        var idRaw = Context.GetHttpContext()!.Request.Query[QueryName];
-
-        if (Guid.TryParse(idRaw, out var id) == false)
-            return;
-
-        var session = _sessions.GetSession(id);
-
-        if (session == null)
-            return;
-
-        await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
-
         await OnConnectedAsync();
     }
 }

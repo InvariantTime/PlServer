@@ -1,14 +1,13 @@
 import { HttpTransportType, LogLevel } from "@aspnet/signalr";
 import { HubConnection, HubConnectionBuilder, HubConnectionState } from "@microsoft/signalr";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { SignalRContext, SignalRContextInterface } from "../../api/sessions/SessionContext";
+import { SessionContext } from "../../api/sessions/SessionContext";
 
 export interface SessionProviderProps
 {
     children: React.ReactNode
     url: string
 }
-
 
 export const SessionProvider = ({children, url}: SessionProviderProps) => {
 
@@ -35,10 +34,16 @@ export const SessionProvider = ({children, url}: SessionProviderProps) => {
         connection.onreconnected(() => {
             console.warn("[Sessions]: reconnected");
             setState(connection.state);
+            setConnectionId(connection.connectionId);
         })
 
         connection.onclose(() => {
             console.warn("[Sessions]: disconnected")
+        });
+
+        connection.start().then(() => {
+            setConnectionId(connection.connectionId);
+            setState(connection.state);
         });
 
         return () => {
@@ -48,15 +53,13 @@ export const SessionProvider = ({children, url}: SessionProviderProps) => {
     }, [url])
 
 
-    const value: SignalRContextInterface = {
-        hub: connectionRef.current,
-        state: state
-    }
+    const value = useMemo(() => ({
+        connection: {hub: connectionRef.current, state: state, id: connectionId, error }
+    }), [state, error]);
 
     return (
-        <SignalRContext.Provider value={value}>
+        <SessionContext.Provider value={value}>
             {children}
-        </SignalRContext.Provider>
-
+        </SessionContext.Provider>
     );
 }

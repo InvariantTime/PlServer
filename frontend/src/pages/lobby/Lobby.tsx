@@ -1,10 +1,14 @@
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { SessionContext, useSession } from "../../api/sessions/SessionContext";
 
 export const Lobby = () => {
   
   const sessions : string[] = ["Session1", "Session2"]
+
+  const session = useSession();
+
 
   return (
     <div className="relative max-w-4xl mx-auto px-6 py-12">
