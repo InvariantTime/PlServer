@@ -1,14 +1,33 @@
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { Plus } from "lucide-react";
-import { useContext, useState } from "react";
-import { SessionContext, useSession } from "../../api/sessions/SessionContext";
+import { useContext, useEffect, useState } from "react";
+import { SessionContext, useInvoke, useListen, useSession } from "../../api/sessions/SessionContext";
+
+const getSessionsUrl = "";
+
 
 export const Lobby = () => {
   
-  const sessions : string[] = ["Session1", "Session2"]
+  const [sessions, setSessions] = useState<string[]>([]);
 
-  const session = useSession();
+  const initList = async () => {
+    
+    const query: RequestInit = {
+      'method': "GET",
+    }
+  
+    const result = fetch("", query);
 
+  }
+
+  useEffect(() => {
+    initList();
+  }, [])
+
+  useListen<string[]>("NotifyListChangedAsync", (sessions) =>
+  {
+    setSessions(sessions);
+  });
 
   return (
     <div className="relative max-w-4xl mx-auto px-6 py-12">

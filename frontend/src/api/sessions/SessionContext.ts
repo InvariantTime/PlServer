@@ -1,5 +1,5 @@
 import { HubConnection } from "@microsoft/signalr";
-import { createContext, useContext } from "react";
+import { createContext, use, useContext, useEffect, useRef } from "react";
 
 
 export interface ServiceConnection
@@ -25,6 +25,29 @@ export const useSession = () : SessionContextType => {
     return session;
 }
 
-export const useListen = () => {
+export function useListen<T = any>(name: string, callback: (data: T) => void) {
+    const session = useSession();
 
+    const callbackRef = useRef(callback);
+
+    useEffect(() => {
+        callbackRef.current = callback;
+    }, [callback]);
+
+    useEffect(() => {
+        const handler = (...args: any[]) => {
+            callbackRef.current(args.length === 1 ? args[0] : args);
+        };
+
+        session.connection.hub?.on(name, handler);
+
+        return () => {
+            session.connection.hub?.off(name, callback);
+        };
+    }, [session.connection.hub, session.connection.state, name]);
+}
+
+export function useInvoke<T = any>(name: string)
+{
+    
 }
