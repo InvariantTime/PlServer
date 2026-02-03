@@ -2,29 +2,21 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 import { Plus } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { SessionContext, useInvoke, useListen, useSession } from "../../api/sessions/SessionContext";
-
-const getSessionsUrl = "";
+import { SessionLobbyInfo } from "../../api/sessions/SessionLobbyInfo";
+import { getSessionList } from "../../api/sessions/SessionQueries";
 
 
 export const Lobby = () => {
   
-  const [sessions, setSessions] = useState<string[]>([]);
-
-  const initList = async () => {
-    
-    const query: RequestInit = {
-      'method': "GET",
-    }
-  
-    const result = fetch("", query);
-
-  }
+  const [sessions, setSessions] = useState<SessionLobbyInfo[]>([]);
 
   useEffect(() => {
-    initList();
+    getSessionList().then((sessions) => {
+      setSessions(sessions);
+    });
   }, [])
 
-  useListen<string[]>("NotifyListChangedAsync", (sessions) =>
+  useListen<SessionLobbyInfo[]>("NotifyListChangedAsync", (sessions) =>
   {
     setSessions(sessions);
   });
@@ -44,7 +36,7 @@ export const Lobby = () => {
           return (
             <div className="bg-slate-200 border-emerald-400 border-2 rounded-xl p-6 hover:bg-emerald-200">
               <h1>
-                {session}
+                {session.name}
               </h1>
             </div>
           )
