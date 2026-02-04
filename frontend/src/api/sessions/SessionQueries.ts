@@ -1,20 +1,26 @@
 import { SessionLobbyInfo } from "./SessionLobbyInfo";
 
-const getSessionListUrl = "";
+const getSessionListUrl = "http://localhost:5000/api/sessions/all";
 
 
 export const getSessionList = async () => {
     
     const query: RequestInit = {
       'method': "GET",
+      credentials: "include"
     }
   
-    const result = await fetch(getSessionListUrl, query);
-    
-    if (result.ok) {
-        const json = await result.json();
-        return json as SessionLobbyInfo[];
-    }
+    try
+    {
+        const result = await fetch(getSessionListUrl, query);
 
-    return [];
-  }
+        if (result.ok) {
+            const json = await result.json();
+            return json as SessionLobbyInfo[];
+        }
+    }
+    finally
+    {
+        return [];
+    }
+}

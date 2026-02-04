@@ -4,15 +4,15 @@ import { LobbyPage } from './pages/lobby/LobbyExample';
 import { Lobby } from './pages/lobby/Lobby';
 import { SessionProvider } from './components/sessions/SessionProvider';
 
-const url = ""
+const url = "http://localhost:5000/ws/sessions"
 
 function App() {
   return (
-    <div className='bg-slate-300 min-h-screen'>
-      <SessionProvider url={url}>
-        <Lobby/>
-      </SessionProvider>
-    </div>
+    <SessionProvider url={url}>
+      <div className='bg-slate-300 min-h-screen'>
+          <Lobby/>
+      </div>
+    </SessionProvider>
   );
 }
 

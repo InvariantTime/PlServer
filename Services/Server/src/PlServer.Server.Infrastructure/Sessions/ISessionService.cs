@@ -2,7 +2,9 @@
 
 public interface ISessionService
 {
+    ICollection<Session> Sessions { get; }
+
     Session? GetSession(Guid id);
 
-    void CreateSession();
+    Session CreateSession(string name);
 }

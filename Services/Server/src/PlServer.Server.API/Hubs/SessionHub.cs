@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using PlServer.Server.API.Responces;
 using PlServer.Server.Infrastructure.Sessions;
 
 namespace PlServer.Server.API.Hubs;
 
-public interface ISessionClient
+public interface ISessionLobbyClient
 {
-    Task SendLogHistoryAsync();
+    Task OnSessionListChangedAsync(IEnumerable<SessionResponce> sessions);
+}
 
-    Task LogDeletedAsync();
-
-    Task LogSendedAsync();
+public interface ISessionClient : ISessionLobbyClient
+{
 }
 
 public class SessionHub : Hub<ISessionClient>
@@ -23,13 +24,15 @@ public class SessionHub : Hub<ISessionClient>
         _sessions = sessions;
     }
 
-    public async Task ExecuteProcedureAsync()
+    public override Task OnConnectedAsync()
     {
+        var id = Context.GetHttpContext()!.Request.Query[QueryName];
 
-    }
+        if (string.IsNullOrEmpty(id) == false)
+        {
 
-    public override async Task OnConnectedAsync()
-    {
-        await OnConnectedAsync();
+        }
+
+        return base.OnConnectedAsync();
     }
 }
