@@ -1,5 +1,23 @@
 services:
 
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+
+    ports:
+      - 80:80
+
+    networks:
+      - backend-net
+
+    depends_on:
+      server-service:
+        condition: service_started
+    
+    profiles:
+      - production
+
   server-service:
     build:
       context: .
