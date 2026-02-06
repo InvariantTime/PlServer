@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { SessionContext, useInvoke, useListen, useSession } from "../../api/sessions/SessionContext";
 import { SessionLobbyInfo } from "../../api/sessions/SessionLobbyInfo";
-import { getSessionList } from "../../api/sessions/SessionQueries";
+import { createSession, getSessionList } from "../../api/sessions/SessionQueries";
 
 
 export const Lobby = () => {
@@ -16,10 +16,22 @@ export const Lobby = () => {
     });
   }, [])
 
-  useListen<SessionLobbyInfo[]>("NotifyListChangedAsync", (sessions) =>
+  useListen<SessionLobbyInfo[]>("OnSessionListChangedAsync", (sessions) =>
   {
     setSessions(sessions);
   });
+
+  const onSessionCreateClick = () => {
+    
+    const name = prompt("enter the session name", "session");
+
+    if (name === null) {
+      alert("name cannot be empty");
+      return;
+    }
+
+    const result = createSession(name);
+  }
 
   return (
     <div className="relative max-w-4xl mx-auto px-6 py-12">
@@ -51,7 +63,8 @@ export const Lobby = () => {
       </div>
 
       <div className="justify-center flex">
-        <button className="w-full max-w-md bg-emerald-500 hover:bg-emerald-700 rounded-md p-3">
+        <button className="w-full max-w-md bg-emerald-500 hover:bg-emerald-700 rounded-md p-3"
+              onClick={onSessionCreateClick}>
           <div className="flex items-center justify-center gap-3">
             <div className="rounded-2xl bg-emerald-200 p-1">
               <Plus className="w-6 h-6"/>

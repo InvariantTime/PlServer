@@ -1,4 +1,5 @@
 
 export type SessionLobbyInfo = {
-    name: string
+    name: string,
+    id: string
 }

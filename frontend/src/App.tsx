@@ -4,7 +4,7 @@ import { LobbyPage } from './pages/lobby/LobbyExample';
 import { Lobby } from './pages/lobby/Lobby';
 import { SessionProvider } from './components/sessions/SessionProvider';
 
-const url = "http://localhost:5000/ws/sessions"
+const url = "/ws/sessions"
 
 function App() {
   return (

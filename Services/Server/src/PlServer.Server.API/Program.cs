@@ -75,8 +75,8 @@ app.MapPost("/work", async ([FromBody]WorkRestRequest request, IWorkerCoordinato
 
 app.MapGet("ping", () => "pong");
 
-app.MapHub<SessionHub>("ws/sessions");
-
 app.MapControllers();
+
+app.MapHub<SessionHub>("ws/sessions"); 
 
 app.Run();

@@ -1,5 +1,7 @@
-import { HttpTransportType, LogLevel } from "@aspnet/signalr";
+
 import {
+  HttpTransportType, 
+  LogLevel, 
   HubConnection,
   HubConnectionBuilder,
   HubConnectionState,

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using PlServer.Server.API.Hubs;
+using PlServer.Server.API.Requests;
 using PlServer.Server.API.Responces;
 using PlServer.Server.Infrastructure.Sessions;
 
@@ -26,9 +27,9 @@ public class SessionController : ControllerBase
     }
 
     [HttpPost]
-    public Task<Guid> CreateSession(string name)
+    public Task<Guid> CreateSession(SessionCreateRequest request)
     {
-        var session = _sessions.CreateSession(name);
+        var session = _sessions.CreateSession(request.Name);
 
         var sessions = _sessions.Sessions;
         _hub.Clients.Group("Lobby").OnSessionListChangedAsync(sessions.Select(x => new SessionResponce(x.Name, x.Id)));//TODO: migrate hubs to infrastructure layer and make notification insert the service

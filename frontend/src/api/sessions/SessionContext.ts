@@ -1,11 +1,11 @@
-import { HubConnection } from "@microsoft/signalr";
+import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 import { createContext, use, useContext, useEffect, useRef } from "react";
 
 
 export interface ServiceConnection
 {
     hub: HubConnection | null,
-    state: signalR.HubConnectionState,
+    state: HubConnectionState,
     id: string | null,
     error: Error | null
 }
