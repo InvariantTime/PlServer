@@ -32,7 +32,8 @@ public class SessionController : ControllerBase
         var session = _sessions.CreateSession(request.Name);
 
         var sessions = _sessions.Sessions;
-        _hub.Clients.Group("Lobby").OnSessionListChangedAsync(sessions.Select(x => new SessionResponce(x.Name, x.Id)));//TODO: migrate hubs to infrastructure layer and make notification insert the service
+        _hub.Clients.Group("Lobby").OnSessionListChangedAsync(
+            sessions.Select(x => new SessionResponce(x.Name, x.Id)));//TODO: migrate hubs to infrastructure layer and make notification insert the service
 
         return Task.FromResult(session.Id);
     }

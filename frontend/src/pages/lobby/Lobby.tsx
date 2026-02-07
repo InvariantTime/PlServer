@@ -9,12 +9,17 @@ import { createSession, getSessionList } from "../../api/sessions/SessionQueries
 export const Lobby = () => {
   
   const [sessions, setSessions] = useState<SessionLobbyInfo[]>([]);
+  const connection = useSession();
 
   useEffect(() => {
     getSessionList().then((sessions) => {
       setSessions(sessions);
     });
   }, [])
+
+  connection.connection.hub?.on("OnSessionListChangedAsync", (sessions: SessionLobbyInfo[]) => {
+    setSessions(sessions);
+  })
 
   useListen<SessionLobbyInfo[]>("OnSessionListChangedAsync", (sessions) =>
   {
@@ -34,7 +39,7 @@ export const Lobby = () => {
   }
 
   return (
-    <div className="relative max-w-4xl mx-auto px-6 py-12">
+    <div className="relative max-w-4xl mx-auto px-6 py-36">
       <header>
         <div className="flex justify-center">
             <h1 className="text-4xl">

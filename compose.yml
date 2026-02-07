@@ -8,7 +8,7 @@ services:
       - 3000:80
 
     networks:
-      - backend-net
+      - backend
 
     depends_on:
       server-service:
@@ -30,7 +30,7 @@ services:
       - 5000:8080
 
     networks:
-      - backend-net
+      - backend
 
   worker-1:
     build:
@@ -41,7 +41,7 @@ services:
     hostname: worker1-host
 
     networks:
-      - backend-net
+      - backend
 
     environment:
       - WorkerOptions__Name=worker_1
@@ -55,11 +55,11 @@ services:
     hostname: worker2-host
 
     networks:
-      - backend-net
+      - backend
 
     environment:
       - WorkerOptions__Name=worker_2
 
 networks:
-  backend-net:
+  backend:
     driver: bridge

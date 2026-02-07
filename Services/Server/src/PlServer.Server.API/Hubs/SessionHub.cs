@@ -24,7 +24,7 @@ public class SessionHub : Hub<ISessionClient>
         _sessions = sessions;
     }
 
-    public override Task OnConnectedAsync()
+    public override async Task OnConnectedAsync()
     {
         var id = Context.GetHttpContext()!.Request.Query[QueryName];
 
@@ -32,7 +32,11 @@ public class SessionHub : Hub<ISessionClient>
         {
 
         }
+        else
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, "Lobby");
+        }
 
-        return base.OnConnectedAsync();
+        await base.OnConnectedAsync();
     }
 }
