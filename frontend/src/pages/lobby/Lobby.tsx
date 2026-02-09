@@ -4,12 +4,14 @@ import { useContext, useEffect, useState } from "react";
 import { SessionContext, useInvoke, useListen, useSession } from "../../api/sessions/SessionContext";
 import { SessionLobbyInfo } from "../../api/sessions/SessionLobbyInfo";
 import { createSession, getSessionList } from "../../api/sessions/SessionQueries";
+import { useMessage } from "../../api/modals/ModalPanelApi";
 
 
 export const Lobby = () => {
   
   const [sessions, setSessions] = useState<SessionLobbyInfo[]>([]);
   const connection = useSession();
+  const message = useMessage();
 
   useEffect(() => {
     getSessionList().then((sessions) => {
@@ -26,16 +28,12 @@ export const Lobby = () => {
     setSessions(sessions);
   });
 
+  
+
   const onSessionCreateClick = () => {
-    
-    const name = prompt("enter the session name", "session");
 
-    if (name === null) {
-      alert("name cannot be empty");
-      return;
-    }
-
-    const result = createSession(name);
+    message("Hello world!", null);
+    //const result = createSession(name);
   }
 
   return (

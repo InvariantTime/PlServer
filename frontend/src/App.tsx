@@ -10,7 +10,7 @@ const url = "/ws/sessions";
 
 function App() {
   return (
-    <ModalProvider zStartIndex={1000}>
+    <ModalProvider>
       <SessionProvider url={url}>
         <div className="bg-slate-300 min-h-screen">
           <div className="h-[8%]">
