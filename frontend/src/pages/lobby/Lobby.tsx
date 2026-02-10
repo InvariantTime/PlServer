@@ -4,14 +4,16 @@ import { useContext, useEffect, useState } from "react";
 import { SessionContext, useInvoke, useListen, useSession } from "../../api/sessions/SessionContext";
 import { SessionLobbyInfo } from "../../api/sessions/SessionLobbyInfo";
 import { createSession, getSessionList } from "../../api/sessions/SessionQueries";
-import { useMessage } from "../../api/modals/ModalPanelApi";
+import { useDialog, useMessage } from "../../api/modals/ModalPanelApi";
+import { SessionCreationRequest } from "../../api/sessions/SessionCreationRequest";
+import { SessionCreatePanel } from "../../components/sessions/SessionCreatePanel";
 
 
 export const Lobby = () => {
   
   const [sessions, setSessions] = useState<SessionLobbyInfo[]>([]);
   const connection = useSession();
-  const message = useMessage();
+  const createSessionPanel = useDialog<SessionCreationRequest>(SessionCreatePanel);
 
   useEffect(() => {
     getSessionList().then((sessions) => {
@@ -30,10 +32,10 @@ export const Lobby = () => {
 
   
 
-  const onSessionCreateClick = () => {
+  const onSessionCreateClick = async () => {
 
-    message("Hello world!", null);
-    //const result = createSession(name);
+    const result = await createSessionPanel();
+    await createSession(result);
   }
 
   return (

@@ -1,10 +1,10 @@
 import { error } from "console";
-import { createContext, ReactNode, useCallback, useContext } from "react";
+import { ComponentType, createContext, ReactNode, useCallback, useContext } from "react";
 import { CancellationToken } from "typescript";
 import { MessagePanel } from "../../components/modals/MessagePanel";
 
 interface ModalContextType {
-    addView: (viewFactory: (closeCallback: (value: object) => void) => ReactNode) => string,
+    addView: (component: ComponentType<{closeCallback: (value: object) => void}>) => string,
     waitForClose: (id: string, cancellation: CancellationToken | null) => Promise<object>,
     close: (id: string, value: object) => void
 }
@@ -21,17 +21,24 @@ export const useModals = (): ModalContextType => {
 };
 
 
-export function useDialog<TResult>(factory: (closeCallback: (result: TResult) => void) => ReactNode) : Promise<TResult> {
+export function useDialog<TResult>(panel: ComponentType<{closeCallback: (value: object) => void}>) : () => Promise<TResult> {
     const modals = useModals();
 
-    return null!;//TODO: callback convertion
+    const callback = useCallback(async () => {
+        const id = modals.addView(panel);
+        const result = modals.waitForClose(id, null);//TODO: cancellation
+
+        return result as TResult;
+    }, [modals]);
+
+    return callback;
 }
 
 export function useMessage() : (msg: string, cancellation: CancellationToken | null) => Promise<object> {
     const modals = useModals();
 
     const callback = useCallback((message: string, cancellation: CancellationToken | null = null) => {
-        const id = modals.addView((callback) => MessagePanel({closeCallback: callback, message}));
+        const id = modals.addView(MessagePanel as ComponentType<{closeCallback: (value: object) => void}>);
         return modals.waitForClose(id, cancellation);
     }, [modals]);
 

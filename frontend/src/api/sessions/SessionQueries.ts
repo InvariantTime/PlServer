@@ -1,3 +1,4 @@
+import { SessionCreationRequest } from "./SessionCreationRequest";
 import { SessionLobbyInfo } from "./SessionLobbyInfo";
 
 const getSessionListUrl = "/api/sessions/all";
@@ -28,7 +29,7 @@ export const getSessionList = async () : Promise<SessionLobbyInfo[]> => {
     return [];
 }
 
-export const createSession = async (name: string) => {
+export const createSession = async (request: SessionCreationRequest) => {
 
         const query: RequestInit = {
 
@@ -37,7 +38,7 @@ export const createSession = async (name: string) => {
       headers: {
         "content-type": "application/json"
       },
-      body: JSON.stringify({name: name})
+      body: JSON.stringify(request)
     }
   
     try

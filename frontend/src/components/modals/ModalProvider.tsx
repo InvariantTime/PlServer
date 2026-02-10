@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import { ComponentType, MouseEvent, ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import { ModalPanelContext } from "../../api/modals/ModalPanelApi";
 import { CompletionSource } from "../../api/utils/CompletionSource";
 import { createPortal } from "react-dom";
@@ -10,7 +10,7 @@ interface Props {
 }
 
 type PanelInfo = {
-  view: ReactNode,
+  component: ComponentType<{closeCallback: (value: object) => void}>,
   id: string
 }
 
@@ -19,7 +19,7 @@ export const ModalProvider = ({ children }: Props) => {
   const [panels, setPanels] = useState<PanelInfo[]>([]);
   const sources = useRef<Map<string, CompletionSource<object>>>(new Map());
   
-  const addView = useCallback((factory: (closeCallback: (value: object) => void) => ReactNode): string => {
+  const addView = useCallback((component: ComponentType<{closeCallback: (value: object) => void}>): string => {
     var id = "";
 
     do {
@@ -30,13 +30,7 @@ export const ModalProvider = ({ children }: Props) => {
 
     sources.current.set(id, cs);
 
-    const closeCallback = (value: object) => {
-      cs.resolve(value);
-    }
-
-    const view = factory(closeCallback);
-
-    setPanels(prev => [...prev, {id, view}]);
+    setPanels(prev => [...prev, {id, component}]);
 
     (document.activeElement as HTMLElement)?.blur();
 
@@ -47,7 +41,6 @@ export const ModalProvider = ({ children }: Props) => {
 
     return id;
   }, []);
-
   
   const waitForClose = useCallback((id: string, cancellation: CancellationToken | null): Promise<object> => {
     const cs = sources.current.get(id);
@@ -84,7 +77,7 @@ export const ModalProvider = ({ children }: Props) => {
 
     return createPortal((
       <div className="overlay" onClick={onOverlayClick}>
-        {info.view}
+        <info.component closeCallback={(value) => close(info.id, value)}/>
       </div>
     ), document.body)
   }
