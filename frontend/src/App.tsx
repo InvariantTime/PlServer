@@ -5,6 +5,7 @@ import { Lobby } from "./pages/lobby/Lobby";
 import { SessionProvider } from "./components/sessions/SessionProvider";
 import { Header } from "./components/Header";
 import { ModalProvider } from "./components/modals/ModalProvider";
+import { Session } from "./pages/lobby/session/Session";
 
 const url = "/ws/sessions";
 
@@ -18,7 +19,7 @@ function App() {
           </div>
 
           <div className="h-full">
-            <Lobby />
+            <Session/>
           </div>
         </div>
       </SessionProvider>
