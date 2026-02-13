@@ -13,7 +13,7 @@ function App() {
   return (
     <ModalProvider>
       <SessionProvider url={url}>
-        <div className="bg-slate-300 min-h-screen">
+        <div className="bg-slate-300 min-h-screen flex flex-col">
           <div className="h-[8%]">
             <Header />
           </div>
