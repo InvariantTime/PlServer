@@ -18,7 +18,7 @@ function App() {
             <Header />
           </div>
 
-          <div className="h-full">
+          <div className="flex flex-1">
             <Session/>
           </div>
         </div>
