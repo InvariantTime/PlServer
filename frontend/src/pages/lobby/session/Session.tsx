@@ -10,8 +10,8 @@ export const Session = () => {
                 <NodeField/>
             </div>
 
-            <div className="bg-slate-200 border-emerald-900 border-2 rounded-md flex-[1] min-h-full pl-1 pr-1">
-                <div className="h-12 p-2 border-b-2 border-emerald-900">
+            <div className="bg-slate-200 border-emerald-900 border-2 rounded-md flex-[1] min-h-full">
+                <div className="h-12 p-2 shadow-md">
                     <Play size={34} strokeWidth={2} color="#2cc352" />
                 </div>
 

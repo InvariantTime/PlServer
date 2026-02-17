@@ -1,9 +1,28 @@
 import { MouseEvent, useState, WheelEvent } from "react"
+import { Node } from "./Node";
+import { NodeInfo } from "../../api/nodes/NodeInfo";
+import { CreateObjectType, ObjectTypeClass } from "../../api/nodes/ObjectType";
+
+
+type SimpleNode = {
+    color: string,
+    x: number,
+    y: number
+}
+
+const nodeInfo: NodeInfo = {
+    name: "Student builder",
+    inputs: [{name: "age", type: CreateObjectType(ObjectTypeClass.Number)}, {name: "name", type: CreateObjectType(ObjectTypeClass.String)}, 
+        {name: "education level", type: CreateObjectType(ObjectTypeClass.Enum)}],
+    outputs: [{name: "student", type: CreateObjectType(ObjectTypeClass.Object)}],
+    parameters: []
+}
 
 export const NodeField = () => {
 
     const [viewport, setViewport] = useState({ x: 0, y: 0, zoom: 1 });
     const [isPanning, setIsPanning] = useState(false);
+    const [nodes, setNodes] = useState<SimpleNode[]>([{x: 0, y: 0, color: ""}]);
 
     const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
 
@@ -42,17 +61,20 @@ export const NodeField = () => {
     }
 
     return (
-        <div className="bg-slate-400 overflow-hidden relative touch-none w-full h-full"
+        <div className="bg-slate-300 overflow-hidden relative touch-none w-full h-full origin-top-left"
             onMouseMove={onMouseMove}
             onMouseDown={onMouseDown}
             onWheel={onMouseWheel}
             onMouseUp={onUnfocus}
             onMouseLeave={onUnfocus}>
-            <div className=""
+            <div className="relative"
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
-                <div className="w-16 h-16 bg-red-500">
-                </div>
+                {nodes.map(node => {
+                    return (
+                            <Node info={nodeInfo}/>
+                    )
+                })}
             </div>
         </div>
     )
