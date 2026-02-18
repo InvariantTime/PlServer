@@ -1,6 +1,7 @@
-import { ChevronDown } from "lucide-react"
-import { NodeInfo } from "../../api/nodes/NodeInfo"
+import { ChevronDown, ChevronUp } from "lucide-react"
+import { NodeConnection, NodeInfo } from "../../api/nodes/NodeInfo"
 import { ObjectTypeClass } from "../../api/nodes/ObjectType"
+import { useCallback, useState } from "react"
 
 interface Props {
     info: NodeInfo
@@ -9,11 +10,31 @@ interface Props {
 
 export const Node = ({ info }: Props) => {
 
+    const [collapsed, setCollapsed] = useState(false);
+
+    const openCallback = useCallback(() => {
+        setCollapsed(false);
+    }, []);
+
+    const closeCallback = useCallback(() => {
+        setCollapsed(true);
+    }, []);
+
+    if (collapsed === true)
+        return (
+            <div className="w-48 flex flex-col shadow-xl border-[1px] rounded-md border-slate-400">
+                <CollapsedNode info={info} openCallback={openCallback}/>
+            </div>
+        );
+
+
     return (
         <div className="w-48 flex flex-col shadow-xl border-[1px] rounded-md border-slate-400">
             <div className="bg-red-600 w-full rounded-t-md h-10 border-b-[1px] border-red-700 flex items-center px-2 gap-3">
-                <div className="h-4 w-4 rounded-full bg-red-100 items-center justify-center flex">
-                    <ChevronDown />
+                <div className="h-4 w-4 rounded-full bg-red-100 items-center justify-center flex 
+                    hover:bg-red-200"
+                    onClick={closeCallback}>
+                    <ChevronUp />
                 </div>
 
                 <h1 className="text-white font-bold">{info.name}</h1>
@@ -50,7 +71,50 @@ export const Node = ({ info }: Props) => {
     )
 }
 
+
+
+interface CollapsedNodeProps {
+    info: NodeInfo,
+    openCallback: () => void
+}
+
+export const CollapsedNode = ({info, openCallback}: CollapsedNodeProps) => {
+
+    const onOpen = useCallback(() => {
+        openCallback();
+    }, []);
+
+
+    return (
+        <div className="bg-red-600 w-full rounded-md h-10 border-[1px] border-red-700 flex items-center px-2 gap-3">
+            <div className="h-4 w-4 rounded-full bg-red-100 items-center justify-center flex
+                hover:bg-red-200"
+                onClick={onOpen}>
+                <ChevronDown />
+            </div>
+
+            <h1 className="text-white font-bold">{info.name}</h1>
+        </div>
+    );
+}
+
+
+
 function getTypeColor(cl: ObjectTypeClass): string {
+
+    if (cl === ObjectTypeClass.String)
+        return "#d45313";
+
+    if (cl === ObjectTypeClass.Number)
+        return "#1db5a1";
+
+    if (cl === ObjectTypeClass.Enum)
+        return "#d4bd13";
+
+    return "#b935db";
+}
+
+function getTypeActiveColor(cl: ObjectTypeClass): string {
 
     if (cl === ObjectTypeClass.String)
         return "#d45313";

@@ -1,0 +1,9 @@
+
+.nodeBody {
+}
+
+.node-field-background {
+  background-color: #e0e0e0;
+  background-image: radial-gradient(#a8a8a8 1px, transparent 1px);
+  background-size: 20px 20px;
+}

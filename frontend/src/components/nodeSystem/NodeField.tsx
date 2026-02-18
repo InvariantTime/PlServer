@@ -2,6 +2,7 @@ import { MouseEvent, useState, WheelEvent } from "react"
 import { Node } from "./Node";
 import { NodeInfo } from "../../api/nodes/NodeInfo";
 import { CreateObjectType, ObjectTypeClass } from "../../api/nodes/ObjectType";
+import "./Node.css";
 
 
 type SimpleNode = {
@@ -13,7 +14,10 @@ type SimpleNode = {
 const nodeInfo: NodeInfo = {
     name: "Student builder",
     inputs: [{name: "age", type: CreateObjectType(ObjectTypeClass.Number)}, {name: "name", type: CreateObjectType(ObjectTypeClass.String)}, 
-        {name: "education level", type: CreateObjectType(ObjectTypeClass.Enum)}],
+        {name: "education's place", type: CreateObjectType(ObjectTypeClass.String)},
+        {name: "education level", type: CreateObjectType(ObjectTypeClass.Enum)},
+        {name: "course", type: CreateObjectType(ObjectTypeClass.Number)},
+        {name: "department", type: CreateObjectType(ObjectTypeClass.String)}],
     outputs: [{name: "student", type: CreateObjectType(ObjectTypeClass.Object)}],
     parameters: []
 }
@@ -61,7 +65,7 @@ export const NodeField = () => {
     }
 
     return (
-        <div className="bg-slate-300 overflow-hidden relative touch-none w-full h-full origin-top-left"
+        <div className="node-field-background overflow-hidden relative touch-none w-full h-full origin-top-left"
             onMouseMove={onMouseMove}
             onMouseDown={onMouseDown}
             onWheel={onMouseWheel}
