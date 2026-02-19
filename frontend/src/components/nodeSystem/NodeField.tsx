@@ -3,22 +3,24 @@ import { Node } from "./Node";
 import { NodeInfo } from "../../api/nodes/NodeInfo";
 import { CreateObjectType, ObjectTypeClass } from "../../api/nodes/ObjectType";
 import "./Node.css";
+import { stringify } from "querystring";
 
 
-type SimpleNode = {
-    color: string,
+type NodeDecloration = {
+    info: NodeInfo,
+    id: number
     x: number,
     y: number
 }
 
 const nodeInfo: NodeInfo = {
     name: "Student builder",
-    inputs: [{name: "age", type: CreateObjectType(ObjectTypeClass.Number)}, {name: "name", type: CreateObjectType(ObjectTypeClass.String)}, 
-        {name: "education's place", type: CreateObjectType(ObjectTypeClass.String)},
-        {name: "education level", type: CreateObjectType(ObjectTypeClass.Enum)},
-        {name: "course", type: CreateObjectType(ObjectTypeClass.Number)},
-        {name: "department", type: CreateObjectType(ObjectTypeClass.String)}],
-    outputs: [{name: "student", type: CreateObjectType(ObjectTypeClass.Object)}],
+    inputs: [{ name: "age", type: CreateObjectType(ObjectTypeClass.Number) }, { name: "name", type: CreateObjectType(ObjectTypeClass.String) },
+    { name: "education's place", type: CreateObjectType(ObjectTypeClass.String) },
+    { name: "education level", type: CreateObjectType(ObjectTypeClass.Enum) },
+    { name: "course", type: CreateObjectType(ObjectTypeClass.Number) },
+    { name: "department", type: CreateObjectType(ObjectTypeClass.String) }],
+    outputs: [{ name: "student", type: CreateObjectType(ObjectTypeClass.Object) }],
     parameters: []
 }
 
@@ -26,7 +28,7 @@ export const NodeField = () => {
 
     const [viewport, setViewport] = useState({ x: 0, y: 0, zoom: 1 });
     const [isPanning, setIsPanning] = useState(false);
-    const [nodes, setNodes] = useState<SimpleNode[]>([{x: 0, y: 0, color: ""}]);
+    const [nodes, setNodes] = useState<NodeDecloration[]>([]);
 
     const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
 
@@ -41,7 +43,7 @@ export const NodeField = () => {
 
     const onMouseWheel = (e: WheelEvent<HTMLDivElement>) => {
         const zoomSpeed = 0.1;
-        const newZoom = e.deltaY > 0 
+        const newZoom = e.deltaY > 0
             ? viewport.zoom * (1 - zoomSpeed)
             : viewport.zoom * (1 + zoomSpeed);
 
@@ -49,7 +51,7 @@ export const NodeField = () => {
         const mouseY = e.clientY;
         const newX = mouseX - (mouseX - viewport.x) * (newZoom / viewport.zoom);
         const newY = mouseY - (mouseY - viewport.y) * (newZoom / viewport.zoom);
-    
+
         setViewport({ x: newX, y: newY, zoom: newZoom });
     }
 
@@ -58,6 +60,20 @@ export const NodeField = () => {
         if (e.button === 0) {
             setIsPanning(true);
         }
+    }
+
+    const onContextOpen = (e: MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+
+        const bound = e.currentTarget.getBoundingClientRect();
+
+        const relativeX = e.clientX - bound.left;
+        const relativeY = e.clientY - bound.top;
+
+        const x = (relativeX - viewport.x) / viewport.zoom;
+        const y = (relativeY - viewport.y) / viewport.zoom;
+
+        setNodes(prev => [...prev, { x: x, y: y, info: nodeInfo, id: 0 }]);
     }
 
     const onUnfocus = () => {
@@ -70,13 +86,17 @@ export const NodeField = () => {
             onMouseDown={onMouseDown}
             onWheel={onMouseWheel}
             onMouseUp={onUnfocus}
+            onContextMenu={onContextOpen}
             onMouseLeave={onUnfocus}>
             <div className="relative"
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
                 {nodes.map(node => {
                     return (
-                            <Node info={nodeInfo}/>
+                        <div className="absolute"
+                            style={{ left: node.x, top: node.y }}>
+                            <Node info={node.info} />
+                        </div>
                     )
                 })}
             </div>
