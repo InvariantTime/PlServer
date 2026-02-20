@@ -42,17 +42,7 @@ export const NodeField = () => {
     }
 
     const onMouseWheel = (e: WheelEvent<HTMLDivElement>) => {
-        const zoomSpeed = 0.1;
-        const newZoom = e.deltaY > 0
-            ? viewport.zoom * (1 - zoomSpeed)
-            : viewport.zoom * (1 + zoomSpeed);
 
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-        const newX = mouseX - (mouseX - viewport.x) * (newZoom / viewport.zoom);
-        const newY = mouseY - (mouseY - viewport.y) * (newZoom / viewport.zoom);
-
-        setViewport({ x: newX, y: newY, zoom: newZoom });
     }
 
     const onMouseDown = (e: MouseEvent<HTMLDivElement>) => {
