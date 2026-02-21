@@ -42,7 +42,15 @@ export const NodeField = () => {
     }
 
     const onMouseWheel = (e: WheelEvent<HTMLDivElement>) => {
+        const direction = e.deltaY > 0 ? 0.95 : 1.05;
 
+        const newViewport = Math.min(viewport.zoom * direction, 2);
+
+        const x = viewport.x;
+        const y = viewport.y;
+        const zoom = newViewport;
+
+        setViewport({ x: x, y: y, zoom: zoom });
     }
 
     const onMouseDown = (e: MouseEvent<HTMLDivElement>) => {
@@ -71,16 +79,23 @@ export const NodeField = () => {
     }
 
     return (
-        <div className="node-field-background overflow-hidden relative touch-none w-full h-full origin-top-left"
+        <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0]"
             onMouseMove={onMouseMove}
             onMouseDown={onMouseDown}
             onWheel={onMouseWheel}
             onMouseUp={onUnfocus}
             onContextMenu={onContextOpen}
             onMouseLeave={onUnfocus}>
-            <div className="relative"
-                style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
+            <div className="node-field-background"
+                style={{ 
+                    '--vx': viewport.x,
+                    '--vy': viewport.y,
+                    backgroundSize: `${Math.max(4, Math.min(35, 20 * viewport.zoom))}px ${Math.max(4, Math.min(35, 20 * viewport.zoom))}px`,
+                    opacity: viewport.zoom < 0.3 ? 0.3 : 1} as React.CSSProperties} />
 
+
+            <div className="relative"
+                style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`}}>
                 {nodes.map(node => {
                     return (
                         <div className="absolute"
