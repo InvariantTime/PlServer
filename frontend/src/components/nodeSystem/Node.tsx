@@ -1,14 +1,15 @@
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { NodeConnection, NodeInfo } from "../../api/nodes/NodeInfo"
 import { ObjectTypeClass } from "../../api/nodes/ObjectType"
-import { useCallback, useState } from "react"
+import { MouseEvent, useCallback, useState } from "react"
 
 interface Props {
-    info: NodeInfo
+    info: NodeInfo,
+    headerMouseDownCallback: (e: MouseEvent<HTMLElement>) => void
 }
 
 
-export const Node = ({ info }: Props) => {
+export const Node = ({ info, headerMouseDownCallback }: Props) => {
 
     const [collapsed, setCollapsed] = useState(false);
 
@@ -29,8 +30,10 @@ export const Node = ({ info }: Props) => {
 
 
     return (
-        <div className="w-48 flex flex-col shadow-xl border-[1px] rounded-md border-slate-400">
-            <div className="bg-red-600 w-full rounded-t-md h-10 border-b-[1px] border-red-700 flex items-center px-2 gap-3">
+        <div className="w-48 flex flex-col shadow-xl border-[1px] rounded-md border-slate-400 select-none">
+            <div className="bg-red-600 w-full rounded-t-md h-10 border-b-[1px] border-red-700 flex items-center px-2 gap-3"
+                onMouseDown={headerMouseDownCallback}>
+
                 <div className="h-4 w-4 rounded-full bg-red-100 items-center justify-center flex 
                     hover:bg-red-200"
                     onClick={closeCallback}>

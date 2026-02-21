@@ -1,4 +1,4 @@
-import { MouseEvent, useState, WheelEvent } from "react"
+import { MouseEvent, useRef, useState, WheelEvent } from "react"
 import { Node } from "./Node";
 import { NodeInfo } from "../../api/nodes/NodeInfo";
 import { CreateObjectType, ObjectTypeClass } from "../../api/nodes/ObjectType";
@@ -29,8 +29,35 @@ export const NodeField = () => {
     const [viewport, setViewport] = useState({ x: 0, y: 0, zoom: 1 });
     const [isPanning, setIsPanning] = useState(false);
     const [nodes, setNodes] = useState<NodeDecloration[]>([]);
+    const dragRef = useRef<{startX: number, startY: number, prevX: number, prevY: number, id: number} | null>(null);
+
+    const dragNode = (e: MouseEvent<HTMLDivElement>) => {
+        
+        if (dragRef.current == null)
+            return;
+  
+        const {id, startX, startY, prevX, prevY} = dragRef.current;
+
+        const dx = (e.clientX - startX) / viewport.zoom;
+        const dy = (e.clientY - startY) / viewport.zoom;
+  
+        setNodes(prev => {
+            const dragged = prev.find(n => n.id == id);
+
+            if (!dragged)
+                return prev;
+
+            return [...prev.filter(n => n.id != id), {...dragged, x: dx + prevX, y: dy + prevY}];
+        });
+    }
+
 
     const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+
+        if (dragRef != null) {
+            dragNode(e);
+            return;
+        }
 
         if (isPanning === true) {
             const x = viewport.x + e.movementX;
@@ -71,11 +98,24 @@ export const NodeField = () => {
         const x = (relativeX - viewport.x) / viewport.zoom;
         const y = (relativeY - viewport.y) / viewport.zoom;
 
-        setNodes(prev => [...prev, { x: x, y: y, info: nodeInfo, id: 0 }]);
+        setNodes(prev => [...prev, { x: x, y: y, info: nodeInfo, id: Date.now() }]);
     }
 
     const onUnfocus = () => {
         setIsPanning(false);
+        dragRef.current = null;
+    }
+
+    const headerMouseDownCallback = (e: MouseEvent<HTMLElement>, id: number, x: number, y: number) => {
+        e.stopPropagation();
+
+        dragRef.current = {
+            startX: e.clientX,
+            startY: e.clientY,
+            prevX: x,
+            prevY: y,
+            id: id,
+        };
     }
 
     return (
@@ -100,7 +140,8 @@ export const NodeField = () => {
                     return (
                         <div className="absolute"
                             style={{ left: node.x, top: node.y }}>
-                            <Node info={node.info} />
+                            <Node info={node.info} 
+                                headerMouseDownCallback={(e) => headerMouseDownCallback(e, node.id, node.x, node.y)}/>
                         </div>
                     )
                 })}
