@@ -13,6 +13,13 @@ type NodeDecloration = {
     y: number
 }
 
+type NodeEdge = {
+    startX: number,
+    startY: number,
+    endX: number,
+    endY: number
+}
+
 const nodeInfo: NodeInfo = {
     name: "Student builder",
     inputs: [{ name: "age", type: CreateObjectType(ObjectTypeClass.Number) }, { name: "name", type: CreateObjectType(ObjectTypeClass.String) },
@@ -29,32 +36,58 @@ export const NodeField = () => {
     const [viewport, setViewport] = useState({ x: 0, y: 0, zoom: 1 });
     const [isPanning, setIsPanning] = useState(false);
     const [nodes, setNodes] = useState<NodeDecloration[]>([]);
-    const dragRef = useRef<{startX: number, startY: number, prevX: number, prevY: number, id: number} | null>(null);
+    const [edges, setEdges] = useState<NodeEdge[]>([{ startX: 10, startY: 10, endX: 15, endY: 18 }]);
+    const dragRef = useRef<{ startX: number, startY: number, prevX: number, prevY: number, id: number } | null>(null);
+
+
+    const getBezierPath = (
+        sourceX: number,
+        sourceY: number,
+        targetX: number,
+        targetY: number
+    ): string => {
+        const deltaX = Math.abs(targetX - sourceX);
+        const deltaY = Math.abs(targetY - sourceY);
+
+        const offset = Math.min(
+            Math.max(deltaX * 0.5, deltaY * 0.5),
+            150
+        );
+
+        const cp1x = sourceX;
+        const cp1y = sourceY + offset;
+
+        const cp2x = targetX;
+        const cp2y = targetY - offset;
+
+        return `M ${sourceX} ${sourceY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`;
+    };
+
 
     const dragNode = (e: MouseEvent<HTMLDivElement>) => {
-        
+
         if (dragRef.current == null)
             return;
-  
-        const {id, startX, startY, prevX, prevY} = dragRef.current;
+
+        const { id, startX, startY, prevX, prevY } = dragRef.current;
 
         const dx = (e.clientX - startX) / viewport.zoom;
         const dy = (e.clientY - startY) / viewport.zoom;
-  
+
         setNodes(prev => {
             const dragged = prev.find(n => n.id == id);
 
             if (!dragged)
                 return prev;
 
-            return [...prev.filter(n => n.id != id), {...dragged, x: dx + prevX, y: dy + prevY}];
+            return [...prev.filter(n => n.id != id), { ...dragged, x: dx + prevX, y: dy + prevY }];
         });
     }
 
 
     const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
 
-        if (dragRef != null) {
+        if (dragRef.current != null) {
             dragNode(e);
             return;
         }
@@ -84,6 +117,10 @@ export const NodeField = () => {
 
         if (e.button === 0) {
             setIsPanning(true);
+
+            const edge = edges.at(0)!;
+
+            setEdges(prev => [{ ...edge, endX: e.clientX - viewport.x, endY: e.clientY - viewport.y }])
         }
     }
 
@@ -127,25 +164,46 @@ export const NodeField = () => {
             onContextMenu={onContextOpen}
             onMouseLeave={onUnfocus}>
             <div className="node-field-background"
-                style={{ 
+                style={{
                     '--vx': viewport.x,
                     '--vy': viewport.y,
                     backgroundSize: `${Math.max(4, Math.min(35, 20 * viewport.zoom))}px ${Math.max(4, Math.min(35, 20 * viewport.zoom))}px`,
-                    opacity: viewport.zoom < 0.3 ? 0.3 : 1} as React.CSSProperties} />
+                    opacity: viewport.zoom < 0.3 ? 0.3 : 1
+                } as React.CSSProperties} />
 
 
             <div className="relative"
-                style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`}}>
+                style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
+
+                <svg className="absolute inset-0 overflow-visible">
+                    {edges.map(edge => {
+                        return (
+                            <path
+                                d={getBezierPath(edge.startX, edge.startY, edge.endX, edge.endY)}
+                                stroke={"#3b82f6"}
+                                strokeWidth={3}
+                                fill="none"
+                                className="transition-all duration-200" />
+                        )
+                    })}
+                </svg>
+
+
+
                 {nodes.map(node => {
                     return (
                         <div className="absolute"
                             style={{ left: node.x, top: node.y }}>
-                            <Node info={node.info} 
-                                headerMouseDownCallback={(e) => headerMouseDownCallback(e, node.id, node.x, node.y)}/>
+                            <Node info={node.info}
+                                headerMouseDownCallback={(e) => headerMouseDownCallback(e, node.id, node.x, node.y)} />
                         </div>
                     )
                 })}
             </div>
+
+            <svg>
+                <path />
+            </svg>
         </div>
     )
 }
