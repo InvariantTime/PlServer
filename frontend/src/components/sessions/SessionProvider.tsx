@@ -52,7 +52,7 @@ export const SessionProvider = ({ children, url }: SessionProviderProps) => {
       connection.start().then(() => {
         setConnectionId(connection.connectionId);
         setState(connection.state);
-      }).catch(e => alert("Unable to connect to server"));
+      }).catch(() => {});
   
     return () => {
       connection.stop().catch(console.error);

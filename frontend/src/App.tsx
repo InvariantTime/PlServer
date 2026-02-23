@@ -3,7 +3,7 @@ import logo from "./logo.svg";
 import { LobbyPage } from "./pages/lobby/LobbyExample";
 import { Lobby } from "./pages/lobby/Lobby";
 import { SessionProvider } from "./components/sessions/SessionProvider";
-import { Header } from "./components/Header";
+import { Header } from "./components/header/Header";
 import { ModalProvider } from "./components/modals/ModalProvider";
 import { Session } from "./pages/lobby/session/Session";
 
