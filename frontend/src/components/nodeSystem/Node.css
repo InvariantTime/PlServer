@@ -9,3 +9,26 @@
   will-change: transform;
   background-position: calc(var(--vx) * 1px) calc(var(--vy) * 1px);
 }
+
+.edge-hover {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+  stroke-width: 20;
+  stroke: transparent;
+  fill: none;
+}
+
+.edge-visible {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+  pointer-events: none;
+  stroke-width: 3;
+  fill: none;
+}
+
+.edge-hover:hover + .edge-visible {
+  stroke-width: 4;
+  filter: brightness(0.8);
+}

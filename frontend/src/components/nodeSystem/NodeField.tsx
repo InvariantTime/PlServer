@@ -4,6 +4,7 @@ import { NodeInfo } from "../../api/nodes/NodeInfo";
 import { CreateObjectType, ObjectTypeClass } from "../../api/nodes/ObjectType";
 import "./Node.css";
 import { stringify } from "querystring";
+import { NodeEdge } from "./NodeEdge";
 
 
 type NodeDecloration = {
@@ -38,31 +39,6 @@ export const NodeField = () => {
     const [nodes, setNodes] = useState<NodeDecloration[]>([]);
     const [edges, setEdges] = useState<NodeEdge[]>([{ startX: 10, startY: 10, endX: 15, endY: 18 }]);
     const dragRef = useRef<{ startX: number, startY: number, prevX: number, prevY: number, id: number } | null>(null);
-
-
-    const getBezierPath = (
-        sourceX: number,
-        sourceY: number,
-        targetX: number,
-        targetY: number
-    ): string => {
-        const deltaX = Math.abs(targetX - sourceX);
-        const deltaY = Math.abs(targetY - sourceY);
-
-        const offset = Math.min(
-            Math.max(deltaX * 0.5, deltaY * 0.5),
-            150
-        );
-
-        const cp1x = sourceX;
-        const cp1y = sourceY + offset;
-
-        const cp2x = targetX;
-        const cp2y = targetY - offset;
-
-        return `M ${sourceX} ${sourceY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`;
-    };
-
 
     const dragNode = (e: MouseEvent<HTMLDivElement>) => {
 
@@ -120,7 +96,15 @@ export const NodeField = () => {
 
             const edge = edges.at(0)!;
 
-            setEdges(prev => [{ ...edge, endX: e.clientX - viewport.x, endY: e.clientY - viewport.y }])
+            const bound = e.currentTarget.getBoundingClientRect();
+
+            const relativeX = e.clientX - bound.left;
+            const relativeY = e.clientY - bound.top;
+
+            const x = (relativeX - viewport.x) / viewport.zoom;
+            const y = (relativeY - viewport.y) / viewport.zoom;
+
+            setEdges(prev => [{ ...edge, endX: x, endY: y }])
         }
     }
 
@@ -175,15 +159,19 @@ export const NodeField = () => {
             <div className="relative"
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
+                {edges.map(e => {
+                    return (
+                        <div className="rounded-full bg-red-600 w-3 h-3 absolute -m-[6px]"
+                            style={{ transform: `translate(${e.endX}px, ${e.endY}px)` }}></div>
+                    )
+                })}
+
                 <svg className="absolute inset-0 overflow-visible">
                     {edges.map(edge => {
                         return (
-                            <path
-                                d={getBezierPath(edge.startX, edge.startY, edge.endX, edge.endY)}
-                                stroke={"#3b82f6"}
-                                strokeWidth={3}
-                                fill="none"
-                                className="transition-all duration-200" />
+                            <NodeEdge startX={edge.startX} startY={edge.startY}
+                                endX={edge.endX} endY={edge.endY}
+                                startColor="orange" endColor="yellow"/>
                         )
                     })}
                 </svg>
