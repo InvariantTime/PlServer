@@ -35,6 +35,10 @@ const StatusBar = ({ state }: StatusBarProps) => {
             setPhase('jump');
             setTimeout(() => setPhase('done'), 2000);
         }
+        else
+        {
+            setPhase('idle');
+        }
 
     }, [state])
 
