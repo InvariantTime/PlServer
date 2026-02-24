@@ -28,7 +28,7 @@ export const SessionProvider = ({ children, url }: SessionProviderProps) => {
           url,
           HttpTransportType.WebSockets | HttpTransportType.ServerSentEvents,
         )
-        .withAutomaticReconnect()
+        .withAutomaticReconnect([0, 3000, 5000, 10000])
         .configureLogging(LogLevel.Information)
         .build();
 

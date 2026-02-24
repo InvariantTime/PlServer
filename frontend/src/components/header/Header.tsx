@@ -57,7 +57,7 @@ const StatusBar = ({ state }: StatusBarProps) => {
     return (
 
         <div className={`flex items-center justify-center ${phase !== 'done' && 'gap-2'} border-2
-             border-emerald-900 border-dashed rounded-full p-2`}>
+             border-emerald-900 border-dashed rounded-full p-1`}>
 
             <div className="flex items-center">
                 {getIcon()}
@@ -66,7 +66,7 @@ const StatusBar = ({ state }: StatusBarProps) => {
             <div className={`overflow-hidden transition-all duration-500 ease-out
                 ${phase === 'done' ? 'max-w-0' : 'max-w-[200px]'}`}>
 
-                <div className={`text-md font-bold items-center flex 
+                <div className={`text-md font-bold items-center flex mr-2
                     ${phase === 'jump' && 'jump-animation'}`}>
                     {state}
                 </div>
