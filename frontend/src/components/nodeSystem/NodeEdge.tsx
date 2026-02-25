@@ -1,3 +1,4 @@
+import { NodeConnection } from "../../api/nodes/NodeConnection";
 import "./Node.css"
 
 

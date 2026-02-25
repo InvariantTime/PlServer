@@ -2,12 +2,12 @@ import { ObjectType } from "./ObjectType"
 
 export type NodeInfo = {
     name: string,
-    inputs: NodeConnection[],
-    outputs: NodeConnection[],
+    inputs: NodePin[],
+    outputs: NodePin[],
     parameters: NodeParameter[]
 }
 
-export type NodeConnection = {
+export type NodePin = {
     name: string,
     type: ObjectType
 }

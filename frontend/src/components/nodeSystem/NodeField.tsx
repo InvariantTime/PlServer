@@ -1,12 +1,11 @@
-import { MouseEvent, useRef, useState, WheelEvent } from "react"
+import { MouseEvent, useCallback, useRef, useState, WheelEvent } from "react"
 import { Node } from "./Node";
-import { NodeConnection, NodeInfo } from "../../api/nodes/NodeInfo";
+import { NodePin, NodeInfo } from "../../api/nodes/NodeInfo";
 import { CreateObjectType, ObjectTypeClass } from "../../api/nodes/ObjectType";
 import "./Node.css";
-import { stringify } from "querystring";
-import { NodeEdge } from "./NodeEdge";
 import { NodeDefinition } from "../../api/nodes/NodeDefinition";
 import { NodeEdgePresenter } from "./NodeEdgePresenter";
+import { NodeConnection } from "../../api/nodes/NodeConnection";
 
 const nodeInfo: NodeInfo = {
     name: "Student builder",
@@ -78,21 +77,8 @@ export const NodeField = () => {
 
     const onMouseDown = (e: MouseEvent<HTMLDivElement>) => {
 
-        if (e.button === 0) {
+        if (e.button === 0)
             setIsPanning(true);
-
-            const edge = edges.at(0)!;
-
-            const bound = e.currentTarget.getBoundingClientRect();
-
-            const relativeX = e.clientX - bound.left;
-            const relativeY = e.clientY - bound.top;
-
-            const x = (relativeX - viewport.x) / viewport.zoom;
-            const y = (relativeY - viewport.y) / viewport.zoom;
-
-            setEdges(prev => [{ ...edge, endX: x, endY: y }])
-        }
     }
 
     const onContextOpen = (e: MouseEvent<HTMLDivElement>) => {
@@ -107,6 +93,11 @@ export const NodeField = () => {
         const y = (relativeY - viewport.y) / viewport.zoom;
 
         setNodes(prev => [...prev, { x: x, y: y, info: nodeInfo, id: Date.now() }]);
+
+        if (nodes.length > 1)
+        {
+            setEdges(prev => [...prev, {sourceId: nodes.at(nodes.length - 2)!.id, targetId: nodes.at(nodes.length - 1)!.id }]);
+        }
     }
 
     const onUnfocus = () => {
@@ -146,7 +137,7 @@ export const NodeField = () => {
             <div className="relative"
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
-                <NodeEdgePresenter nodes={nodes} connections={edges}/>
+                <NodeEdgePresenter getNodePosition={(id) => nodes.find(x => x.id === id)} connections={edges}/>
 
                 {nodes.map(node => {
                     return (
@@ -158,10 +149,6 @@ export const NodeField = () => {
                     )
                 })}
             </div>
-
-            <svg>
-                <path />
-            </svg>
         </div>
     )
 }

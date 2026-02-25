@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "lucide-react"
-import { NodeConnection, NodeInfo } from "../../api/nodes/NodeInfo"
+import { NodePin, NodeInfo } from "../../api/nodes/NodeInfo"
 import { ObjectTypeClass } from "../../api/nodes/ObjectType"
 import { MouseEvent, useCallback, useState } from "react"
 
