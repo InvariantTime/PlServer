@@ -93,11 +93,6 @@ export const NodeField = () => {
         const y = (relativeY - viewport.y) / viewport.zoom;
 
         setNodes(prev => [...prev, { x: x, y: y, info: nodeInfo, id: Date.now() }]);
-
-        if (nodes.length > 1)
-        {
-            setEdges(prev => [...prev, {sourceId: nodes.at(nodes.length - 2)!.id, targetId: nodes.at(nodes.length - 1)!.id }]);
-        }
     }
 
     const onUnfocus = () => {
