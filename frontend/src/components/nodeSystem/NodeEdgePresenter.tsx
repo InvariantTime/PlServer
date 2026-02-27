@@ -1,28 +1,31 @@
-import { NodeConnection } from "../../api/nodes/NodeConnection";
+import { CalculatePinPosition, NodeConnection, NodeEdgeDefinition } from "../../api/nodes/NodeConnection";
 import { NodeDefinition } from "../../api/nodes/NodeDefinition";
 import { NodeEdge } from "./NodeEdge";
 
 
 interface Props {
-    connections: NodeConnection[];
-    getNodePosition: (id: number) => ({x: number, y: number} | undefined)
+    edges: NodeEdgeDefinition[];
+    getNode: ((id: number) => NodeDefinition | undefined)
 }
 
 
-export const NodeEdgePresenter = ({connections, getNodePosition}: Props) => {
+export const NodeEdgePresenter = ({edges, getNode}: Props) => {
 
     return (
         <svg className="absolute inset-0 overflow-visible">
-            {connections.map((connection) => {
-                const source = getNodePosition(connection.sourceId);
-                const target = getNodePosition(connection.targetId);
+            {edges.map((edge) => {
+                const source = getNode(edge.source.nodeId);
+                const target = getNode(edge.target.nodeId);
 
                 if (source === undefined || target === undefined)
                     return null;
 
+                const start = CalculatePinPosition(source, edge.source.pin, edge.source.type);
+                const end = CalculatePinPosition(target, edge.target.pin, edge.target.type);
+
                 return (
-                    <NodeEdge startX={source.x} startY={source.y} endX={target.x} endY={target.y} 
-                        key={`${connection.sourceId}-${connection.targetId}`}/>
+                    <NodeEdge startX={start.x} startY={start.y} endX={end.x} endY={end.y} 
+                        key={`${source.x}-${source.y}-${target.x}-${target.y}`}/>
                 )
             })}
         </svg>

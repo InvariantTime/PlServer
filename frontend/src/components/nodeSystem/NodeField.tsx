@@ -5,7 +5,7 @@ import { CreateObjectType, ObjectTypeClass } from "../../api/nodes/ObjectType";
 import "./Node.css";
 import { NodeDefinition } from "../../api/nodes/NodeDefinition";
 import { NodeEdgePresenter } from "./NodeEdgePresenter";
-import { NodeConnection } from "../../api/nodes/NodeConnection";
+import { NodeConnection, NodeConnectionTypes, NodeEdgeDefinition } from "../../api/nodes/NodeConnection";
 
 const nodeInfo: NodeInfo = {
     name: "Student builder",
@@ -23,7 +23,7 @@ export const NodeField = () => {
     const [viewport, setViewport] = useState({ x: 0, y: 0, zoom: 1 });
     const [isPanning, setIsPanning] = useState(false);
     const [nodes, setNodes] = useState<NodeDefinition[]>([]);
-    const [edges, setEdges] = useState<NodeConnection[]>([]);
+    const [edges, setEdges] = useState<NodeEdgeDefinition[]>([]);
     const dragRef = useRef<{ startX: number, startY: number, prevX: number, prevY: number, id: number } | null>(null);
 
     const dragNode = (e: MouseEvent<HTMLDivElement>) => {
@@ -93,6 +93,16 @@ export const NodeField = () => {
         const y = (relativeY - viewport.y) / viewport.zoom;
 
         setNodes(prev => [...prev, { x: x, y: y, info: nodeInfo, id: Date.now() }]);
+
+        if (nodes.length > 1) {
+            const first = nodes.at(0);
+            const second = nodes.at(1);
+
+            setEdges(prev => [...prev, 
+                {
+                    source: {nodeId: first!.id, pin: 1, type: NodeConnectionTypes.Output}, 
+                    target: {nodeId: second!.id, pin: 2, type: NodeConnectionTypes.Input}}]);
+        }
     }
 
     const onUnfocus = () => {
@@ -132,7 +142,7 @@ export const NodeField = () => {
             <div className="relative"
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
-                <NodeEdgePresenter getNodePosition={(id) => nodes.find(x => x.id === id)} connections={edges}/>
+                <NodeEdgePresenter getNode={(id) => nodes.find(x => x.id === id)} edges={edges}/>
 
                 {nodes.map(node => {
                     return (
