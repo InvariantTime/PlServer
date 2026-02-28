@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useRef, useState, WheelEvent } from "react"
+import { MouseEvent, useCallback, useEffect, useRef, useState, WheelEvent } from "react"
 import { Node } from "./Node";
 import { NodePin, NodeInfo } from "../../api/nodes/NodeInfo";
 import { CreateObjectType, ObjectTypeClass } from "../../api/nodes/ObjectType";
@@ -25,6 +25,8 @@ export const NodeField = () => {
     const [nodes, setNodes] = useState<NodeDefinition[]>([]);
     const [edges, setEdges] = useState<NodeEdgeDefinition[]>([]);
     const dragRef = useRef<{ startX: number, startY: number, prevX: number, prevY: number, id: number } | null>(null);
+
+    const getNode = useCallback((id: number) => nodes.find(x => x.id === id), [nodes]);
 
     const dragNode = (e: MouseEvent<HTMLDivElement>) => {
 
@@ -142,7 +144,7 @@ export const NodeField = () => {
             <div className="relative"
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
-                <NodeEdgePresenter getNode={(id) => nodes.find(x => x.id === id)} edges={edges}/>
+                <NodeEdgePresenter getNode={getNode} edges={edges}/>
 
                 {nodes.map(node => {
                     return (

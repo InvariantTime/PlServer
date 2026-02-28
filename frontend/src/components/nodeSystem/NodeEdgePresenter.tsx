@@ -25,7 +25,7 @@ export const NodeEdgePresenter = ({edges, getNode}: Props) => {
 
                 return (
                     <NodeEdge startX={start.x} startY={start.y} endX={end.x} endY={end.y} 
-                        key={`${source.x}-${source.y}-${target.x}-${target.y}`}/>
+                        />
                 )
             })}
         </svg>
