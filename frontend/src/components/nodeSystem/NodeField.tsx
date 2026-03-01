@@ -6,6 +6,7 @@ import "./Node.css";
 import { NodeDefinition } from "../../api/nodes/NodeDefinition";
 import { NodeEdgePresenter } from "./NodeEdgePresenter";
 import { NodeConnection, NodeConnectionTypes, NodeEdgeDefinition } from "../../api/nodes/NodeConnection";
+import { useNodeSystem } from "../../api/nodes/NodeSystem";
 
 const nodeInfo: NodeInfo = {
     name: "Student builder",
@@ -20,12 +21,22 @@ const nodeInfo: NodeInfo = {
 
 export const NodeField = () => {
 
-    const [viewport, setViewport] = useState({ x: 0, y: 0, zoom: 1 });
-    const [isPanning, setIsPanning] = useState(false);
-    const [nodes, setNodes] = useState<NodeDefinition[]>([]);
-    const [edges, setEdges] = useState<NodeEdgeDefinition[]>([]);
-    const dragRef = useRef<{ startX: number, startY: number, prevX: number, prevY: number, id: number } | null>(null);
+    const {nodes, 
+        edges, 
+        viewport, 
+        addNode, 
+        removeNode, 
+        registerPinRef, 
+        createEdge, 
+        removeEdge, 
+        getPinPosition,
+        setCanvasRef,
+        moveViewport,
+        zoomViewport} = useNodeSystem();
 
+
+    const [isPanning, setIsPanning] = useState(false);
+    const dragRef = useRef<{ startX: number, startY: number, prevX: number, prevY: number, id: number } | null>(null);
     const getNode = useCallback((id: number) => nodes.find(x => x.id === id), [nodes]);
 
     const dragNode = (e: MouseEvent<HTMLDivElement>) => {
@@ -38,14 +49,14 @@ export const NodeField = () => {
         const dx = (e.clientX - startX) / viewport.zoom;
         const dy = (e.clientY - startY) / viewport.zoom;
 
-        setNodes(prev => {
+        /*setNodes(prev => {
             const dragged = prev.find(n => n.id == id);
 
             if (!dragged)
                 return prev;
 
             return [...prev.filter(n => n.id != id), { ...dragged, x: dx + prevX, y: dy + prevY }];
-        });
+        });*/
     }
 
 
@@ -57,24 +68,15 @@ export const NodeField = () => {
         }
 
         if (isPanning === true) {
-            const x = viewport.x + e.movementX;
-            const y = viewport.y + e.movementY;
-            const zoom = viewport.zoom;
-
-            setViewport({ x: x, y: y, zoom: zoom });
+            moveViewport(e.movementX, e.movementY);
         }
     }
 
     const onMouseWheel = (e: WheelEvent<HTMLDivElement>) => {
         const direction = e.deltaY > 0 ? 0.95 : 1.05;
 
-        const newViewport = Math.min(viewport.zoom * direction, 2);
-
-        const x = viewport.x;
-        const y = viewport.y;
-        const zoom = newViewport;
-
-        setViewport({ x: x, y: y, zoom: zoom });
+        const newZoom = Math.min(viewport.zoom * direction, 2);
+        zoomViewport(newZoom);
     }
 
     const onMouseDown = (e: MouseEvent<HTMLDivElement>) => {
@@ -94,17 +96,7 @@ export const NodeField = () => {
         const x = (relativeX - viewport.x) / viewport.zoom;
         const y = (relativeY - viewport.y) / viewport.zoom;
 
-        setNodes(prev => [...prev, { x: x, y: y, info: nodeInfo, id: Date.now() }]);
-
-        if (nodes.length > 1) {
-            const first = nodes.at(0);
-            const second = nodes.at(1);
-
-            setEdges(prev => [...prev, 
-                {
-                    source: {nodeId: first!.id, pin: 1, type: NodeConnectionTypes.Output}, 
-                    target: {nodeId: second!.id, pin: 2, type: NodeConnectionTypes.Input}}]);
-        }
+        addNode({ x: x, y: y, info: nodeInfo, id: Date.now() });
     }
 
     const onUnfocus = () => {
