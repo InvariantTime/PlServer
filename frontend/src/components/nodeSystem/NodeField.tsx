@@ -39,50 +39,25 @@ export const NodeField = () => {
     const dragRef = useRef<{ startX: number, startY: number, prevX: number, prevY: number, id: number } | null>(null);
     const getNode = useCallback((id: number) => nodes.find(x => x.id === id), [nodes]);
 
-    const dragNode = (e: MouseEvent<HTMLDivElement>) => {
-
-        if (dragRef.current == null)
-            return;
-
-        const { id, startX, startY, prevX, prevY } = dragRef.current;
-
-        const dx = (e.clientX - startX) / viewport.zoom;
-        const dy = (e.clientY - startY) / viewport.zoom;
-
-        /*setNodes(prev => {
-            const dragged = prev.find(n => n.id == id);
-
-            if (!dragged)
-                return prev;
-
-            return [...prev.filter(n => n.id != id), { ...dragged, x: dx + prevX, y: dy + prevY }];
-        });*/
-    }
-
-
     const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
 
-        if (dragRef.current != null) {
-            dragNode(e);
-            return;
-        }
-
-        if (isPanning === true) {
-            moveViewport(e.movementX, e.movementY);
-        }
+       
     }
 
+    const onMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+
+    }
+
+    const onUnfocus = () => {
+        setIsPanning(false);
+        dragRef.current = null;
+    }
+    
     const onMouseWheel = (e: WheelEvent<HTMLDivElement>) => {
         const direction = e.deltaY > 0 ? 0.95 : 1.05;
 
         const newZoom = Math.min(viewport.zoom * direction, 2);
         zoomViewport(newZoom);
-    }
-
-    const onMouseDown = (e: MouseEvent<HTMLDivElement>) => {
-
-        if (e.button === 0)
-            setIsPanning(true);
     }
 
     const onContextOpen = (e: MouseEvent<HTMLDivElement>) => {
@@ -99,10 +74,6 @@ export const NodeField = () => {
         addNode({ x: x, y: y, info: nodeInfo, id: Date.now() });
     }
 
-    const onUnfocus = () => {
-        setIsPanning(false);
-        dragRef.current = null;
-    }
 
     const headerMouseDownCallback = (e: MouseEvent<HTMLElement>, id: number, x: number, y: number) => {
         e.stopPropagation();

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react"
+import { MouseEvent, useCallback, useRef, useState } from "react"
 import { NodeDefinition } from "./NodeDefinition";
 import { NodeEdgeDefinition } from "./NodeConnection";
 import { NodeViewport } from "../../components/nodeSystem/NodeViewport";
@@ -59,18 +59,21 @@ export const useNodeSystem = () => {
             return null;
 
         const rect = element.getBoundingClientRect();
+        const canvasRect = canvasRef.current?.getBoundingClientRect();
+
+
         return {x: rect.left, y: rect.top};
     }, []);
 
-    const startDrag = useCallback(() => {
-
+    const startDrag = useCallback((e: MouseEvent<HTMLDivElement>) => {
+        
     }, [])
 
     const stopDrag = useCallback(() => {
 
     }, [])
 
-    const onDrag = useCallback(() => {
+    const onDrag = useCallback((e: MouseEvent<HTMLDivElement>) => {
 
     }, [])
 
