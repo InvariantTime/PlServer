@@ -1,9 +1,14 @@
-import { NodeInfo } from "./NodeInfo"
 
 
 export type NodeDefinition = {
-    info: NodeInfo,
-    id: number
-    x: number,
-    y: number
+  
+    id: string,
+    inputs: NodePin[],
+    outputs: NodePin[]
+}
+
+export type NodePin = {
+    id: string,
+    name: string,
+    type: "input" | "output"
 }

@@ -1,13 +1,13 @@
 import { MouseEvent, useCallback, useRef, useState } from "react"
 import { NodeDefinition } from "./NodeDefinition";
-import { NodeEdgeDefinition } from "./NodeConnection";
 import { NodeViewport } from "../../components/nodeSystem/NodeViewport";
+import { NodeConnection } from "./NodeConnection";
 
 
 export const useNodeSystem = () => {
 
     const [nodes, setNodes] = useState<NodeDefinition[]>([]);
-    const [edges, setEdges] = useState<NodeEdgeDefinition[]>([]);
+    const [connections, setConnections] = useState<NodeConnection[]>([]);
     const [viewport, setViewport] = useState<NodeViewport>({x: 0, y: 0, zoom: 1});
 
 
@@ -65,22 +65,9 @@ export const useNodeSystem = () => {
         return {x: rect.left, y: rect.top};
     }, []);
 
-    const startDrag = useCallback((e: MouseEvent<HTMLDivElement>) => {
-        
-    }, [])
-
-    const stopDrag = useCallback(() => {
-
-    }, [])
-
-    const onDrag = useCallback((e: MouseEvent<HTMLDivElement>) => {
-
-    }, [])
-
-
     return {
         nodes,
-        edges,
+        connections,
         viewport,
         addNode,
         removeNode,
