@@ -3,11 +3,11 @@
 export type NodeDefinition = {
   
     id: string,
-    inputs: NodePin[],
-    outputs: NodePin[]
+    inputs: NodePinDefinition[],
+    outputs: NodePinDefinition[]
 }
 
-export type NodePin = {
+export type NodePinDefinition = {
     id: string,
     name: string,
     type: "input" | "output"

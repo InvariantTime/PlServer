@@ -31,7 +31,7 @@ export const Node = ({ instance, definition, headerMouseDownCallback }: Props) =
                     <div className="flex gap-2 flex-col">
                         {definition.outputs.map(output => {
                             return (
-                                <NodePin/>
+                                <NodePin pin={output} registry={() => {}}/>
                             )
                         })}
                     </div>
@@ -40,7 +40,7 @@ export const Node = ({ instance, definition, headerMouseDownCallback }: Props) =
                 <div className="justify-start flex gap-2 flex-col">
                     {definition.inputs.map(input => {
                         return (
-                            <NodePin/>
+                            <NodePin pin={input} registry={() => {}}/>
                         )
                     })}
                 </div>

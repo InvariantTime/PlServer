@@ -4,6 +4,24 @@ import "./Node.css";
 import { NodeDefinition } from "../../api/nodes/NodeDefinition";
 import { useNodeSystem } from "../../api/nodes/NodeSystem";
 import { NodeFieldBackground } from "./NodeFieldBackground";
+import { NodeInstance } from "../../api/nodes/NodeInstance";
+import { transform } from "typescript";
+
+const definition : NodeDefinition = {
+    id: "AFfdsfdsfdsf",
+    inputs: [{id: "dsadas", name: "pin 1", type: "input"}, {id: "dsdas", name: "pin 2", type: "input"}],
+    outputs: [{id: "vvv", name: "output", type: "output"}]
+}
+
+const instance : NodeInstance = {
+    collapsed: false,
+    definitionId: "AFfdsfdsfdsf",
+    id: "vncvmdfdsfdsfnm",
+    name: "My node",
+    position: {x: 200, y: 200},
+    values: []
+}
+
 
 export const NodeField = () => {
 
@@ -35,13 +53,9 @@ export const NodeField = () => {
             <div className="relative"
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
-
-                {nodes.map(node => {
-                    return (
-                        <div className="absolute">
-                        </div>
-                    )
-                })}
+                <div className="absolute" style={{transform: `translate(${instance.position.x}px, ${instance.position.y}px)`}}>
+                    <Node definition={definition} instance={instance} headerMouseDownCallback={() => {}} key={instance.id}/>
+                </div>
             </div>
         </div>
     )
