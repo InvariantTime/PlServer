@@ -22,8 +22,9 @@ export const useNodeSystem = () => {
 
     }, []);
 
-    const registerPinRef = useCallback(() => {
-
+    const registerPinRef = useCallback((nodeId: string, pinId: string, element: HTMLDivElement) => {
+        const id = `${nodeId}_${pinId}`
+        pinRefs.current[id] = element;
     }, []);
 
     const createEdge = useCallback(() => {
@@ -52,14 +53,14 @@ export const useNodeSystem = () => {
 
     const getPinPosition = useCallback((nodeId: string, pinId: string): {x: number, y: number} | null => {
 
-        const id = `${nodeId}-${pinId}`;
+        const id = `${nodeId}_${pinId}`;
         const element = pinRefs.current[id];
 
-        if (element === null)
+        if (element === undefined)
             return null;
 
-        const rect = element.getBoundingClientRect();
-        const canvasRect = canvasRef.current?.getBoundingClientRect();
+        const rect = element!.getBoundingClientRect();
+        //const canvasRect = canvasRef.current?.getBoundingClientRect();
 
 
         return {x: rect.left, y: rect.top};

@@ -7,7 +7,8 @@ import { NodePin } from "./NodePin"
 interface Props {
     instance: NodeInstance,
     definition: NodeDefinition,
-    headerMouseDownCallback: (e: MouseEvent<HTMLElement>, id: string) => void
+    headerMouseDownCallback: (e: MouseEvent<HTMLElement>, id: string) => void,
+    registerPinRef: (nodeId: string, pinId: string, element: HTMLDivElement) => void
 }
 
 
