@@ -3,17 +3,13 @@ import "./Node.css"
 
 
 interface Props {
-    startX: number,
-    startY: number,
-    endX: number,
-    endY: number,
-    startColor?: string,
-    endColor?: string
+    connection: NodeConnection,
+    getPinPosition: (nodeId: string, pinId: string) => ({x: number, y: number} | null)
 }
 
 const defaultColor = "#3b82f6";
 
-export const NodeEdge = ({ startX, startY, endX, endY, startColor, endColor }: Props) => {
+export const NodeEdge = ({ connection, getPinPosition }: Props) => {
 
     const getBezierPath = (
         sourceX: number,
@@ -38,7 +34,13 @@ export const NodeEdge = ({ startX, startY, endX, endY, startColor, endColor }: P
         return `M ${sourceX} ${sourceY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`;
     };
 
-    const path = getBezierPath(startX, startY, endX, endY)
+    const source = getPinPosition(connection.source.nodeId, connection.source.pinId) ?? {x: 0, y: 0};
+    const target = getPinPosition(connection.target.nodeId, connection.target.pinId) ?? {x: 0, y: 0};
+
+    const path = getBezierPath(source.x, source.y, target.x, target.y);
+
+    const startColor = null;
+    const endColor = null;//TODO: colors
 
     return (
 
@@ -47,10 +49,10 @@ export const NodeEdge = ({ startX, startY, endX, endY, startColor, endColor }: P
             <defs>
                 <linearGradient
                     id="curveGradient"
-                    x1={startX}
-                    y1={startY}
-                    x2={endX}
-                    y2={endY}
+                    x1={source.x}
+                    y1={source.y}
+                    x2={target.x}
+                    y2={target.y}
                     gradientUnits="userSpaceOnUse">
 
                     <stop offset="0%" stopColor={startColor} />

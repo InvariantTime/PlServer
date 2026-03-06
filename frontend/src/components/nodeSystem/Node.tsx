@@ -12,7 +12,7 @@ interface Props {
 }
 
 
-export const Node = ({ instance, definition, headerMouseDownCallback }: Props) => {
+export const Node = ({ instance, definition, headerMouseDownCallback, registerPinRef }: Props) => {
 
     return (
         <div className="w-48 flex flex-col shadow-xl border-[1px] rounded-md border-slate-400 select-none">
@@ -32,7 +32,7 @@ export const Node = ({ instance, definition, headerMouseDownCallback }: Props) =
                     <div className="flex gap-2 flex-col">
                         {definition.outputs.map(output => {
                             return (
-                                <NodePin pin={output} registry={() => {}}/>
+                                <NodePin pin={output} registry={(el) => registerPinRef(instance.id, output.id, el)}/>
                             )
                         })}
                     </div>
@@ -41,7 +41,7 @@ export const Node = ({ instance, definition, headerMouseDownCallback }: Props) =
                 <div className="justify-start flex gap-2 flex-col">
                     {definition.inputs.map(input => {
                         return (
-                            <NodePin pin={input} registry={() => {}}/>
+                            <NodePin pin={input} registry={(el) => registerPinRef(instance.id, input.id, el)}/>
                         )
                     })}
                 </div>

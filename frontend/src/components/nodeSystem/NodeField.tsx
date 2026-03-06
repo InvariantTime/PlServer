@@ -7,85 +7,65 @@ import { NodeFieldBackground } from "./NodeFieldBackground";
 import { NodeInstance } from "../../api/nodes/NodeInstance";
 import { transform } from "typescript";
 import { NodeEdge } from "./NodeEdge";
-
-const definition : NodeDefinition = {
-    id: "AFfdsfdsfdsf",
-    inputs: [{id: "dsadas", name: "pin 1", type: "input"}, {id: "dsdas", name: "pin 2", type: "input"}],
-    outputs: [{id: "vvv", name: "output", type: "output"}]
-}
-
-const instance : NodeInstance = {
-    collapsed: false,
-    definitionId: "AFfdsfdsfdsf",
-    id: "vncvmdfdsfdsfnm",
-    name: "My node",
-    position: {x: 200, y: 200},
-    values: []
-}
-
-const instance2 : NodeInstance = {
-    collapsed: false,
-    definitionId: "AFfdsfdsfdsf",
-    id: "cccmmmvdvd",
-    name: "My node",
-    position: {x: 400, y: 400},
-    values: []
-}
-
+import { NodeConnection } from "../../api/nodes/NodeConnection";
 
 export const NodeField = () => {
 
-    const {nodes, 
-        connections, 
-        viewport, 
-        addNode, 
-        removeNode, 
-        registerPinRef, 
-        createEdge, 
-        removeEdge, 
+    const {
+        nodeDefinitions,
+        nodes,
+        connections,
+        viewport,
+        addNode,
+        removeNode,
+        registerPinRef,
+        createEdge,
+        removeEdge,
         getPinPosition,
         setCanvasRef,
         moveViewport,
-        zoomViewport} = useNodeSystem();
+        zoomViewport } = useNodeSystem();
 
 
-    
+
     const onNodeMouseDown = useCallback((e: React.MouseEvent, id: string) => {
 
     }, []);
 
-    const sourcePin = getPinPosition(instance.id, definition.outputs[0].id);
-    const targetPin = getPinPosition(instance2.id, definition.inputs[1].id);
-
     return (
         <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0]" ref={setCanvasRef}>
-            <NodeFieldBackground viewport={viewport}/>
+            <NodeFieldBackground viewport={viewport} />
 
-            <div className="relative"
+            <div className="relative w-full h-full"
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
-                <div>
-                    <NodeEdge startX={sourcePin?.x ?? 0} startY={sourcePin?.y ?? 0} endX={targetPin?.x ?? 0} endY={targetPin?.y ?? 0}/>
-                </div>
+                <svg className="absolute w-full h-full">
+                    {connections.map((connection) => {
 
+                        return (
+                            <NodeEdge connection={connection} getPinPosition={getPinPosition} />
+                        )
+                    })}
+                </svg>
 
-                <div className="absolute" style={{transform: `translate(${instance.position.x}px, ${instance.position.y}px)`}}>
-                    <Node 
-                        key={instance.id}
-                        definition={definition} 
-                        instance={instance} 
-                        headerMouseDownCallback={() => {}} 
-                        registerPinRef={registerPinRef}/>
-                </div>
+                {nodes.map((node) => {
 
-                <div className="absolute" style={{transform: `translate(${instance2.position.x}px, ${instance2.position.y}px)`}}>
-                    <Node 
-                        key={instance.id}
-                        definition={definition} 
-                        instance={instance} 
-                        headerMouseDownCallback={() => {}} 
-                        registerPinRef={registerPinRef}/>
-                </div>
+                    const definition = nodeDefinitions.find(d => d.id === node.definitionId);
+
+                    if (definition === undefined)
+                        return null;
+
+                    return (
+                        <div className="absolute" style={{ transform: `translate(${node.position.x}px, ${node.position.y}px)` }}>
+                            <Node
+                                key={node.id}
+                                definition={definition}
+                                instance={node}
+                                headerMouseDownCallback={() => { }}
+                                registerPinRef={registerPinRef} />
+                        </div>
+                    )
+                })}
             </div>
         </div>
     )
