@@ -11,6 +11,8 @@ import { NodeConnection } from "../../api/nodes/NodeConnection";
 
 export const NodeField = () => {
 
+    const canvasRef = useRef<HTMLDivElement | null>(null);
+
     const {
         nodeDefinitions,
         nodes,
@@ -18,22 +20,34 @@ export const NodeField = () => {
         viewport,
         addNode,
         removeNode,
+        moveNode,
         registerPinRef,
         createEdge,
         removeEdge,
         getPinPosition,
-        setCanvasRef,
+        registerCanvas,
         moveViewport,
         zoomViewport } = useNodeSystem();
 
+
+    const setCanvasRef = useCallback((el: HTMLDivElement | null) => {
+        canvasRef.current = el;
+        registerCanvas(el);
+    }, [registerCanvas]);
 
 
     const onNodeMouseDown = useCallback((e: React.MouseEvent, id: string) => {
 
     }, []);
 
+    const onMouseMove = useCallback((e: React.MouseEvent) => {
+        moveNode(nodes.at(0)!.id, e.clientX, e.clientY);
+    }, []);
+
     return (
-        <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0]" ref={setCanvasRef}>
+        <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0]" ref={setCanvasRef}
+            onMouseMove={onMouseMove}>
+
             <NodeFieldBackground viewport={viewport} />
 
             <div className="relative w-full h-full"

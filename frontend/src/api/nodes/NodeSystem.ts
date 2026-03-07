@@ -54,6 +54,23 @@ export const useNodeSystem = () => {
 
     }, []);
 
+    const moveNode = useCallback((nodeId: string, x: number, y: number) => {
+        const node = nodes.find(x => x.id === nodeId);
+        
+        
+        if (node === undefined)
+            return;
+        
+        node.position = {x: x, y: y};
+        
+        setNodes(prev => {
+
+            const nodes = prev.filter(x => x.id !== node.id);
+
+            return [...nodes, node];
+        });
+    }, []);
+
     const registerPinRef = useCallback((nodeId: string, pinId: string, element: HTMLDivElement) => {
         const id = `${nodeId}_${pinId}`
         setPinRefs(prev => {
@@ -71,7 +88,7 @@ export const useNodeSystem = () => {
 
     }, []);
 
-    const setCanvasRef = useCallback((canvas: HTMLDivElement) => {
+    const setCanvasRef = useCallback((canvas: HTMLDivElement | null) => {
         canvasRef.current = canvas;
     }, []);
 
@@ -96,9 +113,9 @@ export const useNodeSystem = () => {
             return null;
 
         const rect = element!.getBoundingClientRect();
-        //const canvasRect = canvasRef.current?.getBoundingClientRect();
+        const canvasRect = canvasRef.current?.getBoundingClientRect() ?? {left: 0, top: 0};
 
-        return { x: rect.left, y: rect.top };
+        return { x: rect.left - canvasRect.left, y: rect.top - canvasRect.top};
     }, []);
 
     return {
@@ -108,11 +125,12 @@ export const useNodeSystem = () => {
         viewport,
         addNode,
         removeNode,
+        moveNode,
         registerPinRef,
         createEdge,
         removeEdge,
         getPinPosition,
-        setCanvasRef,
+        registerCanvas: setCanvasRef,
         moveViewport,
         zoomViewport
     };
