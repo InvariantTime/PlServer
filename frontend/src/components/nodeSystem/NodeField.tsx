@@ -1,17 +1,16 @@
 import { MouseEvent, useCallback, useEffect, useRef, useState, WheelEvent } from "react"
 import { Node } from "./Node";
 import "./Node.css";
-import { NodeDefinition } from "../../api/nodes/NodeDefinition";
 import { useNodeSystem } from "../../api/nodes/NodeSystem";
 import { NodeFieldBackground } from "./NodeFieldBackground";
-import { NodeInstance } from "../../api/nodes/NodeInstance";
-import { transform } from "typescript";
 import { NodeEdge } from "./NodeEdge";
-import { NodeConnection } from "../../api/nodes/NodeConnection";
+import { NodeConnectionState, NodeConnectionStateDefault } from "../../api/nodes/NodeConnectionState";
+import { TemporaryNodeEdge } from "./TemporaryNodeEdge";
 
 export const NodeField = () => {
 
     const canvasRef = useRef<HTMLDivElement | null>(null);
+    const [connectionState, setConnectionState] = useState<NodeConnectionState>(NodeConnectionStateDefault);
 
     const {
         nodeDefinitions,
@@ -45,12 +44,13 @@ export const NodeField = () => {
     }, []);
 
     return (
-        <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0]" ref={setCanvasRef}
+        <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0]"
             onMouseMove={onMouseMove}>
 
             <NodeFieldBackground viewport={viewport} />
 
             <div className="relative w-full h-full"
+                ref={setCanvasRef}
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
                 <svg className="absolute w-full h-full">
@@ -60,6 +60,9 @@ export const NodeField = () => {
                             <NodeEdge connection={connection} getPinPosition={getPinPosition} />
                         )
                     })}
+
+                    {connectionState.isConnecting === true &&
+                        <TemporaryNodeEdge source={connectionState.sourcePosition} target={connectionState.targetPosition}/>}
                 </svg>
 
                 {nodes.map((node) => {

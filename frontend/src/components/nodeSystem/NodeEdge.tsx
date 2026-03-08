@@ -43,7 +43,6 @@ export const NodeEdge = ({ connection, getPinPosition }: Props) => {
     const endColor = null;//TODO: colors
 
     return (
-
         <g>
             {(startColor != null && endColor != null) &&
             <defs>

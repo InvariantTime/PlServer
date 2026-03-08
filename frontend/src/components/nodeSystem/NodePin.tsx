@@ -14,7 +14,7 @@ export const NodePin = ({pin, registry}: Props) => {
 
             {pin.type === "output" && <h2 className="text-center font-bold">{pin.name}</h2>}
 
-            <div className="w-3 h-3 rounded-full -m-[6px] bg-red-400"
+            <div className="w-3 h-3 rounded-full -m-[6px] bg-red-400 origin-center"
                 ref={registry}/>
 
             {pin.type === "input" && <h2 className="text-center font-bold">{pin.name}</h2>}
