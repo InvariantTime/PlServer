@@ -40,7 +40,34 @@ export const NodeField = () => {
     }, []);
 
     const onMouseMove = useCallback((e: React.MouseEvent) => {
-        moveNode(nodes.at(0)!.id, e.clientX, e.clientY);
+        
+        if (connectionState.isConnecting === true) {
+
+            const cursor = {x: e.clientX, y: e.clientY};
+            console.debug("drag");
+
+            setConnectionState(prev => {
+                return {...prev, targetPosition: cursor};
+            });
+        }
+
+    }, []);
+
+    const onPinClick = useCallback((e: React.MouseEvent, nodeId: string, pinId: string) => {
+
+        if (connectionState.isConnecting === false) {
+
+            const pos = getPinPosition(nodeId, pinId);
+            const cursor = {x: e.clientX, y: e.clientY};
+
+            if (pos === null)
+                return;
+
+            setConnectionState({source: {nodeId: nodeId, pinId: pinId}, sourcePosition: pos, targetPosition: cursor, isConnecting: true});
+        }
+        else {
+            
+        }
     }, []);
 
     return (
@@ -79,7 +106,8 @@ export const NodeField = () => {
                                 definition={definition}
                                 instance={node}
                                 headerMouseDownCallback={() => { }}
-                                registerPinRef={registerPinRef} />
+                                registerPinRef={registerPinRef}
+                                pinClickCallback={onPinClick} />
                         </div>
                     )
                 })}

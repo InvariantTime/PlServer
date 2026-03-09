@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp } from "lucide-react"
-import { MouseEvent, useCallback, useState } from "react"
+import React, { MouseEvent, useCallback, useState } from "react"
 import { NodeInstance } from "../../api/nodes/NodeInstance"
 import { NodeDefinition } from "../../api/nodes/NodeDefinition"
 import { NodePin } from "./NodePin"
@@ -7,12 +7,13 @@ import { NodePin } from "./NodePin"
 interface Props {
     instance: NodeInstance,
     definition: NodeDefinition,
-    headerMouseDownCallback: (e: MouseEvent<HTMLElement>, id: string) => void,
+    headerMouseDownCallback: (e: React.MouseEvent, id: string) => void,
+    pinClickCallback: (e: React.MouseEvent, nodeId: string, pinId: string) => void,
     registerPinRef: (nodeId: string, pinId: string, element: HTMLDivElement) => void
 }
 
 
-export const Node = ({ instance, definition, headerMouseDownCallback, registerPinRef }: Props) => {
+export const Node = ({ instance, definition, headerMouseDownCallback, registerPinRef, pinClickCallback }: Props) => {
 
     return (
         <div className="w-48 flex flex-col shadow-xl border-[1px] rounded-md border-slate-400 select-none">
@@ -32,7 +33,9 @@ export const Node = ({ instance, definition, headerMouseDownCallback, registerPi
                     <div className="flex gap-2 flex-col">
                         {definition.outputs.map(output => {
                             return (
-                                <NodePin pin={output} registry={(el) => registerPinRef(instance.id, output.id, el)}/>
+                                <NodePin pin={output} 
+                                    registry={(el) => registerPinRef(instance.id, output.id, el)}
+                                    onClick={(el) => pinClickCallback(el, instance.id, output.id)}/>
                             )
                         })}
                     </div>
@@ -41,7 +44,9 @@ export const Node = ({ instance, definition, headerMouseDownCallback, registerPi
                 <div className="justify-start flex gap-2 flex-col">
                     {definition.inputs.map(input => {
                         return (
-                            <NodePin pin={input} registry={(el) => registerPinRef(instance.id, input.id, el)}/>
+                            <NodePin pin={input} 
+                                registry={(el) => registerPinRef(instance.id, input.id, el)}
+                                onClick={(el) => pinClickCallback(el, instance.id, input.id)}/>
                         )
                     })}
                 </div>
