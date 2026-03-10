@@ -40,21 +40,22 @@ export const NodeField = () => {
     }, []);
 
     const onMouseMove = useCallback((e: React.MouseEvent) => {
-        
+
         if (connectionState.isConnecting === true) {
 
+            console.debug("move connection");
             const cursor = {x: e.clientX, y: e.clientY};
-            console.debug("drag");
 
             setConnectionState(prev => {
                 return {...prev, targetPosition: cursor};
             });
         }
 
-    }, []);
+    }, [connectionState]);
 
     const onPinClick = useCallback((e: React.MouseEvent, nodeId: string, pinId: string) => {
 
+        console.debug("on pin click");
         if (connectionState.isConnecting === false) {
 
             const pos = getPinPosition(nodeId, pinId);
@@ -74,6 +75,8 @@ export const NodeField = () => {
         <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0]"
             onMouseMove={onMouseMove}>
 
+            <h1 className="absolute text-xl">{connectionState.targetPosition.x}</h1>
+             <h1 className="absolute text-xl my-20" key={connectionState.isConnecting.toString()}>{connectionState.isConnecting.toString()}</h1>
             <NodeFieldBackground viewport={viewport} />
 
             <div className="relative w-full h-full"
@@ -89,7 +92,11 @@ export const NodeField = () => {
                     })}
 
                     {connectionState.isConnecting === true &&
-                        <TemporaryNodeEdge source={connectionState.sourcePosition} target={connectionState.targetPosition}/>}
+                        <TemporaryNodeEdge
+                            sourceX={connectionState.sourcePosition.x} 
+                            sourceY={connectionState.sourcePosition.y} 
+                            targetX={connectionState.targetPosition.x}
+                            targetY={connectionState.targetPosition.y}/>}
                 </svg>
 
                 {nodes.map((node) => {
