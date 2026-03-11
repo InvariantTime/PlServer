@@ -11,20 +11,13 @@
 }
 
 .edge-hover {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
   stroke-width: 20;
   stroke: transparent;
   fill: none;
 }
 
 .edge-visible {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
   pointer-events: none;
-  stroke: red;
   stroke-width: 3;
   fill: none;
 }

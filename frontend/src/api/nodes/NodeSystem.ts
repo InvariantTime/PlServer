@@ -118,6 +118,13 @@ export const useNodeSystem = () => {
         return { x: rect.left - canvasRect.left, y: rect.top - canvasRect.top};
     }, []);
 
+    const getViewportPoint = useCallback((x: number, y: number): {x: number, y: number} => {
+
+        const canvasRect = canvasRef.current?.getBoundingClientRect() ?? {x: 0, y: 0};
+
+        return {x: x - canvasRect.x, y: y - canvasRect.y};//TODO: viewport
+    }, [canvasRef]);
+
     return {
         nodeDefinitions,
         nodes,
@@ -132,6 +139,7 @@ export const useNodeSystem = () => {
         getPinPosition,
         registerCanvas: setCanvasRef,
         moveViewport,
-        zoomViewport
+        zoomViewport,
+        getViewportPoint
     };
 }

@@ -1,5 +1,6 @@
 
 const defaultColor = "#FFD700";
+const circleColor = "#f0cb05";
 
 interface Props {
     sourceX: number,
@@ -24,12 +25,15 @@ export const TemporaryNodeEdge = ({sourceX, sourceY, targetX, targetY}: Props) =
         <g>
             <path
                 d={pathData}
-                className="edge-hover" />
-
-            <path
-                d={pathData}
                 stroke={defaultColor}
                 className="edge-visible" />
+
+            <circle
+                className="pointer-events-none"
+                cx={targetX}
+                cy={targetY}
+                r={5}
+                fill={circleColor}/>
         </g>
     );
 }

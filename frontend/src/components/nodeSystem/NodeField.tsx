@@ -26,7 +26,8 @@ export const NodeField = () => {
         getPinPosition,
         registerCanvas,
         moveViewport,
-        zoomViewport } = useNodeSystem();
+        zoomViewport,
+        getViewportPoint } = useNodeSystem();
 
 
     const setCanvasRef = useCallback((el: HTMLDivElement | null) => {
@@ -42,24 +43,21 @@ export const NodeField = () => {
     const onMouseMove = useCallback((e: React.MouseEvent) => {
 
         if (connectionState.isConnecting === true) {
-
-            console.debug("move connection");
-            const cursor = {x: e.clientX, y: e.clientY};
+            const cursor = getViewportPoint(e.clientX, e.clientY);
 
             setConnectionState(prev => {
                 return {...prev, targetPosition: cursor};
             });
         }
 
-    }, [connectionState]);
+    }, [connectionState.isConnecting, getViewportPoint]);
 
     const onPinClick = useCallback((e: React.MouseEvent, nodeId: string, pinId: string) => {
 
-        console.debug("on pin click");
         if (connectionState.isConnecting === false) {
 
             const pos = getPinPosition(nodeId, pinId);
-            const cursor = {x: e.clientX, y: e.clientY};
+            const cursor = getViewportPoint(e.clientX, e.clientY);
 
             if (pos === null)
                 return;
@@ -68,22 +66,30 @@ export const NodeField = () => {
         }
         else {
             
+            const source = connectionState.source;
+
+            if (source.nodeId === nodeId && source.pinId === pinId) {
+                setConnectionState(NodeConnectionStateDefault);
+                return;
+            }
+
+            //createEdge();
+            console.debug("connect!");
+            setConnectionState(NodeConnectionStateDefault);
         }
-    }, []);
+    }, [connectionState.isConnecting, getViewportPoint]);
 
     return (
         <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0]"
             onMouseMove={onMouseMove}>
 
-            <h1 className="absolute text-xl">{connectionState.targetPosition.x}</h1>
-             <h1 className="absolute text-xl my-20" key={connectionState.isConnecting.toString()}>{connectionState.isConnecting.toString()}</h1>
             <NodeFieldBackground viewport={viewport} />
 
             <div className="relative w-full h-full"
                 ref={setCanvasRef}
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
-                <svg className="absolute w-full h-full">
+                <svg className="absolute w-full h-full pointer-events-auto inset-0">
                     {connections.map((connection) => {
 
                         return (
@@ -96,7 +102,9 @@ export const NodeField = () => {
                             sourceX={connectionState.sourcePosition.x} 
                             sourceY={connectionState.sourcePosition.y} 
                             targetX={connectionState.targetPosition.x}
-                            targetY={connectionState.targetPosition.y}/>}
+                            targetY={connectionState.targetPosition.y}
+                        />
+                    }
                 </svg>
 
                 {nodes.map((node) => {
