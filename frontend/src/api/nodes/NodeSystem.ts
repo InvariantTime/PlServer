@@ -22,7 +22,7 @@ export const useNodeSystem = () => {
             definitionId: "AFfdsfdsfdsf",
             id: "cccmmmvdvd",
             name: "My node",
-            position: { x: 400, y: 400 },
+            position: { x: 100, y: 400 },
             values: []
         },
         {
@@ -30,7 +30,7 @@ export const useNodeSystem = () => {
             definitionId: "AFfdsfdsfdsf",
             id: "vncvmdfdsfdsfnm",
             name: "My node",
-            position: { x: 200, y: 200 },
+            position: { x: 600, y: 300 },
             values: []
         }
     ]);
@@ -80,17 +80,25 @@ export const useNodeSystem = () => {
 
     }, [pinRefs]);
 
-    const createEdge = useCallback(() => {
+    const createEdge = useCallback((source: {nodeId: string, pinId: string}, target: {nodeId: string, pinId: string}) => {
 
-    }, []);
+        const connection = {
+            source: source,
+            target: target,
+            id: crypto.randomUUID()
+        };
 
-    const removeEdge = useCallback(() => {
+        setConnections(prev => [...prev, connection]);
 
-    }, []);
+    }, [connections]);
+
+    const removeEdge = useCallback((id: string) => {
+        setConnections(prev => prev.filter(x => x.id != id));
+    }, [connections]);
 
     const setCanvasRef = useCallback((canvas: HTMLDivElement | null) => {
         canvasRef.current = canvas;
-    }, []);
+    }, [canvasRef]);
 
     const moveViewport = useCallback((xOffset: number, yOffset: number) => {
         setViewport(prev => {

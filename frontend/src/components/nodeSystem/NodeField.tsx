@@ -74,7 +74,6 @@ export const NodeField = () => {
             setConnectionState({source: {nodeId: nodeId, pinId: pinId}, sourcePosition: pos, targetPosition: cursor, isConnecting: true});
         }
         else {
-            
             const source = connectionState.source;
 
             if (source.nodeId === nodeId && source.pinId === pinId) {
@@ -82,11 +81,14 @@ export const NodeField = () => {
                 return;
             }
 
-            //createEdge();
-            console.debug("connect!");
+            createEdge(source, {nodeId: nodeId, pinId: pinId});
             setConnectionState(NodeConnectionStateDefault);
         }
     }, [connectionState.isConnecting, getViewportPoint]);
+
+    const onEdgeClick = useCallback((e: React.MouseEvent, id: string) => {
+        removeEdge(id);
+    }, [removeEdge]);
 
     return (
         <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0] select-none"
@@ -103,7 +105,10 @@ export const NodeField = () => {
                     {connections.map((connection) => {
 
                         return (
-                            <NodeEdge connection={connection} getPinPosition={getPinPosition} />
+                            <NodeEdge 
+                                connection={connection}
+                                onEdgeClick={onEdgeClick}
+                                getPinPosition={getPinPosition} />
                         )
                     })}
 
