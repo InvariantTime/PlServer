@@ -37,8 +37,17 @@ export const NodeField = () => {
 
 
     const onNodeMouseDown = useCallback((e: React.MouseEvent, id: string) => {
-
+        e.stopPropagation();
     }, []);
+
+    const onMouseClick = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        if (connectionState.isConnecting === true) {
+            setConnectionState(NodeConnectionStateDefault);
+        }
+
+    }, [connectionState.isConnecting]);
 
     const onMouseMove = useCallback((e: React.MouseEvent) => {
 
@@ -80,7 +89,8 @@ export const NodeField = () => {
     }, [connectionState.isConnecting, getViewportPoint]);
 
     return (
-        <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0]"
+        <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0] select-none"
+            onClick={onMouseClick}
             onMouseMove={onMouseMove}>
 
             <NodeFieldBackground viewport={viewport} />

@@ -115,7 +115,7 @@ export const useNodeSystem = () => {
         const rect = element!.getBoundingClientRect();
         const canvasRect = canvasRef.current?.getBoundingClientRect() ?? {left: 0, top: 0};
 
-        return { x: rect.left - canvasRect.left, y: rect.top - canvasRect.top};
+        return { x: rect.left - canvasRect.left + rect.width / 2, y: rect.top - canvasRect.top + rect.height / 2};
     }, []);
 
     const getViewportPoint = useCallback((x: number, y: number): {x: number, y: number} => {

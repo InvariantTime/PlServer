@@ -14,9 +14,12 @@ export const NodePin = ({pin, registry, onClick}: Props) => {
 
             {pin.type === "output" && <h2 className="text-center font-bold">{pin.name}</h2>}
 
-            <div className="w-3 h-3 rounded-full -m-[6px] bg-red-400 origin-center"
+            <div className="w-3 h-3 rounded-full -m-[6px] bg-red-400 cursor-pointer hover:brightness-90"
                 ref={registry}
-                onClick={onClick}/>
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onClick(e);
+                }}/>
 
             {pin.type === "input" && <h2 className="text-center font-bold">{pin.name}</h2>}
         </div>
