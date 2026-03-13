@@ -1,8 +1,8 @@
 import { MouseEvent, useCallback, useEffect, useRef, useState } from "react"
-import { NodeDefinition } from "./NodeDefinition";
-import { NodeViewport } from "../../components/nodeSystem/NodeViewport";
-import { NodeConnection } from "./NodeConnection";
-import { NodeInstance } from "./NodeInstance";
+import { NodeDefinition } from "../api/nodes/NodeDefinition";
+import { NodeViewport } from "../components/nodeSystem/NodeViewport";
+import { NodeConnection } from "../api/nodes/NodeConnection";
+import { NodeInstance } from "../api/nodes/NodeInstance";
 
 
 export const useNodeSystem = () => {
@@ -56,7 +56,6 @@ export const useNodeSystem = () => {
 
     const moveNode = useCallback((nodeId: string, x: number, y: number) => {
         const node = nodes.find(x => x.id === nodeId);
-        
         
         if (node === undefined)
             return;

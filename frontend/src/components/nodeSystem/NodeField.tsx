@@ -1,7 +1,7 @@
 import { MouseEvent, useCallback, useEffect, useRef, useState, WheelEvent } from "react"
 import { Node } from "./Node";
 import "./Node.css";
-import { useNodeSystem } from "../../api/nodes/NodeSystem";
+import { useNodeSystem } from "../../hooks/NodeSystem";
 import { NodeFieldBackground } from "./NodeFieldBackground";
 import { NodeEdge } from "./NodeEdge";
 import { NodeConnectionState, NodeConnectionStateDefault } from "../../api/nodes/NodeConnectionState";
@@ -40,7 +40,7 @@ export const NodeField = () => {
         e.stopPropagation();
     }, []);
 
-    const onMouseClick = useCallback((e: React.MouseEvent) => {
+    const onMouseDown = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
 
         if (connectionState.isConnecting === true) {
@@ -92,7 +92,7 @@ export const NodeField = () => {
 
     return (
         <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0] select-none"
-            onClick={onMouseClick}
+            onClick={onMouseDown}
             onMouseMove={onMouseMove}>
 
             <NodeFieldBackground viewport={viewport} />
@@ -135,7 +135,7 @@ export const NodeField = () => {
                                 key={node.id}
                                 definition={definition}
                                 instance={node}
-                                headerMouseDownCallback={() => { }}
+                                headerMouseDownCallback={onNodeMouseDown}
                                 registerPinRef={registerPinRef}
                                 pinClickCallback={onPinClick} />
                         </div>

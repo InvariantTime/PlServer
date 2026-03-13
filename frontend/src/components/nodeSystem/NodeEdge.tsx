@@ -12,33 +12,21 @@ const defaultColor = "#3b82f6";
 
 export const NodeEdge = ({ connection, getPinPosition, onEdgeClick }: Props) => {
 
-    const getBezierPath = (
-        sourceX: number,
-        sourceY: number,
-        targetX: number,
-        targetY: number
-    ): string => {
-        const deltaX = Math.abs(targetX - sourceX);
-        const deltaY = Math.abs(targetY - sourceY);
+    const source = getPinPosition(connection.target.nodeId, connection.target.pinId);
+    const target = getPinPosition(connection.source.nodeId, connection.source.pinId);
 
-        const offset = Math.min(
-            Math.max(deltaX * 0.5, deltaY * 0.5),
-            150
-        );
+    if (source === null || target === null)
+        return null;
 
-        const cp1x = sourceX;
-        const cp1y = sourceY + offset;
+    const dx = target.x - source.x;
+        const controlOffset = Math.abs(dx) * 0.5;
+  
+        const cp1x = source.x + controlOffset;
+        const cp1y = source.y;
+        const cp2x = target.x - controlOffset;
+        const cp2y = target.y;
 
-        const cp2x = targetX;
-        const cp2y = targetY - offset;
-
-        return `M ${sourceX} ${sourceY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${targetX} ${targetY}`;
-    };
-
-    const source = getPinPosition(connection.source.nodeId, connection.source.pinId) ?? {x: 0, y: 0};
-    const target = getPinPosition(connection.target.nodeId, connection.target.pinId) ?? {x: 0, y: 0};
-
-    const path = getBezierPath(source.x, source.y, target.x, target.y);
+        const pathData = `M ${source.x} ${source.y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${target.x} ${target.y}`;
 
     const startColor = null;
     const endColor = null;//TODO: colors
@@ -61,12 +49,12 @@ export const NodeEdge = ({ connection, getPinPosition, onEdgeClick }: Props) => 
             </defs>}
 
             <path
-                d={path}
+                d={pathData}
                 className="edge-hover cursor-pointer"
                 onClick={(e) => onEdgeClick(e, connection.id)} />
 
             <path
-                d={path}
+                d={pathData}
                 stroke={startColor != null && endColor != null ? "url(#curveGradient)" : defaultColor}
                 className="edge-visible" />
         </g>
