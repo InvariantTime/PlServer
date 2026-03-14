@@ -9,6 +9,8 @@ export type EmptyDrag = {
 
 export type NodeDragState = {
     type: "node";
+    nodeId: string,
+    offset: {x: number, y: number}
 }
 
 export type ConnectionDragState = {
@@ -27,24 +29,30 @@ interface Props {
     viewport: NodeViewport, 
     getPinPosition: (nodeId: string, pinId: string) => ({x: number, y: number} | null),
     getViewportPoint: (x: number, y: number) => {x: number, y: number},
-    createEdge: (source: {nodeId: string, pinId: string}, target: {nodeId: string, pinId: string}) => void
+    createEdge: (source: {nodeId: string, pinId: string}, target: {nodeId: string, pinId: string}) => void,
+    moveNode: (nodeId: string, x: number, y: number) => void
 }
 
 
-export const useDragSystem = ({viewport, getPinPosition, getViewportPoint, createEdge}: Props) => {
+export const useDragSystem = ({viewport, getPinPosition, getViewportPoint, createEdge, moveNode}: Props) => {
 
     const [state, setState] = useState<DragState>({type: "none"});
 
     const onMouseDown = useCallback((e: React.MouseEvent) => {
 
-        console.debug("click");
         if (state.type === "connection") {
             setState({type: "none"});
         }
 
     }, [state.type]);
 
-    const onNodeDown = useCallback((nodeId: string) => {
+    const onNodeDown = useCallback((e: React.MouseEvent, nodeId: string, x: number, y: number) => {
+
+        if (state.type === "none") {
+
+            const start = {x: e.clientX, y: e.clientY};
+            setState({type: "node", nodeId: nodeId, offset: {x: x - start.x, y: y - start.y}});
+        }
 
     }, [state.type]);
 
@@ -84,7 +92,10 @@ export const useDragSystem = ({viewport, getPinPosition, getViewportPoint, creat
             });
         }
         else if (state.type === "node") {
-
+            
+            const x = e.clientX + state.offset.x;
+            const y = e.clientY + state.offset.y;
+            moveNode(state.nodeId, x, y);
         }
         else if (state.type === "viewport") {
 
@@ -92,11 +103,20 @@ export const useDragSystem = ({viewport, getPinPosition, getViewportPoint, creat
 
     }, [state.type, getViewportPoint]);
 
+    const onUnfocus = useCallback(() => {
+
+        if (state.type === "connection" || state.type === "node") {
+            setState({type: "none"});
+        }
+
+    }, [state.type]);
+
     return {
         state,
         onMouseDown,
         onNodeDown,
         onPinClick,
-        onMouseMove
+        onMouseMove,
+        onUnfocus
     }
 }

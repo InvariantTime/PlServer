@@ -34,19 +34,15 @@ export const NodeField = () => {
         onMouseDown,
         onMouseMove,
         onNodeDown,
+        onUnfocus,
         onPinClick
-    } = useDragSystem({viewport, getPinPosition, getViewportPoint, createEdge});
+    } = useDragSystem({viewport, getPinPosition, getViewportPoint, createEdge, moveNode});
 
 
     const setCanvasRef = useCallback((el: HTMLDivElement | null) => {
         canvasRef.current = el;
         registerCanvas(el);
     }, [registerCanvas]);
-
-
-    const onNodeMouseDown = useCallback((e: React.MouseEvent, id: string) => {
-        e.stopPropagation();
-    }, []);
 
     const onEdgeClick = useCallback((e: React.MouseEvent, id: string) => {
         removeEdge(id);
@@ -55,7 +51,10 @@ export const NodeField = () => {
     return (
         <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0] select-none"
             onClick={onMouseDown}
-            onMouseMove={onMouseMove}>
+            onMouseMove={onMouseMove}
+            onMouseUp={onUnfocus}
+            onBlur={onUnfocus}
+            onMouseLeave={onUnfocus}>
 
             <NodeFieldBackground viewport={viewport} />
 
@@ -97,7 +96,7 @@ export const NodeField = () => {
                                 key={node.id}
                                 definition={definition}
                                 instance={node}
-                                headerMouseDownCallback={onNodeMouseDown}
+                                headerMouseDownCallback={onNodeDown}
                                 registerPinRef={registerPinRef}
                                 pinClickCallback={onPinClick} />
                         </div>

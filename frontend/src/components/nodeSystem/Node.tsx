@@ -7,7 +7,7 @@ import { NodePin } from "./NodePin"
 interface Props {
     instance: NodeInstance,
     definition: NodeDefinition,
-    headerMouseDownCallback: (e: React.MouseEvent, id: string) => void,
+    headerMouseDownCallback: (e: React.MouseEvent, id: string, x: number, y: number) => void,
     pinClickCallback: (e: React.MouseEvent, nodeId: string, pinId: string) => void,
     registerPinRef: (nodeId: string, pinId: string, element: HTMLDivElement) => void
 }
@@ -18,7 +18,7 @@ export const Node = ({ instance, definition, headerMouseDownCallback, registerPi
     return (
         <div className="w-48 flex flex-col shadow-xl border-[1px] rounded-md border-slate-400 select-none">
             <div className="bg-red-600 w-full rounded-t-md h-10 border-b-[1px] border-red-700 flex items-center px-2 gap-3"
-                onMouseDown={e => headerMouseDownCallback(e, instance.id)}>
+                onMouseDown={e => headerMouseDownCallback(e, instance.id, instance.position.x, instance.position.y)}>
 
                 <div className="h-4 w-4 rounded-full bg-red-100 items-center justify-center flex 
                     hover:bg-red-200">
