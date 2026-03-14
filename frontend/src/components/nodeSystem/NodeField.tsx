@@ -6,11 +6,11 @@ import { NodeFieldBackground } from "./NodeFieldBackground";
 import { NodeEdge } from "./NodeEdge";
 import { NodeConnectionState, NodeConnectionStateDefault } from "../../api/nodes/NodeConnectionState";
 import { TemporaryNodeEdge } from "./TemporaryNodeEdge";
+import { useDragSystem } from "../../hooks/NodeDragSystem";
 
 export const NodeField = () => {
 
     const canvasRef = useRef<HTMLDivElement | null>(null);
-    const [connectionState, setConnectionState] = useState<NodeConnectionState>(NodeConnectionStateDefault);
 
     const {
         nodeDefinitions,
@@ -29,6 +29,14 @@ export const NodeField = () => {
         zoomViewport,
         getViewportPoint } = useNodeSystem();
 
+    const {
+        state: dragState,
+        onMouseDown,
+        onMouseMove,
+        onNodeDown,
+        onPinClick
+    } = useDragSystem({viewport, getPinPosition, getViewportPoint, createEdge});
+
 
     const setCanvasRef = useCallback((el: HTMLDivElement | null) => {
         canvasRef.current = el;
@@ -39,52 +47,6 @@ export const NodeField = () => {
     const onNodeMouseDown = useCallback((e: React.MouseEvent, id: string) => {
         e.stopPropagation();
     }, []);
-
-    const onMouseDown = useCallback((e: React.MouseEvent) => {
-        e.stopPropagation();
-
-        if (connectionState.isConnecting === true) {
-            setConnectionState(NodeConnectionStateDefault);
-        }
-
-    }, [connectionState.isConnecting]);
-
-    const onMouseMove = useCallback((e: React.MouseEvent) => {
-
-        if (connectionState.isConnecting === true) {
-            const cursor = getViewportPoint(e.clientX, e.clientY);
-
-            setConnectionState(prev => {
-                return {...prev, targetPosition: cursor};
-            });
-        }
-
-    }, [connectionState.isConnecting, getViewportPoint]);
-
-    const onPinClick = useCallback((e: React.MouseEvent, nodeId: string, pinId: string) => {
-
-        if (connectionState.isConnecting === false) {
-
-            const pos = getPinPosition(nodeId, pinId);
-            const cursor = getViewportPoint(e.clientX, e.clientY);
-
-            if (pos === null)
-                return;
-
-            setConnectionState({source: {nodeId: nodeId, pinId: pinId}, sourcePosition: pos, targetPosition: cursor, isConnecting: true});
-        }
-        else {
-            const source = connectionState.source;
-
-            if (source.nodeId === nodeId && source.pinId === pinId) {
-                setConnectionState(NodeConnectionStateDefault);
-                return;
-            }
-
-            createEdge(source, {nodeId: nodeId, pinId: pinId});
-            setConnectionState(NodeConnectionStateDefault);
-        }
-    }, [connectionState.isConnecting, getViewportPoint]);
 
     const onEdgeClick = useCallback((e: React.MouseEvent, id: string) => {
         removeEdge(id);
@@ -112,12 +74,12 @@ export const NodeField = () => {
                         )
                     })}
 
-                    {connectionState.isConnecting === true &&
+                    {dragState.type === "connection"  &&
                         <TemporaryNodeEdge
-                            sourceX={connectionState.sourcePosition.x} 
-                            sourceY={connectionState.sourcePosition.y} 
-                            targetX={connectionState.targetPosition.x}
-                            targetY={connectionState.targetPosition.y}
+                            sourceX={dragState.sourcePosition.x} 
+                            sourceY={dragState.sourcePosition.y} 
+                            targetX={dragState.targetPosition.x}
+                            targetY={dragState.targetPosition.y}
                         />
                     }
                 </svg>

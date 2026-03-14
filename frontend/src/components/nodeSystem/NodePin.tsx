@@ -17,7 +17,6 @@ export const NodePin = ({pin, registry, onClick}: Props) => {
             <div className="w-3 h-3 rounded-full -m-[6px] bg-red-400 cursor-pointer hover:brightness-90"
                 ref={registry}
                 onClick={(e) => {
-                    e.stopPropagation();
                     onClick(e);
                 }}/>
 
