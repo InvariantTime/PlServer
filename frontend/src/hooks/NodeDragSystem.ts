@@ -105,7 +105,7 @@ export const useDragSystem = ({viewport, getPinPosition, getViewportPoint, creat
 
     const onUnfocus = useCallback(() => {
 
-        if (state.type === "connection" || state.type === "node") {
+        if (state.type === "viewport" || state.type === "node") {
             setState({type: "none"});
         }
 

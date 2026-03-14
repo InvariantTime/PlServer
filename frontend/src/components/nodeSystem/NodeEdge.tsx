@@ -18,12 +18,13 @@ export const NodeEdge = ({ connection, getPinPosition, onEdgeClick }: Props) => 
     if (source === null || target === null)
         return null;
 
-    const dx = target.x - source.x;
+        const dx = target.x - source.x;
         const controlOffset = Math.abs(dx) * 0.5;
-  
-        const cp1x = source.x + controlOffset;
+        const direction = dx >= 0 ? 1 : -1;
+    
+        const cp1x = source.x + controlOffset * direction;
         const cp1y = source.y;
-        const cp2x = target.x - controlOffset;
+        const cp2x = target.x - controlOffset * direction;
         const cp2y = target.y;
 
         const pathData = `M ${source.x} ${source.y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${target.x} ${target.y}`;
