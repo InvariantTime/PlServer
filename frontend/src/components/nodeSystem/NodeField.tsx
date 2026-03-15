@@ -16,27 +16,24 @@ export const NodeField = () => {
         nodeDefinitions,
         nodes,
         connections,
-        viewport,
         addNode,
         removeNode,
         moveNode,
         registerPinRef,
         createEdge,
         removeEdge,
-        getPinPosition,
-        registerCanvas,
-        moveViewport,
-        zoomViewport,
-        getViewportPoint } = useNodeSystem();
+        getPinPosition } = useNodeSystem();
 
     const {
+        viewport,
         state: dragState,
         onMouseDown,
         onMouseMove,
         onNodeDown,
         onUnfocus,
-        onPinClick
-    } = useDragSystem({viewport, getPinPosition, getViewportPoint, createEdge, moveNode});
+        onPinClick,
+        setCanvasRef: registerCanvas
+    } = useDragSystem({getPinPosition, createEdge, moveNode});
 
 
     const setCanvasRef = useCallback((el: HTMLDivElement | null) => {

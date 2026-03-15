@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { NodeViewport } from "../components/nodeSystem/NodeViewport";
 
 export type DragState = NodeDragState | ConnectionDragState | ViewportDragState | EmptyDrag;
@@ -26,17 +26,29 @@ export type ViewportDragState = {
 
 
 interface Props {
-    viewport: NodeViewport, 
     getPinPosition: (nodeId: string, pinId: string) => ({x: number, y: number} | null),
-    getViewportPoint: (x: number, y: number) => {x: number, y: number},
     createEdge: (source: {nodeId: string, pinId: string}, target: {nodeId: string, pinId: string}) => void,
     moveNode: (nodeId: string, x: number, y: number) => void
 }
 
 
-export const useDragSystem = ({viewport, getPinPosition, getViewportPoint, createEdge, moveNode}: Props) => {
+export const useDragSystem = ({getPinPosition, createEdge, moveNode}: Props) => {
 
     const [state, setState] = useState<DragState>({type: "none"});
+    const [viewport, setViewport] = useState<NodeViewport>({x: 0, y: 0, zoom: 1});
+
+    const canvasRef = useRef<HTMLDivElement | null>(null);
+
+    const setCanvasRef = useCallback((element: HTMLDivElement | null) => {
+        canvasRef.current = element;
+    }, [canvasRef]);
+
+    const getViewportPoint = useCallback((x: number, y: number): {x: number, y: number} => {
+        
+        const canvasRect = canvasRef.current?.getBoundingClientRect() ?? {x: 0, y: 0};
+        return {x: x - canvasRect.x, y: y - canvasRect.y};//TODO: viewport
+
+    }, [canvasRef, viewport]);
 
     const onMouseDown = useCallback((e: React.MouseEvent) => {
 
@@ -113,6 +125,8 @@ export const useDragSystem = ({viewport, getPinPosition, getViewportPoint, creat
 
     return {
         state,
+        viewport,
+        setCanvasRef,
         onMouseDown,
         onNodeDown,
         onPinClick,

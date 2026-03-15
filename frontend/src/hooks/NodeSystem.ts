@@ -39,12 +39,7 @@ export const useNodeSystem = () => {
         {id: "jfsdlkdsjf", source: {nodeId: "vncvmdfdsfdsfnm", pinId: "vvv"}, target: {nodeId: "cccmmmvdvd", pinId: "dsdas"}}
     ]);
 
-
-    const [viewport, setViewport] = useState<NodeViewport>({ x: 0, y: 0, zoom: 1 });
-
-
     const [pinRefs, setPinRefs] = useState<Record<string, HTMLDivElement | null>>({});
-    const canvasRef = useRef<HTMLDivElement>(null);
 
     const addNode = useCallback((node: NodeDefinition) => {
 
@@ -95,22 +90,6 @@ export const useNodeSystem = () => {
         setConnections(prev => prev.filter(x => x.id != id));
     }, [connections]);
 
-    const setCanvasRef = useCallback((canvas: HTMLDivElement | null) => {
-        canvasRef.current = canvas;
-    }, [canvasRef]);
-
-    const moveViewport = useCallback((xOffset: number, yOffset: number) => {
-        setViewport(prev => {
-            return { x: prev.x + xOffset, y: prev.y + yOffset, zoom: prev.zoom };
-        });
-    }, []);
-
-    const zoomViewport = useCallback((zoom: number) => {
-        setViewport(prev => {
-            return { x: prev.x, y: prev.y, zoom: zoom };
-        });
-    }, []);
-
     const getPinPosition = useCallback((nodeId: string, pinId: string): { x: number, y: number } | null => {
 
         const id = `${nodeId}_${pinId}`;
@@ -120,33 +99,21 @@ export const useNodeSystem = () => {
             return null;
 
         const rect = element!.getBoundingClientRect();
-        const canvasRect = canvasRef.current?.getBoundingClientRect() ?? {left: 0, top: 0};
+        const canvasRect = {left: 0, top: 0};//TODO: remove pin ref logic from node system logic. Node system logic is api for act with backend
 
         return { x: rect.left - canvasRect.left + rect.width / 2, y: rect.top - canvasRect.top + rect.height / 2};
     }, []);
-
-    const getViewportPoint = useCallback((x: number, y: number): {x: number, y: number} => {
-
-        const canvasRect = canvasRef.current?.getBoundingClientRect() ?? {x: 0, y: 0};
-
-        return {x: x - canvasRect.x, y: y - canvasRect.y};//TODO: viewport
-    }, [canvasRef]);
 
     return {
         nodeDefinitions,
         nodes,
         connections,
-        viewport,
         addNode,
         removeNode,
         moveNode,
         registerPinRef,
         createEdge,
         removeEdge,
-        getPinPosition,
-        registerCanvas: setCanvasRef,
-        moveViewport,
-        zoomViewport,
-        getViewportPoint
+        getPinPosition
     };
 }
