@@ -19,21 +19,22 @@ export const NodeField = () => {
         addNode,
         removeNode,
         moveNode,
-        registerPinRef,
         createEdge,
-        removeEdge,
-        getPinPosition } = useNodeSystem();
+        removeEdge } = useNodeSystem();
 
     const {
         viewport,
         state: dragState,
+        onMouseClick,
         onMouseDown,
         onMouseMove,
         onNodeDown,
         onUnfocus,
         onPinClick,
+        registerPin,
+        getPinPosition,
         setCanvasRef: registerCanvas
-    } = useDragSystem({getPinPosition, createEdge, moveNode});
+    } = useDragSystem({createEdge, moveNode});
 
 
     const setCanvasRef = useCallback((el: HTMLDivElement | null) => {
@@ -47,7 +48,8 @@ export const NodeField = () => {
 
     return (
         <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0] select-none"
-            onClick={onMouseDown}
+            onMouseDown={onMouseDown}
+            onClick={onMouseClick}
             onMouseMove={onMouseMove}
             onMouseUp={onUnfocus}
             onBlur={onUnfocus}
@@ -94,7 +96,7 @@ export const NodeField = () => {
                                 definition={definition}
                                 instance={node}
                                 headerMouseDownCallback={onNodeDown}
-                                registerPinRef={registerPinRef}
+                                registerPinRef={registerPin}
                                 pinClickCallback={onPinClick} />
                         </div>
                     )

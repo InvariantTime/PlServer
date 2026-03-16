@@ -39,8 +39,6 @@ export const useNodeSystem = () => {
         {id: "jfsdlkdsjf", source: {nodeId: "vncvmdfdsfdsfnm", pinId: "vvv"}, target: {nodeId: "cccmmmvdvd", pinId: "dsdas"}}
     ]);
 
-    const [pinRefs, setPinRefs] = useState<Record<string, HTMLDivElement | null>>({});
-
     const addNode = useCallback((node: NodeDefinition) => {
 
     }, []);
@@ -65,15 +63,6 @@ export const useNodeSystem = () => {
         });
     }, []);
 
-    const registerPinRef = useCallback((nodeId: string, pinId: string, element: HTMLDivElement) => {
-        const id = `${nodeId}_${pinId}`
-        setPinRefs(prev => {
-            prev[id] = element;
-            return prev;
-        });
-
-    }, [pinRefs]);
-
     const createEdge = useCallback((source: {nodeId: string, pinId: string}, target: {nodeId: string, pinId: string}) => {
 
         const connection = {
@@ -90,20 +79,6 @@ export const useNodeSystem = () => {
         setConnections(prev => prev.filter(x => x.id != id));
     }, [connections]);
 
-    const getPinPosition = useCallback((nodeId: string, pinId: string): { x: number, y: number } | null => {
-
-        const id = `${nodeId}_${pinId}`;
-        const element = pinRefs[id];
-
-        if (element === undefined)
-            return null;
-
-        const rect = element!.getBoundingClientRect();
-        const canvasRect = {left: 0, top: 0};//TODO: remove pin ref logic from node system logic. Node system logic is api for act with backend
-
-        return { x: rect.left - canvasRect.left + rect.width / 2, y: rect.top - canvasRect.top + rect.height / 2};
-    }, []);
-
     return {
         nodeDefinitions,
         nodes,
@@ -111,9 +86,7 @@ export const useNodeSystem = () => {
         addNode,
         removeNode,
         moveNode,
-        registerPinRef,
         createEdge,
-        removeEdge,
-        getPinPosition
+        removeEdge
     };
 }
