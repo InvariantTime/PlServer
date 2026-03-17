@@ -144,6 +144,11 @@ export const useDragSystem = ({ createEdge, moveNode }: Props) => {
 
     }, [state.type, getViewportPoint]);
 
+    const onScroll = useCallback((e: React.UIEvent) => {
+        console.debug("scroll");
+        setViewport(prev => ({...prev, zoom: prev.zoom + e.currentTarget.scrollTop}));
+    }, []);
+
     const onUnfocus = useCallback(() => {
 
         if (state.type === "viewport" || state.type === "node") {
@@ -164,6 +169,7 @@ export const useDragSystem = ({ createEdge, moveNode }: Props) => {
         onNodeDown,
         onPinClick,
         onMouseMove,
-        onUnfocus
+        onUnfocus,
+        onScroll
     }
 }

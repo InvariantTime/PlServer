@@ -29,6 +29,7 @@ export const NodeField = () => {
         onMouseDown,
         onMouseMove,
         onNodeDown,
+        onScroll,
         onUnfocus,
         onPinClick,
         registerPin,
@@ -53,6 +54,7 @@ export const NodeField = () => {
             onMouseMove={onMouseMove}
             onMouseUp={onUnfocus}
             onBlur={onUnfocus}
+            onScroll={onScroll}
             onMouseLeave={onUnfocus}>
 
             <NodeFieldBackground viewport={viewport} />
