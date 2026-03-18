@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using PlServer.Server.API.Responces;
-using PlServer.Server.Infrastructure.Sessions;
+using PlServer.Server.Services.Sessions;
 
 namespace PlServer.Server.API.Hubs;
 

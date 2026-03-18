@@ -1,4 +1,4 @@
-﻿namespace PlServer.Server.Infrastructure.Sessions;
+﻿namespace PlServer.Server.Services.Sessions;
 
 public interface ISessionService
 {
@@ -6,5 +6,5 @@ public interface ISessionService
 
     Session? GetSession(Guid id);
 
-    Session CreateSession(string name);
+    Task<Session?> CreateSessionAsync(string name);
 }

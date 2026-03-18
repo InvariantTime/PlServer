@@ -2,21 +2,23 @@
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 
-namespace PlServer.Server.Infrastructure.Sessions;
+namespace PlServer.Server.Services.Sessions;
 
 public class SessionService : ISessionService
 {
     private readonly ConcurrentDictionary<Guid, Session> _sessions;
+    private readonly ISessionNotificationService _notification;
 
     public ICollection<Session> Sessions => _sessions.Values;
 
-    public SessionService()
+    public SessionService(ISessionNotificationService notification)
     {
         _sessions = new();
+        _notification = notification;
     }
 
 
-    public Session CreateSession(string name)
+    public async Task<Session?> CreateSessionAsync(string name)
     {
         var id = Guid.NewGuid();
 
@@ -24,7 +26,12 @@ public class SessionService : ISessionService
             id = Guid.NewGuid();
 
         var session = new Session(name, id);
-        _sessions.TryAdd(id, session);
+        bool result = _sessions.TryAdd(id, session);
+
+        if (result == false)
+            return null;
+
+        await _notification.NotifyLobbyChangedAsync(_sessions.Values, CancellationToken.None);
 
         return session;
     }

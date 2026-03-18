@@ -1,5 +1,5 @@
 ﻿
-namespace PlServer.Server.Infrastructure.Sessions;
+namespace PlServer.Server.Services.Sessions;
 
 public class Session
 {

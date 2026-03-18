@@ -3,6 +3,7 @@
   <Folder Name="/Services/Server/">
     <Project Path="Services/Server/src/PlServer.Server.API/PlServer.Server.API.csproj" Id="0e2ab483-ef45-42ca-9c21-29ab21a9db14" />
     <Project Path="Services/Server/src/PlServer.Server.Infrastructure/PlServer.Server.Infrastructure.csproj" Id="c8b454ac-784e-4937-b9da-e85217a05509" />
+    <Project Path="Services/Server/src/PlServer.Server.Services/PlServer.Server.Services.csproj" Id="4f369f1f-4b20-4632-b475-fbe885344a5e" />
   </Folder>
   <Folder Name="/Services/Worker/">
     <Project Path="Services/Worker/src/PlServer.Worker.API/PlServer.Worker.API.csproj" Id="96db114d-06ee-47f5-b6b1-b1b620a7e350" />
@@ -13,4 +14,5 @@
     <Project Path="Shared/PlServer.Plugins/PlServer.Plugins.csproj" Id="5d05be49-29bb-4dc6-bc5f-16740eb8121c" />
     <Project Path="Shared/PlServer.Protos/PlServer.Protos.csproj" />
   </Folder>
+  <Folder Name="/Solution Items/" />
 </Solution>
