@@ -1,11 +1,10 @@
 import React from "react";
 import logo from "./logo.svg";
-import { LobbyPage } from "./pages/lobby/LobbyExample";
 import { Lobby } from "./pages/lobby/Lobby";
 import { SessionProvider } from "./components/sessions/SessionProvider";
 import { Header } from "./components/header/Header";
 import { ModalProvider } from "./components/modals/ModalProvider";
-import { Session } from "./pages/lobby/session/Session";
+import { Session } from "./pages/session/Session";
 
 const url = "/ws/sessions";
 
@@ -19,7 +18,7 @@ function App() {
           </div>
 
           <div className="flex flex-1">
-            <Session/>
+            <Lobby/>
           </div>
         </div>
       </SessionProvider>

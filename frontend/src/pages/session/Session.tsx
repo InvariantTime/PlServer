@@ -1,6 +1,6 @@
 import { Play } from "lucide-react"
 import { useCallback } from "react";
-import { NodeField } from "../../../components/nodeSystem/NodeField";
+import { NodeField } from "../../components/nodeSystem/NodeField";
 
 export const Session = () => {
 

@@ -6,9 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using PlServer.Domain;
 using PlServer.Protos;
 using PlServer.Server.API.Hubs;
+using PlServer.Server.API.Notifications;
 using PlServer.Server.API.Requests;
 using PlServer.Server.Infrastructure;
-using PlServer.Server.Infrastructure.Sessions;
+using PlServer.Server.Services.Sessions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddSignalR();
 builder.Services.AddControllers();
 
 builder.Services.AddSingleton<ISessionService, SessionService>();
+builder.Services.AddSingleton<ISessionNotificationService, SessionNotificationService>();
 
 builder.Services.AddCors(options =>
 {

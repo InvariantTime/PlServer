@@ -12,12 +12,10 @@ namespace PlServer.Server.API.Controllers;
 public class SessionController : ControllerBase
 {
     private readonly ISessionService _sessions;
-    private readonly IHubContext<SessionHub, ISessionClient> _hub;
 
-    public SessionController(ISessionService sessions, IHubContext<SessionHub, ISessionClient> hub)
+    public SessionController(ISessionService sessions)
     {
         _sessions = sessions;
-        _hub = hub;
     }
 
     [HttpGet("all")]
