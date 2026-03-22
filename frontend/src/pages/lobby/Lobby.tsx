@@ -19,11 +19,11 @@ export const Lobby = () => {
     getSessionList().then((sessions) => {
       setSessions(sessions);
     });
-  }, [])
+  }, []);
 
   connection.connection.hub?.on("OnSessionListChangedAsync", (sessions: SessionLobbyInfo[]) => {
     setSessions(sessions);
-  })
+  });
 
   useListen<SessionLobbyInfo[]>("OnSessionListChangedAsync", (sessions) =>
   {
