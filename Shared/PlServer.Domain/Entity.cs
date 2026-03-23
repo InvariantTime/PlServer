@@ -5,6 +5,11 @@ public abstract class Entity<TKey> : IEquatable<Entity<TKey>> where TKey : notnu
 {
     public TKey Key { get; }
 
+    protected Entity(TKey key)
+    {
+        Key = key;
+    }
+
     public bool Equals(Entity<TKey>? other)
     {
         if (ReferenceEquals(this, other) == true)
