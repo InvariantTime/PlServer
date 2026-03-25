@@ -9,8 +9,8 @@
     <Project Path="Services/Worker/src/PlServer.Worker.API/PlServer.Worker.API.csproj" Id="96db114d-06ee-47f5-b6b1-b1b620a7e350" />
   </Folder>
   <Folder Name="/Shared/">
+    <Project Path="Shared/PlServer.Domain.NodeGraph/PlServer.Domain.Nodes.csproj" Id="29ad70e8-3d6e-451e-bbca-478ea57efe3e" />
     <Project Path="Shared/PlServer.Domain/PlServer.Domain.csproj" />
-    <Project Path="Shared/PlServer.Nodes/PlServer.Nodes.csproj" Id="5a9e0452-a330-4d50-988c-9e8976edcc85" />
     <Project Path="Shared/PlServer.Plugins.Loading/PlServer.Plugins.Loading.csproj" Id="ef57b92e-2d10-4b4a-891b-ff3adab3481c" />
     <Project Path="Shared/PlServer.Plugins/PlServer.Plugins.csproj" Id="5d05be49-29bb-4dc6-bc5f-16740eb8121c" />
     <Project Path="Shared/PlServer.Protos/PlServer.Protos.csproj" />

@@ -1,27 +1,26 @@
 ﻿
-using PlServer.Domain;
 using System.Numerics;
 
-namespace PlServer.Nodes;
+namespace PlServer.Domain.Nodes;
 
-public class Node : Entity<Guid>
+public class Node : Entity<NodeId>
 {
     public string DisplayName { get; private set; }
 
     public Vector2 Position { get; private set; }
 
-    public Node(string name, Guid id) : base(id)
+    public Node(string name, NodeId id) : base(id)
     {
         DisplayName = name;
     }
 
-    public void SetPosition(Vector2 position)
+    public void Move(Vector2 position)
     {
         Position = position;
     }
 
     public void SetName(string name)
     {
-        DisplayName = name;
+        DisplayName = name;//TODO: get default name from node definition
     }
 }
