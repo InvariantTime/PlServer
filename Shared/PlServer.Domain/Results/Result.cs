@@ -1,6 +1,6 @@
 ﻿namespace PlServer.Domain.Results;
 
-public readonly struct Result : IResult<Error<ErrorTypes>>
+public readonly partial struct Result : IResult<Error<ErrorTypes>>
 {
     public bool IsSuccess { get; init; }
 
