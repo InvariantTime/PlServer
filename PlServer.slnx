@@ -2,6 +2,7 @@
   <Folder Name="/Services/" />
   <Folder Name="/Services/Server/">
     <Project Path="Services/Server/src/PlServer.Server.API/PlServer.Server.API.csproj" Id="0e2ab483-ef45-42ca-9c21-29ab21a9db14" />
+    <Project Path="Services/Server/src/PlServer.Server.Domain/PlServer.Server.Domain.csproj" Id="fc1fe615-872d-4732-89bc-31e3a3a43d82" />
     <Project Path="Services/Server/src/PlServer.Server.Infrastructure/PlServer.Server.Infrastructure.csproj" Id="c8b454ac-784e-4937-b9da-e85217a05509" />
     <Project Path="Services/Server/src/PlServer.Server.Services/PlServer.Server.Services.csproj" Id="4f369f1f-4b20-4632-b475-fbe885344a5e" />
   </Folder>
