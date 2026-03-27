@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Balancers\**" />
+    <EmbeddedResource Remove="Balancers\**" />
+    <None Remove="Balancers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.76.0" />
   </ItemGroup>
@@ -14,10 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Shared\PlServer.Domain\PlServer.Domain.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\PlServer.Protos\PlServer.Protos.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Balancers\" />
   </ItemGroup>
 
 </Project>
