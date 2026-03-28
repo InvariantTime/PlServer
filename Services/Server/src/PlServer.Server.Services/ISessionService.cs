@@ -1,11 +1,14 @@
 ﻿using PlServer.Domain.Results;
 using PlServer.Server.Domain;
+using PlServer.Server.Services.DTOs;
 
 namespace PlServer.Server.Services;
 
 public interface ISessionService
 {
-    Task<Session> CreateSessionAsync(string name, UserId user, int maxPlayers);
+    IEnumerable<SessionSummaryDTO> GetSessionSummaryDtos();
+
+    Task<Result<SessionSummaryDTO>> CreateSessionAsync(string name, UserId user, int maxPlayers);
 
     Task<Result> JoinAsync(SessionId session, UserId user);
 

@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using PlServer.Server.API.Hubs;
 using PlServer.Server.API.Requests;
 using PlServer.Server.API.Responces;
-using PlServer.Server.Services.Sessions;
+using PlServer.Server.Domain;
+using PlServer.Server.Services;
 
 namespace PlServer.Server.API.Controllers;
 
@@ -19,19 +18,18 @@ public class SessionController : ControllerBase
     }
 
     [HttpGet("all")]
-    public IEnumerable<SessionResponce> GetSessionList()
+    public IEnumerable<SessionResponse> GetSessionList()
     {
-        return _sessions.Sessions.Select(x => new SessionResponce(x.Name, x.Id));
+        var dtos = _sessions.GetSessionSummaryDtos();
+
+        return dtos.Select(x => new SessionResponse(x.Name, x.Id));
     }
 
     [HttpPost]
-    public async Task<Guid> CreateSession(SessionCreateRequest request)
+    public async Task<SessionId> CreateSession(SessionCreateRequest request)
     {
-        var session = await _sessions.CreateSessionAsync(request.Name);
+        var result = await _sessions.CreateSessionAsync(request.Name, UserId.New(), 5);
 
-        if (session == null)
-            return Guid.Empty;
-
-        return session.Id;
+        return result.Value?.Id ?? SessionId.Empty;
     }
 }

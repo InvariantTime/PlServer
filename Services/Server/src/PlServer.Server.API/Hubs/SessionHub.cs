@@ -1,42 +1,13 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using PlServer.Server.API.Responces;
-using PlServer.Server.Services.Sessions;
 
 namespace PlServer.Server.API.Hubs;
 
-public interface ISessionLobbyClient
+public interface ISessionClient
 {
-    Task OnSessionListChangedAsync(IEnumerable<SessionResponce> sessions);
-}
 
-public interface ISessionClient : ISessionLobbyClient
-{
 }
 
 public class SessionHub : Hub<ISessionClient>
 {
-    public const string QueryName = "sessionId";
-
-    private readonly ISessionService _sessions;
-
-    public SessionHub(ISessionService sessions)
-    {
-        _sessions = sessions;
-    }
-
-    public override async Task OnConnectedAsync()
-    {
-        var id = Context.GetHttpContext()!.Request.Query[QueryName];
-
-        if (string.IsNullOrEmpty(id) == false)
-        {
-
-        }
-        else
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, "Lobby");
-        }
-
-        await base.OnConnectedAsync();
-    }
+    
 }

@@ -17,7 +17,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-//builder.Services.AddSingleton<ISessionService, SessionService>();
+builder.Services.AddSingleton<ISessionRepository, SessionRepository>();
+
+builder.Services.AddSingleton<ISessionService, SessionService>();
 
 var app = builder.Build();
 
