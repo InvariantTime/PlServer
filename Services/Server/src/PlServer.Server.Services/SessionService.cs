@@ -27,8 +27,8 @@ public class SessionService : ISessionService
 
         var result = _repository.AddSession(session);
 
-        if (result.IsSuccess == false)
-            return Result.Failure<SessionSummaryDTO>(result.Error);
+        if (result == false)
+            return Result.Failure<SessionSummaryDTO>(ErrorTypes.Common, "Unable to add session");
 
         //TODO: dispatch events
        
@@ -37,7 +37,7 @@ public class SessionService : ISessionService
 
     public async Task<Result> DeleteSessionAsync(SessionId sessionId)
     {
-        _repository.Sessions.TryGetValue(sessionId, out var session);
+        var session = _repository.GetSessionById(sessionId);
 
         if (session == null)
             return Result.Failure(ErrorTypes.Common, $"There is no session with id {sessionId}");
@@ -49,7 +49,7 @@ public class SessionService : ISessionService
 
     public async Task<Result> JoinAsync(SessionId sessionId, UserId user)
     {
-        _repository.Sessions.TryGetValue(sessionId, out var session);
+        var session = _repository.GetSessionById(sessionId);
 
         if (session == null)
             return Result.Failure(ErrorTypes.Common);
@@ -59,7 +59,7 @@ public class SessionService : ISessionService
 
     public async Task<Result> LeaveAsync(SessionId sessionId, UserId user)
     {
-        _repository.Sessions.TryGetValue(sessionId, out var session);
+        var session = _repository.GetSessionById(sessionId);
 
         if (session == null)
             return Result.Failure(ErrorTypes.Common);
@@ -69,7 +69,7 @@ public class SessionService : ISessionService
 
     public IEnumerable<SessionSummaryDTO> GetSessionSummaryDtos()
     {
-        return _repository.Sessions.Values
+        return _repository.GetAll()
             .Select(x => new SessionSummaryDTO(x.Key, x.Name, x.HostId, x.MaxUsersCount, x.Users.Count));
     }
 }

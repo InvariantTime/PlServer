@@ -1,13 +1,14 @@
-﻿using PlServer.Domain.Results;
-using PlServer.Server.Domain;
+﻿using PlServer.Server.Domain;
 
 namespace PlServer.Server.Services.Repositories;
 
 public interface ISessionRepository
 {
-    IReadOnlyDictionary<SessionId, Session> Sessions { get; }
+    Session? GetSessionById(SessionId session);
 
-    Result AddSession(Session session);
+    bool AddSession(Session session);
 
-    Result<Session> RemoveSession(SessionId session);
+    Session? RemoveSession(SessionId session);
+
+    ICollection<Session> GetAll();
 }

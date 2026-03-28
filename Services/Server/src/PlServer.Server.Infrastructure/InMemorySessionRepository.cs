@@ -10,27 +10,31 @@ public class InMemorySessionRepository : ISessionRepository
 {
     private readonly ConcurrentDictionary<SessionId, Session> _sessions;
 
-    public IReadOnlyDictionary<SessionId, Session> Sessions => _sessions.AsReadOnly();
-
     public InMemorySessionRepository()
     {
         _sessions = new ConcurrentDictionary<SessionId, Session>();
     }
 
-    public Result AddSession(Session session)
+    public bool AddSession(Session session)
     {
         bool result = _sessions.TryAdd(session.Key, session);
-
-        return Result.Check(result == true, ErrorTypes.Common, "Unable to add session");
+        return result;
     }
 
-    public Result<Session> RemoveSession(SessionId sessionId)
+    public Session? RemoveSession(SessionId sessionId)
     {
-        bool result = _sessions.TryRemove(sessionId, out var session);
+        _sessions.TryRemove(sessionId, out var session);
+        return session;
+    }
 
-        if (result == true)
-            return Result.Success(session!);
+    public Session? GetSessionById(SessionId sessionId)
+    {
+        _sessions.TryGetValue(sessionId, out var session);
+        return session;
+    }
 
-        return Result.Failure<Session>(ErrorTypes.Common, $"Unable to remove session {sessionId}");
+    public ICollection<Session> GetAll()
+    {
+        return _sessions.Values;
     }
 }
