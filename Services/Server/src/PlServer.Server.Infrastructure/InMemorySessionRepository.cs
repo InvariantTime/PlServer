@@ -1,17 +1,18 @@
 ﻿
 using PlServer.Domain.Results;
 using PlServer.Server.Domain;
+using PlServer.Server.Services.Repositories;
 using System.Collections.Concurrent;
 
-namespace PlServer.Server.Services;
+namespace PlServer.Server.Infrastructure;
 
-public class SessionRepository : ISessionRepository
+public class InMemorySessionRepository : ISessionRepository
 {
     private readonly ConcurrentDictionary<SessionId, Session> _sessions;
 
     public IReadOnlyDictionary<SessionId, Session> Sessions => _sessions.AsReadOnly();
 
-    public SessionRepository()
+    public InMemorySessionRepository()
     {
         _sessions = new ConcurrentDictionary<SessionId, Session>();
     }

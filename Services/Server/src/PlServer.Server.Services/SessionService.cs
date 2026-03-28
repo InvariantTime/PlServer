@@ -2,6 +2,7 @@
 using PlServer.Domain.Results;
 using PlServer.Server.Domain;
 using PlServer.Server.Services.DTOs;
+using PlServer.Server.Services.Repositories;
 
 namespace PlServer.Server.Services;
 
@@ -14,12 +15,12 @@ public class SessionService : ISessionService
         _repository = repository;
     }
 
-    public async Task<Result<Session>> CreateSessionAsync(string name, UserId user, int maxPlayers)
+    public async Task<Result<SessionSummaryDTO>> CreateSessionAsync(string name, UserId host, int maxPlayers)
     {
         var session = Session.Create(new SessionCreationQuery
         {
             Name = name,
-            HostId = user,
+            HostId = host,
             Id = SessionId.New(),
             MaxUsersCount = maxPlayers
         });
@@ -27,11 +28,11 @@ public class SessionService : ISessionService
         var result = _repository.AddSession(session);
 
         if (result.IsSuccess == false)
-            return Result.Failure<Session>(result.Error);
+            return Result.Failure<SessionSummaryDTO>(result.Error);
 
-        
-
-        return Result.Success(session);
+        //TODO: dispatch events
+       
+        return Result.Success(new SessionSummaryDTO(session.Key, session.Name, session.HostId, session.MaxUsersCount, session.Users.Count));
     }
 
     public async Task<Result> DeleteSessionAsync(SessionId sessionId)
@@ -66,7 +67,7 @@ public class SessionService : ISessionService
         return Result.Success();
     }
 
-    public IEnumerable<SessionSummaryDTO> GetSessionSummaryDTOs()
+    public IEnumerable<SessionSummaryDTO> GetSessionSummaryDtos()
     {
         return _repository.Sessions.Values
             .Select(x => new SessionSummaryDTO(x.Key, x.Name, x.HostId, x.MaxUsersCount, x.Users.Count));

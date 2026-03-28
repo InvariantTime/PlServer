@@ -1,7 +1,7 @@
 ﻿using PlServer.Domain.Results;
 using PlServer.Server.Domain;
 
-namespace PlServer.Server.Services;
+namespace PlServer.Server.Services.Repositories;
 
 public interface ISessionRepository
 {

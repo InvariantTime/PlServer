@@ -1,5 +1,7 @@
 using PlServer.Server.API.Hubs;
+using PlServer.Server.Infrastructure;
 using PlServer.Server.Services;
+using PlServer.Server.Services.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +19,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddSingleton<ISessionRepository, SessionRepository>();
+builder.Services.AddSingleton<ISessionRepository, InMemorySessionRepository>();
 
 builder.Services.AddSingleton<ISessionService, SessionService>();
 

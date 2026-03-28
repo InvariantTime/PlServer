@@ -8,7 +8,7 @@ public interface ISessionService
 {
     IEnumerable<SessionSummaryDTO> GetSessionSummaryDtos();
 
-    Task<Result<SessionSummaryDTO>> CreateSessionAsync(string name, UserId user, int maxPlayers);
+    Task<Result<SessionSummaryDTO>> CreateSessionAsync(string name, UserId host, int maxPlayers);
 
     Task<Result> JoinAsync(SessionId session, UserId user);
 
