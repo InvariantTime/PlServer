@@ -1,10 +1,9 @@
-﻿
-using PlServer.Domain.Results;
+﻿using PlServer.Domain.Results;
 using PlServer.Server.Domain;
 using PlServer.Server.Services.Repositories;
 using System.Collections.Concurrent;
 
-namespace PlServer.Server.Infrastructure;
+namespace PlServer.Server.Infrastructure.Repositories;
 
 public class InMemorySessionRepository : ISessionRepository
 {

@@ -1,5 +1,5 @@
 using PlServer.Server.API.Hubs;
-using PlServer.Server.Infrastructure;
+using PlServer.Server.Infrastructure.Repositories;
 using PlServer.Server.Services;
 using PlServer.Server.Services.Repositories;
 
