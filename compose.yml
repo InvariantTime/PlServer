@@ -32,34 +32,6 @@ services:
     networks:
       - backend
 
-  worker-1:
-    build:
-      context: .
-      dockerfile: ./Services/Worker/Dockerfile
-    
-    container_name: worker1
-    hostname: worker1-host
-
-    networks:
-      - backend
-
-    environment:
-      - WorkerOptions__Name=worker_1
-
-  worker-2:
-    build:
-      context: .
-      dockerfile: ./Services/Worker/Dockerfile
-    
-    container_name: worker2
-    hostname: worker2-host
-
-    networks:
-      - backend
-
-    environment:
-      - WorkerOptions__Name=worker_2
-
 networks:
   backend:
     driver: bridge

@@ -6,17 +6,11 @@
     <Project Path="Services/Server/src/PlServer.Server.Infrastructure/PlServer.Server.Infrastructure.csproj" Id="c8b454ac-784e-4937-b9da-e85217a05509" />
     <Project Path="Services/Server/src/PlServer.Server.Services/PlServer.Server.Services.csproj" Id="4f369f1f-4b20-4632-b475-fbe885344a5e" />
   </Folder>
-  <Folder Name="/Services/Worker/">
-    <Project Path="Services/Worker/src/PlServer.Worker.API/PlServer.Worker.API.csproj" Id="96db114d-06ee-47f5-b6b1-b1b620a7e350" />
-  </Folder>
   <Folder Name="/Shared/">
     <Project Path="Shared/PlServer.Application/PlServer.Application.csproj" Id="d9e094aa-eb06-4b3b-81cc-e9891763591f" />
     <Project Path="Shared/PlServer.Domain.NodeGraph/PlServer.Domain.Nodes.csproj" Id="29ad70e8-3d6e-451e-bbca-478ea57efe3e" />
     <Project Path="Shared/PlServer.Domain/PlServer.Domain.csproj" />
     <Project Path="Shared/PlServer.Infrastructure/PlServer.Infrastructure.csproj" Id="19f28e65-e423-4413-8a64-343fc22c5a7a" />
-    <Project Path="Shared/PlServer.Plugins.Loading/PlServer.Plugins.Loading.csproj" Id="ef57b92e-2d10-4b4a-891b-ff3adab3481c" />
-    <Project Path="Shared/PlServer.Plugins/PlServer.Plugins.csproj" Id="5d05be49-29bb-4dc6-bc5f-16740eb8121c" />
-    <Project Path="Shared/PlServer.Protos/PlServer.Protos.csproj" />
   </Folder>
   <Folder Name="/Solution Items/" />
 </Solution>
