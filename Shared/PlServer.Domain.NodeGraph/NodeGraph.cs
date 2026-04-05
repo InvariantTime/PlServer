@@ -6,10 +6,12 @@ namespace PlServer.Domain.Nodes;
 public class NodeGraph
 {
     private readonly Dictionary<NodeId, Node> _nodes;
+    private readonly List<NodeConnection> _connections;
 
     public NodeGraph()
     {
         _nodes = new Dictionary<NodeId, Node>();
+        _connections = new List<NodeConnection>();
     }
 
     public UnitResult<NodeErrors> AddNode(Node node)

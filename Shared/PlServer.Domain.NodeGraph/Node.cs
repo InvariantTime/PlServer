@@ -9,9 +9,12 @@ public class Node : Entity<NodeId>
 
     public Vector2 Position { get; private set; }
 
-    public Node(string name, NodeId id) : base(id)
+    public INodeDefinition Definition { get; }
+
+    public Node(string name, INodeDefinition definition, NodeId id) : base(id)
     {
         DisplayName = name;
+        Definition = definition;
     }
 
     public void Move(Vector2 position)
@@ -19,8 +22,8 @@ public class Node : Entity<NodeId>
         Position = position;
     }
 
-    public void SetName(string name)
+    public void SetName(string? name)
     {
-        DisplayName = name;//TODO: get default name from node definition
+        DisplayName = name ?? Definition.Name;
     }
 }
