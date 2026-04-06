@@ -1,4 +1,7 @@
 ﻿
 namespace PlServer.Domain.Nodes;
 
-public readonly record struct NodeConnection(NodePinId SourcePin, NodeId SourceNode, NodePinId TargetPin, NodeId TargetNode);
+
+public record NodeConnection(NodeConnectionPart Source, NodeConnectionPart Target);
+
+public readonly record struct NodeConnectionPart(NodePinId Pin, NodeId Node);

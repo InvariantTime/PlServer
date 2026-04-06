@@ -6,12 +6,12 @@ namespace PlServer.Domain.Nodes;
 public class NodeGraph
 {
     private readonly Dictionary<NodeId, Node> _nodes;
-    private readonly List<NodeConnection> _connections;
+    private readonly HashSet<NodeConnection> _connections;
 
     public NodeGraph()
     {
         _nodes = new Dictionary<NodeId, Node>();
-        _connections = new List<NodeConnection>();
+        _connections = new HashSet<NodeConnection>();
     }
 
     public UnitResult<NodeErrors> AddNode(Node node)
@@ -32,5 +32,27 @@ public class NodeGraph
         bool result = _nodes.Remove(id);
 
         return Result.Check(result, NodeErrors.Common, $"Unable to remove node {id}");
+    }
+
+    public UnitResult<NodeErrors> AddConnection(NodeConnection connection)
+    {
+        if (_connections.Contains(connection) == true)
+            return Result.Failure(NodeErrors.AlreadyExists, "There is already such connection");
+
+        //TODO: validation types and e.t.c
+
+        return Result.Success<NodeErrors>();
+    }
+
+    public UnitResult<NodeErrors> RemoveConnection(NodeConnectionPart target)
+    {
+        var other = _connections.FirstOrDefault(x => x.Target == target);
+
+        if (other == null)
+            return Result.Failure(NodeErrors.NoExists);
+
+        _connections.Remove(other);
+
+        return Result.Success<NodeErrors>();
     }
 }
