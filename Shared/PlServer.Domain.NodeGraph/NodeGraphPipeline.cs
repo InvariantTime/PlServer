@@ -6,7 +6,7 @@ public class NodeGraphPipeline
     {
     }
 
-    public void ApplyCommand(INodeGraphCommand command)
+    public void ApplyCommand(NodeGraphContext context, INodeGraphCommand command)
     {
     }
 }
