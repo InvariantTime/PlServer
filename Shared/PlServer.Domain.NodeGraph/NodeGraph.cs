@@ -6,6 +6,10 @@ public class NodeGraph
     private readonly NodeGraphPipeline _pipeline;
     private readonly NodeGraphContext _context;
 
+    public ICollection<Node> Nodes => _context.Nodes;
+
+    public IReadOnlyCollection<NodeConnection> Connections => _context.Connections;
+
     public NodeGraph(NodeGraphPipeline pipeline)
     {
         _pipeline = pipeline;
