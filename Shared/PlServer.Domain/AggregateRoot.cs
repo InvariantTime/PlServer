@@ -1,7 +1,7 @@
 ﻿
 namespace PlServer.Domain;
 
-public class AggregateRoot<TKey> : Entity<TKey> where TKey : notnull
+public class AggregateRoot<TKey> : Entity<TKey>, IEventSource<IDomainEvent> where TKey : notnull
 {
     private readonly List<IDomainEvent> _events;
 
