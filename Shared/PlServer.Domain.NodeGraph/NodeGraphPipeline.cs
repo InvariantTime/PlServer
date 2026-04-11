@@ -1,23 +1,21 @@
-﻿namespace PlServer.Domain.Nodes;
+﻿using PlServer.Domain.Results;
+
+namespace PlServer.Domain.Nodes;
 
 public class NodeGraphPipeline
 {
-    private readonly Dictionary<Type, INodeGraphPolicy> _polices = new();
+
+    private readonly Dictionary<Type, NodeGraphMiddleware> _polices = new();
 
     public void Rebuild()
     {
         _polices.Clear();
     }
 
-    public void ApplyCommand(NodeGraphContext context, INodeGraphCommand command)
+    public UnitResult<NodeErrors> ApplyCommand<T>(NodeGraphContext context, T command) where T : class
     {
-        var result = _polices.TryGetValue(command.GetType(), out var policy);
-
-        if (result == true)
-        {
-            policy!.Validate();
-        }
-
-        command.Execute();
+        return Result.Success<NodeErrors>();
     }
 }
+
+internal delegate UnitResult<NodeErrors> NodeGraphMiddleware();
