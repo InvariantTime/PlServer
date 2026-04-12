@@ -6,5 +6,6 @@ public enum NodeErrors
     None = default,
     Common = 1,
     AlreadyExists = 2,
-    NoExists = 3
+    NoExists = 3,
+    UnknownCommand = 4
 }
