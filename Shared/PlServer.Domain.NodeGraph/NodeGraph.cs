@@ -1,4 +1,6 @@
 ﻿
+using PlServer.Domain.Results;
+
 namespace PlServer.Domain.Nodes;
 
 public class NodeGraph
@@ -16,9 +18,9 @@ public class NodeGraph
         _context = new NodeGraphContext();
     }
 
-    public void ApplyCommand(INodeGraphCommand command)
+    public UnitResult<NodeErrors> ApplyCommand<T>(T command) where T : class
     {
-        _pipeline.ApplyCommand(_context, command);
+        return _pipeline.ApplyCommand(_context, command);
     }
 
     public void Rebuild()

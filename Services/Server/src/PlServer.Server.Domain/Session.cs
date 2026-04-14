@@ -1,5 +1,6 @@
 ﻿
 using PlServer.Domain;
+using PlServer.Domain.Nodes;
 using PlServer.Domain.Results;
 using PlServer.Server.Domain.Events;
 
@@ -8,6 +9,7 @@ namespace PlServer.Server.Domain;
 public class Session : AggregateRoot<SessionId>
 {
     private readonly HashSet<UserId> _users;
+    private readonly NodeGraph _graph;
 
     public UserId HostId { get; }
 
@@ -24,6 +26,7 @@ public class Session : AggregateRoot<SessionId>
         HostId = hostId;
 
         _users = new HashSet<UserId>();
+        _graph = new NodeGraph(new NodeGraphPipeline());
     }
 
     public static Session Create(SessionCreationQuery query)
@@ -32,6 +35,11 @@ public class Session : AggregateRoot<SessionId>
         session.AddEvent(new SessionCreatedEvent(query.Id, query.HostId, query.Name));
 
         return session;
+    }
+
+    public UnitResult<NodeErrors> ApplyNodeGraphCommand<T>(T command) where T : class
+    {
+        return _graph.ApplyCommand(command);
     }
 
     public UnitResult<SessionErrors> JoinPlayer(UserId user)

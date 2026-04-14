@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Shared\PlServer.Domain.NodeGraph\PlServer.Domain.Nodes.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\PlServer.Domain\PlServer.Domain.csproj" />
   </ItemGroup>
 
