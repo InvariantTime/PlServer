@@ -21,7 +21,7 @@ public class SessionService : ISessionService
         {
             Name = name,
             HostId = host,
-            Id = SessionId.New(),
+            Id = SessionId.New(),//TODO: add node graph
             MaxUsersCount = maxPlayers
         });
 

@@ -9,7 +9,6 @@ namespace PlServer.Server.Domain;
 public class Session : AggregateRoot<SessionId>
 {
     private readonly HashSet<UserId> _users;
-    private readonly NodeGraph _graph;
 
     public UserId HostId { get; }
 
@@ -19,27 +18,24 @@ public class Session : AggregateRoot<SessionId>
 
     public int MaxUsersCount { get; }
 
-    private Session(SessionId id, string name, int maxUsersCount, UserId hostId) : base(id)
+    public NodeGraphId GraphId { get; }
+
+    private Session(SessionId id, string name, int maxUsersCount, UserId hostId, NodeGraphId graphId) : base(id)
     {
         Name = name;
         MaxUsersCount = maxUsersCount;
         HostId = hostId;
+        GraphId = graphId;
 
-        _users = new HashSet<UserId>();
-        _graph = new NodeGraph(new NodeGraphPipeline());
+        _users = new HashSet<UserId>();//TODO: move all user logic to new class
     }
 
     public static Session Create(SessionCreationQuery query)
     {
-        var session = new Session(query.Id, query.Name, query.MaxUsersCount, query.HostId);
-        session.AddEvent(new SessionCreatedEvent(query.Id, query.HostId, query.Name));
+        var session = new Session(query.Id, query.Name, query.MaxUsersCount, query.HostId, query.GraphId);
+        session.AddEvent(new SessionCreatedEvent(query.Id, query.GraphId, query.HostId, query.Name));
 
         return session;
-    }
-
-    public UnitResult<NodeErrors> ApplyNodeGraphCommand<T>(T command) where T : class
-    {
-        return _graph.ApplyCommand(command);
     }
 
     public UnitResult<SessionErrors> JoinPlayer(UserId user)
@@ -73,4 +69,4 @@ public class Session : AggregateRoot<SessionId>
     }
 }
 
-public readonly record struct SessionCreationQuery(SessionId Id, string Name, int MaxUsersCount, UserId HostId);
+public readonly record struct SessionCreationQuery(SessionId Id, string Name, int MaxUsersCount, UserId HostId, NodeGraphId GraphId);

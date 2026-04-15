@@ -3,7 +3,7 @@ using PlServer.Domain.Results;
 
 namespace PlServer.Domain.Nodes;
 
-public class NodeGraph
+public class NodeGraph : AggregateRoot<NodeGraphId>
 {
     private readonly NodeGraphPipeline _pipeline;
     private readonly NodeGraphContext _context;
@@ -12,7 +12,7 @@ public class NodeGraph
 
     public IReadOnlyCollection<NodeConnection> Connections => _context.Connections;
 
-    public NodeGraph(NodeGraphPipeline pipeline)
+    public NodeGraph(NodeGraphId id, NodeGraphPipeline pipeline) : base(id)
     {
         _pipeline = pipeline;
         _context = new NodeGraphContext();
