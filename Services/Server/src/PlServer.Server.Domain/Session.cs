@@ -8,26 +8,19 @@ namespace PlServer.Server.Domain;
 
 public class Session : AggregateRoot<SessionId>
 {
-    private readonly HashSet<UserId> _users;
+    private readonly UserCollection _users;
 
-    public UserId HostId { get; }
 
     public string Name { get; }
-
-    public IReadOnlyCollection<UserId> Users => _users.AsReadOnly();
-
-    public int MaxUsersCount { get; }
 
     public NodeGraphId GraphId { get; }
 
     private Session(SessionId id, string name, int maxUsersCount, UserId hostId, NodeGraphId graphId) : base(id)
     {
         Name = name;
-        MaxUsersCount = maxUsersCount;
-        HostId = hostId;
         GraphId = graphId;
 
-        _users = new HashSet<UserId>();//TODO: move all user logic to new class
+        _users = new UserCollection(hostId, maxUsersCount);
     }
 
     public static Session Create(SessionCreationQuery query)
@@ -38,30 +31,25 @@ public class Session : AggregateRoot<SessionId>
         return session;
     }
 
-    public UnitResult<SessionErrors> JoinPlayer(UserId user)
+    public UnitResult<SessionErrors> JoinPlayer(User user)
     {
-        if (_users.Contains(user) == true)
-            return Result.Failure(SessionErrors.UserAlreadyExists, $"User with id {user.Id} already exists");
+        var result = _users.TryAdd(user);
 
-        bool result = _users.Add(user);
+        if (result.IsSuccess == true)
+            AddEvent(new UserJoinedEvent(Key, user.Key));
 
-        if (result == false)
-            return Result.Failure(SessionErrors.Common, $"Unable to join user with id {user.Id}");
-
-        AddEvent(new UserJoinedEvent(Key, user));
-
-        return Result.Success<SessionErrors>();
+        return result;
     }
 
     public UnitResult<SessionErrors> LeavePlayer(UserId user)
     {
-        if (_users.Contains(user) == false)
-            return Result.Failure(SessionErrors.UserNotExists, $"There is no user with id {user}");
+        var result = _users.TryRemove(user, out var isHost);
 
-        bool result = _users.Remove(user);//TODO: Handle host left
+        if (result.IsSuccess == false)
+            return result;
 
-        if (result == false)
-            return Result.Failure(SessionErrors.Common, $"Unable to remove user with id {user.Id}");
+        if (isHost == true)
+            AddEvent(new HostLeftEvent(Key, user));
 
         AddEvent(new UserLeftEvent(Key, user));
 

@@ -7,4 +7,5 @@ public enum SessionErrors
     Common = 1,
     UserAlreadyExists = 2,
     UserNotExists = 3,
+    SessionFull = 4
 }
