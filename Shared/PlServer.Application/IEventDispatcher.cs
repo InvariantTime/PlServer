@@ -4,5 +4,7 @@ namespace PlServer.Application;
 
 public interface IEventDispatcher
 {
-    Task DispatchEventAsync<T>(IDomainEvent @event, CancellationToken cancellation = default) where T : struct;
+    Task DispatchEventAsync<T>(T @event, CancellationToken cancellation = default);
+
+    Task DispatchEventAsync(IDomainEvent @event,  CancellationToken cancellation = default);
 }

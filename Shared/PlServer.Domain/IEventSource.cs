@@ -1,7 +1,7 @@
 ﻿
 namespace PlServer.Domain;
 
-public interface IEventSource<out T> where T : class, IDomainEvent
+public interface IEventSource<out T> where T : IDomainEvent
 {
     IReadOnlyCollection<T> Events { get; }
 

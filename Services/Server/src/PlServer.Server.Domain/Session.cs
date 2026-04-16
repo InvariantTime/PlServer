@@ -6,10 +6,9 @@ using PlServer.Server.Domain.Events;
 
 namespace PlServer.Server.Domain;
 
-public class Session : AggregateRoot<SessionId>
+public class Session : AggregateRoot<SessionId, ISessionEvent>
 {
     private readonly UserCollection _users;
-
 
     public string Name { get; }
 

@@ -4,5 +4,5 @@ namespace PlServer.Application;
 
 public interface IDomainEventHandler<T> where T : IDomainEvent
 {
-    void Handle(T @event);
+    Task HandleAsync(T @event);
 }
