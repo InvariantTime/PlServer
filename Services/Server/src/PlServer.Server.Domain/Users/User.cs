@@ -1,7 +1,6 @@
-﻿
-using PlServer.Domain;
+﻿using PlServer.Domain;
 
-namespace PlServer.Server.Domain;
+namespace PlServer.Server.Domain.Users;
 
 public class User : Entity<UserId>
 {

@@ -1,6 +1,8 @@
 ﻿
+using PlServer.Application;
 using PlServer.Domain.Results;
 using PlServer.Server.Domain;
+using PlServer.Server.Domain.Users;
 using PlServer.Server.Services.DTOs;
 using PlServer.Server.Services.Repositories;
 
@@ -9,10 +11,12 @@ namespace PlServer.Server.Services;
 public class SessionService : ISessionService
 {
     private readonly ISessionRepository _repository;
+    private readonly IEventDispatcher _dispatcher;
 
-    public SessionService(ISessionRepository repository)
+    public SessionService(ISessionRepository repository, IEventDispatcher dispatcher)
     {
         _repository = repository;
+        _dispatcher = dispatcher;
     }
 
     public async Task<Result<SessionSummaryDTO>> CreateSessionAsync(string name, UserId host, int maxPlayers)
@@ -30,9 +34,9 @@ public class SessionService : ISessionService
         if (result == false)
             return Result.Failure<SessionSummaryDTO>(ErrorTypes.Common, "Unable to add session");
 
-        //TODO: dispatch events
+        await _dispatcher.DispatchEntityEventsAsync(session);
        
-        return Result.Success(new SessionSummaryDTO(session.Key, session.Name, session.HostId, session.MaxUsersCount, session.Users.Count));
+        return Result.Success(new SessionSummaryDTO(session.Key, session.Name, session.Users.HostId, session.Users.MaxUserCount, session.Users.UserCount));
     }
 
     public async Task<Result> DeleteSessionAsync(SessionId sessionId)
@@ -70,6 +74,6 @@ public class SessionService : ISessionService
     public IEnumerable<SessionSummaryDTO> GetSessionSummaryDtos()
     {
         return _repository.GetAll()
-            .Select(x => new SessionSummaryDTO(x.Key, x.Name, x.HostId, x.MaxUsersCount, x.Users.Count));
+            .Select(x => new SessionSummaryDTO(x.Key, x.Name, x.Users.HostId, x.Users.MaxUserCount, x.Users.Users.Count));
     }
 }

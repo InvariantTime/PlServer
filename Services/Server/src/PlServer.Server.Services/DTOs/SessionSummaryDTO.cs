@@ -1,5 +1,6 @@
 ﻿
 using PlServer.Server.Domain;
+using PlServer.Server.Domain.Users;
 
 namespace PlServer.Server.Services.DTOs;
 

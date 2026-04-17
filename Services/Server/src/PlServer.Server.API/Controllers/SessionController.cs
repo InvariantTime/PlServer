@@ -2,6 +2,7 @@
 using PlServer.Server.API.Requests;
 using PlServer.Server.API.Responces;
 using PlServer.Server.Domain;
+using PlServer.Server.Domain.Users;
 using PlServer.Server.Services;
 
 namespace PlServer.Server.API.Controllers;
@@ -22,7 +23,7 @@ public class SessionController : ControllerBase
     {
         var dtos = _sessions.GetSessionSummaryDtos();
 
-        return dtos.Select(x => new SessionResponse(x.Name, x.Id));
+        return dtos.Select(x => new SessionResponse(x.Name, x.Id, "user", x.MaxUsersCount, x.UsersCount));//TODO: user service, get user name
     }
 
     [HttpPost]

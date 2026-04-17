@@ -6,7 +6,7 @@ import { Header } from "./components/header/Header";
 import { ModalProvider } from "./components/modals/ModalProvider";
 import { Session } from "./pages/session/Session";
 
-const url = "/ws/sessions";
+const url = "/ws/lobby";
 
 function App() {
   return (

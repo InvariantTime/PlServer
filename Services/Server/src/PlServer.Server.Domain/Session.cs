@@ -3,6 +3,7 @@ using PlServer.Domain;
 using PlServer.Domain.Nodes;
 using PlServer.Domain.Results;
 using PlServer.Server.Domain.Events;
+using PlServer.Server.Domain.Users;
 
 namespace PlServer.Server.Domain;
 
@@ -13,6 +14,9 @@ public class Session : AggregateRoot<SessionId, ISessionEvent>
     public string Name { get; }
 
     public NodeGraphId GraphId { get; }
+
+    public IReadOnlyUserCollection Users => field 
+        ?? new ReadOnlyUserCollection(_users);
 
     private Session(SessionId id, string name, int maxUsersCount, UserId hostId, NodeGraphId graphId) : base(id)
     {

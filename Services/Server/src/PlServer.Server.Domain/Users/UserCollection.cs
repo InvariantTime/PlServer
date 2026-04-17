@@ -1,8 +1,8 @@
 ﻿using PlServer.Domain.Results;
 
-namespace PlServer.Server.Domain;
+namespace PlServer.Server.Domain.Users;
 
-public class UserCollection : IDisposable
+public class UserCollection : IDisposable, IReadOnlyUserCollection
 {
     private readonly Dictionary<UserId, User> _users;
     private readonly SemaphoreSlim _locker;

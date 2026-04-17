@@ -38,6 +38,6 @@ app.MapGet("ping", () => "pong");
 
 app.MapControllers();
 
-app.MapHub<SessionHub>("ws/sessions"); 
+app.MapHub<LobbyHub>("ws/lobby");
 
 app.Run();
