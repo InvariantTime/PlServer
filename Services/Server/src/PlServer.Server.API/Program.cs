@@ -1,4 +1,7 @@
+using PlServer.Application;
 using PlServer.Server.API.Hubs;
+using PlServer.Server.Infrastructure;
+using PlServer.Server.Infrastructure.Handlers.Sessions;
 using PlServer.Server.Infrastructure.Repositories;
 using PlServer.Server.Services;
 using PlServer.Server.Services.Repositories;
@@ -22,6 +25,10 @@ builder.Services.AddCors(options =>
 builder.Services.AddSingleton<ISessionRepository, InMemorySessionRepository>();
 
 builder.Services.AddSingleton<ISessionService, SessionService>();
+builder.Services.AddSingleton<ILobbyNotifier, SessionLobbyNotifier>();
+
+builder.Services.RegisterHandlers();
+
 
 var app = builder.Build();
 
