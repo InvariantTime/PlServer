@@ -4,7 +4,7 @@ namespace PlServer.Server.Domain.Users;
 
 public class UserCollection : IDisposable, IReadOnlyUserCollection
 {
-    private readonly Dictionary<UserId, User> _users;
+    private readonly HashSet<UserId> _users;
     private readonly SemaphoreSlim _locker;
 
     public UserId HostId { get; }
@@ -15,18 +15,18 @@ public class UserCollection : IDisposable, IReadOnlyUserCollection
 
     public bool HasHost => HasHostInternal();
 
-    public ICollection<User> Users => CopyUsers();
+    public ICollection<UserId> Users => CopyUsers();
 
     public UserCollection(UserId host, int maxUserCount)
     {
         MaxUserCount = maxUserCount;
         HostId = host;
 
-        _users = new Dictionary<UserId, User>();
+        _users = new HashSet<UserId>();
         _locker = new SemaphoreSlim(1, 1);
     }
 
-    public UnitResult<SessionErrors> TryAdd(User user)
+    public UnitResult<SessionErrors> TryAdd(UserId user)
     {
         try
         {
@@ -35,7 +35,7 @@ public class UserCollection : IDisposable, IReadOnlyUserCollection
             if (_users.Count >= MaxUserCount)
                 return Result.Failure(SessionErrors.SessionFull);
 
-            bool result = _users.TryAdd(user.Key, user);
+            bool result = _users.Add(user);
 
             return Result.Check(result == true, SessionErrors.UserAlreadyExists);
         }
@@ -51,9 +51,9 @@ public class UserCollection : IDisposable, IReadOnlyUserCollection
         {
             _locker.Wait();
 
-            bool result = _users.Remove(id, out var user);
+            bool result = _users.Remove(id);
 
-            isHost = user?.Key == HostId;
+            isHost = id == HostId;
             return Result.Check(result == true, SessionErrors.UserNotExists);
         }
         finally
@@ -73,7 +73,7 @@ public class UserCollection : IDisposable, IReadOnlyUserCollection
         try
         {
             _locker.Wait();
-            return _users.ContainsKey(HostId);
+            return _users.Contains(HostId);
         }
         finally
         {
@@ -94,12 +94,12 @@ public class UserCollection : IDisposable, IReadOnlyUserCollection
         }
     }
 
-    private IList<User> CopyUsers()
+    private IList<UserId> CopyUsers()
     {
         try
         {
             _locker.Wait();
-            return _users.Values.ToList();
+            return _users.ToList();
         }
         finally
         {

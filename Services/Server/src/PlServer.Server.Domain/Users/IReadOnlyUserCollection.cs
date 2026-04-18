@@ -5,7 +5,7 @@ public interface IReadOnlyUserCollection
 {
     UserId HostId { get; }
 
-    ICollection<User> Users { get; }
+    ICollection<UserId> Users { get; }
 
     int MaxUserCount { get; }
 

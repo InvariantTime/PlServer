@@ -34,12 +34,12 @@ public class Session : AggregateRoot<SessionId, ISessionEvent>
         return session;
     }
 
-    public UnitResult<SessionErrors> JoinPlayer(User user)
+    public UnitResult<SessionErrors> JoinPlayer(UserId user)
     {
         var result = _users.TryAdd(user);
 
         if (result.IsSuccess == true)
-            AddEvent(new UserJoinedEvent(Key, user.Key));
+            AddEvent(new UserJoinedEvent(Key, user));
 
         return result;
     }

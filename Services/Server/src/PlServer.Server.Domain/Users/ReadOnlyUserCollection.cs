@@ -7,7 +7,7 @@ public class ReadOnlyUserCollection : IReadOnlyUserCollection
 
     public UserId HostId => _base.HostId;
 
-    public ICollection<User> Users => _base.Users;
+    public ICollection<UserId> Users => _base.Users;
 
     public int MaxUserCount => _base.MaxUserCount;
 
