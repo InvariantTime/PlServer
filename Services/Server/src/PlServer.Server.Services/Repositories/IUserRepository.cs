@@ -13,5 +13,7 @@ public interface IUserRepository
 
     User? GetByName(string name);
 
+    bool HasUserWithName(string name);
+
     ICollection<User> GetAll();
 }

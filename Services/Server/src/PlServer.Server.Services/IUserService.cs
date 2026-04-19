@@ -6,7 +6,7 @@ namespace PlServer.Server.Services;
 
 public interface IUserService
 {
-    Task<Result<UserId>> RegisterAsync(string name, string passwordHash);
+    Task<Result<UserId>> RegisterAsync(string name, string passwor);
 
-    Task<Result<UserId>> LoginAsync(string name, string passwordHash);
+    Task<Result<UserId>> LoginAsync(string name, string password);
 }
