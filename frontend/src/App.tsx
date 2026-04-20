@@ -5,6 +5,7 @@ import { SessionProvider } from "./components/sessions/SessionProvider";
 import { Header } from "./components/header/Header";
 import { ModalProvider } from "./components/modals/ModalProvider";
 import { Session } from "./pages/session/Session";
+import { Auth } from "./pages/auth/Auth";
 
 const url = "/ws/lobby";
 
@@ -18,7 +19,7 @@ function App() {
           </div>
 
           <div className="flex flex-1">
-            <Lobby/>
+            <Auth/>
           </div>
         </div>
       </SessionProvider>

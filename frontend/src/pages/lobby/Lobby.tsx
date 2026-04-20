@@ -52,7 +52,7 @@ export const Lobby = () => {
       </header>
 
       <div className="space-y-4 mb-8 border-2 rounded-xl border-dashed border-emerald-900 mt-4 p-4">
-        {sessions.map((session, index, array) => {
+        {sessions.map((session) => {
 
           const isFree = session.userCount < session.maxUserCount;
 
