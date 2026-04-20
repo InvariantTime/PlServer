@@ -7,7 +7,7 @@ public interface IUserRepository
 {
     bool AddUser(User user);
 
-    bool RemoveUser(UserId id);
+    bool RemoveUser(UserId id, out User? user);
 
     User? GetById(UserId id);
 

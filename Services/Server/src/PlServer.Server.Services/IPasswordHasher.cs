@@ -3,7 +3,7 @@ namespace PlServer.Server.Services;
 
 public interface IPasswordHasher
 {
-    string Hash(object value);
+    string Hash(string value);
 
-    bool IsValid(object password, string passwordHash);
+    bool Verify(string password, string passwordHash);
 }

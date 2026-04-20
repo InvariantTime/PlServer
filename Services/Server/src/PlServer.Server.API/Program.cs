@@ -23,9 +23,11 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSingleton<ISessionRepository, InMemorySessionRepository>();
+builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
 
 builder.Services.AddSingleton<ISessionService, SessionService>();
 builder.Services.AddSingleton<ILobbyNotifier, SessionLobbyNotifier>();
+builder.Services.AddSingleton<IUserService, UserService>();
 
 builder.Services.RegisterHandlers();
 

@@ -1,5 +1,4 @@
 ﻿using PlServer.Application;
-using PlServer.Domain;
 using PlServer.Domain.Results;
 using PlServer.Server.Domain.Users;
 using PlServer.Server.Services.Repositories;
@@ -26,7 +25,7 @@ public class UserService : IUserService
         if (user == null)
             return Result.Failure<UserId>(ErrorTypes.Common, "Invalid name or password");
 
-        if (_hasher.IsValid(password, user.PasswordHash) == false)
+        if (_hasher.Verify(password, user.PasswordHash) == false)
             return Result.Failure<UserId>(ErrorTypes.Common, "Invalid name or password");
 
         await _dispatcher.DispatchEntityEventsAsync(user);
