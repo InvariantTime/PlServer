@@ -2,6 +2,7 @@ using PlServer.Application;
 using PlServer.Server.API.Hubs;
 using PlServer.Server.Infrastructure;
 using PlServer.Server.Infrastructure.Handlers.Sessions;
+using PlServer.Server.Infrastructure.Hashers;
 using PlServer.Server.Infrastructure.Repositories;
 using PlServer.Server.Services;
 using PlServer.Server.Services.Repositories;
@@ -28,6 +29,7 @@ builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
 builder.Services.AddSingleton<ISessionService, SessionService>();
 builder.Services.AddSingleton<ILobbyNotifier, SessionLobbyNotifier>();
 builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
 builder.Services.RegisterHandlers();
 

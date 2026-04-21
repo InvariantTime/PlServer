@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PlServer.Server.API.Requests;
+using PlServer.Server.API.Responces;
 using PlServer.Server.Services;
 
 namespace PlServer.Server.API.Controllers;
@@ -15,24 +16,24 @@ public class UserController : ControllerBase
         _service = service;
     }
 
-    [HttpPost("/register")]
+    [HttpPost("register")]
     public async Task<IResult> RegisterAsync([FromBody]RegisterRequest request)
     {
         var result = await _service.RegisterAsync(request.Name, request.Password);
 
         if (result.IsSuccess == false)
-            return Results.BadRequest(result.Error);
+            return Results.BadRequest(result.AsErrorResponce());
 
         return Results.Ok();
     }
 
-    [HttpPost("/login")]
+    [HttpPost("login")]
     public async Task<IResult> LogInAsync(LoginRequest request)
     {
         var result = await _service.LoginAsync(request.Name, request.Password);
 
         if (result.IsSuccess == false)
-            return Results.BadRequest(result.Error);
+            return Results.BadRequest(result.AsErrorResponce());
 
         return Results.Ok();
     }

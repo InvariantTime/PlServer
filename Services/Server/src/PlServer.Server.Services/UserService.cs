@@ -48,6 +48,11 @@ public class UserService : IUserService
         if (user.IsSuccess == false)
             return Result.Failure<UserId>(user.Error);
 
+        var added = _users.AddUser(user.Value!);
+
+        if (added == false)
+            return Result.Failure<UserId>(ErrorTypes.Unknown, "server error");
+
         await _dispatcher.DispatchEntityEventsAsync(user.Value!);
 
         return Result.Success(id);
