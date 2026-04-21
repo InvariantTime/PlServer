@@ -1,0 +1,26 @@
+
+.inputBlock {
+    margin-top: 20px;
+}
+
+.inputBlock input {
+    width: 100%;
+    margin-top: 4px;
+    border-radius: 6px;
+    padding: 4px;
+    outline-offset: 2px;
+    outline-width: 1px;
+    outline-color: #cbd5e1;
+}
+
+.inputBlock label {
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 500;
+    padding-left: 8px;
+}
+
+.inputBlock input:focus {
+    outline-color: #10b981;
+    outline-width: 2px;
+}
