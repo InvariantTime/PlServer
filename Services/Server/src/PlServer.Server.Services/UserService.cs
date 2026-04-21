@@ -1,6 +1,7 @@
 ﻿using PlServer.Application;
 using PlServer.Domain.Results;
 using PlServer.Server.Domain.Users;
+using PlServer.Server.Services.DTOs;
 using PlServer.Server.Services.Repositories;
 
 namespace PlServer.Server.Services;
@@ -56,5 +57,12 @@ public class UserService : IUserService
         await _dispatcher.DispatchEntityEventsAsync(user.Value!);
 
         return Result.Success(id);
+    }
+
+    public UserSummaryDTO? GetUserById(UserId id)
+    {
+        var user = _users.GetAll().FirstOrDefault(x => x.Key == id);
+
+        return user != null ? new UserSummaryDTO(user.Key, user.Name) : null;
     }
 }

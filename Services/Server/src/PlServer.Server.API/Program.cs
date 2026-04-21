@@ -1,6 +1,9 @@
 using PlServer.Application;
+using PlServer.Server.API;
+using PlServer.Server.API.Binders;
 using PlServer.Server.API.Hubs;
 using PlServer.Server.Infrastructure;
+using PlServer.Server.Infrastructure.Auth;
 using PlServer.Server.Infrastructure.Handlers.Sessions;
 using PlServer.Server.Infrastructure.Hashers;
 using PlServer.Server.Infrastructure.Repositories;
@@ -10,7 +13,10 @@ using PlServer.Server.Services.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
-builder.Services.AddControllers();
+builder.Services.AddControllers(op =>
+{
+    op.ModelBinderProviders.Insert(0, new CustomBindingProvider());
+});
 
 builder.Services.AddCors(options =>
 {
@@ -30,11 +36,15 @@ builder.Services.AddSingleton<ISessionService, SessionService>();
 builder.Services.AddSingleton<ILobbyNotifier, SessionLobbyNotifier>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+builder.Services.AddSingleton<IAuthTokenService, JwtAuthTokenService>();
 
+builder.Services.RegisterAuthentication(builder.Configuration);
 builder.Services.RegisterHandlers();
 
 
 var app = builder.Build();
+
+app.UseAuthentication();
 
 app.UseCors("frontend");
 
