@@ -21,6 +21,9 @@ public class SessionService : ISessionService
 
     public async Task<Result<SessionSummaryDTO>> CreateSessionAsync(string name, UserId host, int maxPlayers)
     {
+        if (_repository.CanCreateSession(host) == false)
+            return Result.Failure<SessionSummaryDTO>(ErrorTypes.Common, "User is already in a session");
+
         var session = Session.Create(new SessionCreationQuery
         {
             Name = name,
@@ -51,24 +54,45 @@ public class SessionService : ISessionService
         return Result.Success();
     }
 
-    public async Task<Result> JoinAsync(SessionId sessionId, UserId user)
+    public async Task<UnitResult<SessionErrors>> JoinAsync(SessionId sessionId, UserId user)
     {
+        if (_repository.CanJoinTo(user, sessionId) == false)
+            return Result.Failure(SessionErrors.UserAlreadyExists, "User is already in a session");
+
         var session = _repository.GetSessionById(sessionId);
 
         if (session == null)
-            return Result.Failure(ErrorTypes.Common);
+            return Result.Failure(SessionErrors.Common, "There is no such session");
 
-        return Result.Success();
+        var result = session.JoinPlayer(user);
+
+        if (result.IsSuccess == false)
+            return result;
+
+        _repository.Update(session);
+        await _dispatcher.DispatchEntityEventsAsync(session);
+
+        return Result.Success<SessionErrors>();
     }
 
-    public async Task<Result> LeaveAsync(SessionId sessionId, UserId user)
+    public async Task<UnitResult<SessionErrors>> LeaveAsync(SessionId sessionId, UserId user)
     {
         var session = _repository.GetSessionById(sessionId);
 
         if (session == null)
-            return Result.Failure(ErrorTypes.Common);
+            return Result.Failure(SessionErrors.Common, "There is no such session");
 
-        return Result.Success();
+        var result = session.LeavePlayer(user);
+
+        if (result.IsSuccess == false)
+            return result;
+
+        //TODO: handle session shutdown when host left
+
+        _repository.Update(session);
+        await _dispatcher.DispatchEntityEventsAsync(session);
+
+        return Result.Success<SessionErrors>();
     }
 
     public IEnumerable<SessionSummaryDTO> GetSessionSummaryDtos()

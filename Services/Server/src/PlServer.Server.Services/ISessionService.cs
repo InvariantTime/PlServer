@@ -11,9 +11,9 @@ public interface ISessionService
 
     Task<Result<SessionSummaryDTO>> CreateSessionAsync(string name, UserId host, int maxPlayers);
 
-    Task<Result> JoinAsync(SessionId session, UserId user);
+    Task<UnitResult<SessionErrors>> JoinAsync(SessionId session, UserId user);
 
-    Task<Result> LeaveAsync(SessionId session, UserId user);
+    Task<UnitResult<SessionErrors>> LeaveAsync(SessionId session, UserId user);
 
     Task<Result> DeleteSessionAsync(SessionId session);
 }
