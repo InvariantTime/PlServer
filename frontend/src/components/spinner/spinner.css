@@ -1,0 +1,19 @@
+.spinner {
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    border-style: dashed dashed dashed solid;
+    border-color: #047857;
+    border-width: 3px;
+    border-radius: 50%;
+    animation: rotation 0.8s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -1,6 +1,7 @@
 import { SubmitEventHandler, useEffect, useState } from "react"
 import "./auth.css"
 import { register } from "../../api/auth/AuthService"
+import { useNavigate } from "react-router-dom"
 
 interface Props {
     goToLogin: () => void
@@ -12,13 +13,29 @@ export const RegisterPanel = ({ goToLogin }: Props) => {
     const [password, setPassword] = useState('');
     const [cpassword, setCpassword] = useState('');
     const [error, setError] = useState<string | null>(null);
+    const navigation = useNavigate();
 
     useEffect(() => {
         setError(null);
     }, [name, password, cpassword]);
 
+    useEffect(() => {
+
+        if (password === '' || cpassword === '')
+            return;
+
+        if (password === cpassword)
+            return;
+
+        setError("the passwords don't match");
+
+    }, [password, cpassword]);
+
     const onSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (password !== cpassword)
+            return;
 
         const result = await register(name, password);
 
@@ -27,7 +44,7 @@ export const RegisterPanel = ({ goToLogin }: Props) => {
             return;
         }
 
-        //
+        navigation("/");
     };
 
     return (

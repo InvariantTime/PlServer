@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './auth.css'
 import { login } from '../../api/auth/AuthService';
+import { useNavigate } from 'react-router-dom';
 
 
 interface Props {
@@ -12,6 +13,7 @@ export const LoginPanel = ({ goToRegister }: Props) => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
+    const navigation = useNavigate();
 
     useEffect(() => {
         setError(null);
@@ -27,7 +29,7 @@ export const LoginPanel = ({ goToRegister }: Props) => {
             return;
         }
 
-        //
+        navigation("/");
     }
 
     return (

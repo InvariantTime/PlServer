@@ -1,29 +1,23 @@
-import React from "react";
-import logo from "./logo.svg";
 import { Lobby } from "./pages/lobby/Lobby";
-import { SessionProvider } from "./components/sessions/SessionProvider";
-import { Header } from "./components/header/Header";
-import { ModalProvider } from "./components/modals/ModalProvider";
 import { Session } from "./pages/session/Session";
 import { Auth } from "./pages/auth/Auth";
-
-const url = "/ws/lobby";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { PrivateRoute } from "./components/PrivateRoute";
 
 function App() {
   return (
-    <ModalProvider>
-      <SessionProvider url={url}>
-        <div className="bg-slate-300 min-h-screen flex flex-col">
-          <div className="h-[8%]">
-            <Header />
-          </div>
+    <div className="w-screen h-screen bg-slate-200">
+      <BrowserRouter>
+        <Routes>
+          <Route element={<PrivateRoute />}>
+            <Route path="/" element={<Lobby />} />
+            <Route path="/session" element={<Session/>}/>
+          </Route>
 
-          <div className="flex flex-1">
-            <Auth/>
-          </div>
-        </div>
-      </SessionProvider>
-    </ModalProvider>
+          <Route path="/auth" element={<Auth/>}/>
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 

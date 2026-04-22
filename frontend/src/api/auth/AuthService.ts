@@ -69,5 +69,18 @@ export async function login(name: string, password: string) : Promise<Auth> {
 }
 
 export async function verify() : Promise<boolean> {
-    return false;
+    
+    const query = {
+        method: "GET"
+    }
+
+    try
+    {
+        const result = await fetch(verifyUrl, query);
+        return result.ok === true;
+    }
+    catch
+    {
+        return false;
+    }
 }
