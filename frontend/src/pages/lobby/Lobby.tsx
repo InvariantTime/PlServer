@@ -4,29 +4,32 @@ import { useEffect, useState } from "react";
 import { useSession } from "../../api/sessions/SessionContext";
 import { SessionLobbyInfo } from "../../api/sessions/SessionLobbyInfo";
 import { createSession, getSessionList } from "../../api/sessions/SessionQueries";
-import { useDialog } from "../../api/modals/ModalPanelApi";
 import { SessionCreationRequest } from "../../api/sessions/SessionCreationRequest";
 import { SessionCreatePanel } from "../../components/sessions/SessionCreatePanel";
+import { Layout } from "../../components/modals/Layout";
 
+type LobbyCreationInfo = {
+  name: string
+}
 
 export const Lobby = () => {
 
   const [sessions, setSessions] = useState<SessionLobbyInfo[]>([]);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const connection = useSession();
-  const createSessionPanel = useDialog<SessionCreationRequest>(SessionCreatePanel);
 
   useEffect(() => {
     getSessionList().then((sessions) => {
       setSessions(sessions);
     });
-    //setSessions([{name: "name", maxUserCount: 5, userCount: 2, hostName: "user", id: "id"}]);
+
+    connection.connection.hub?.on("LobbyChangedAsync", () => {
+      getSessionList().then((sessions) => {
+        setSessions(sessions);
+      });
+    });
   }, []);
 
-  connection.connection.hub?.on("LobbyChangedAsync", () => {
-    getSessionList().then((sessions) => {
-      setSessions(sessions);
-    });
-  });
 
   /*useListen<SessionLobbyInfo[]>("OnSessionListChangedAsync", (sessions) =>
   {
@@ -36,13 +39,28 @@ export const Lobby = () => {
 
 
   const onSessionCreateClick = async () => {
+    setIsCreateOpen(true);
+  }
 
-    const result = await createSessionPanel();
-    await createSession(result);
+  const onLayoutClick = () => {
+    setIsCreateOpen(false);
+  }
+
+  const createLobby = (info: LobbyCreationInfo) => {
+    setIsCreateOpen(false);
+    
+    createSession({name: info.name});
   }
 
   return (
     <div className="mx-auto px-6 py-36 max-w-4xl w-full">
+      
+      {isCreateOpen === true &&
+        <Layout onClick={onLayoutClick}>
+          <SessionCreatePanel creationCallback={createLobby}/>
+        </Layout>
+      }
+
       <header>
         <div className="flex justify-center">
           <h1 className="text-4xl">
@@ -58,7 +76,7 @@ export const Lobby = () => {
 
           return (
             <div className={`bg-slate-200 border-2 rounded-xl p-2 
-             flex justify-between ${isFree ? "border-emerald-400 hover:bg-emerald-200": "border-red-300"}`}>
+             flex justify-between ${isFree ? "border-emerald-400 hover:bg-emerald-200" : "border-red-300"}`}>
               <div className="pl-3">
                 <h1 className="text-2xl">
                   {session.name}
@@ -70,7 +88,7 @@ export const Lobby = () => {
 
               <div className="mr-4 pt-2">
                 <h2 className={isFree ? "" : "text-red-600"}>
-                  <User/>
+                  <User />
                   {session.userCount}/{session.maxUserCount}
                 </h2>
               </div>

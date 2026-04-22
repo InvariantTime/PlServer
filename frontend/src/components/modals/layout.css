@@ -1,0 +1,12 @@
+.layout-animated {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.panel-animated {
+    animation: slideUp 3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+}

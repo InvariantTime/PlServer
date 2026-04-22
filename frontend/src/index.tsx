@@ -7,6 +7,14 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+if (process.env.NODE_ENV === 'development') {
+  const { worker } = await import('./mocks/browser')
+        await worker.start({
+            onUnhandledRequest: 'bypass'
+  })
+}
+
 root.render(
   <React.StrictMode>
     <App />
