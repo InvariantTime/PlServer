@@ -18,12 +18,14 @@ public class UserController : ControllerBase
     private readonly IUserService _service;
     private readonly IAuthTokenService _tokenService;
     private readonly CookieNamesOptions _options;
+    private readonly ILogger<UserController> _logger;
 
-    public UserController(IUserService service, IAuthTokenService tokenService, IOptions<CookieNamesOptions> options)
+    public UserController(IUserService service, IAuthTokenService tokenService, IOptions<CookieNamesOptions> options, ILogger<UserController> logger)
     {
         _service = service;
         _tokenService = tokenService;
         _options = options.Value;
+        _logger = logger;
     }
 
     [HttpPost("register")]
@@ -58,6 +60,7 @@ public class UserController : ControllerBase
     [HttpGet("verify")]
     public IResult Verify(UserSummaryDTO user)//TODO: send name to client
     {
+        _logger.LogInformation(user.Name);
         return Results.Ok();
     }
 }

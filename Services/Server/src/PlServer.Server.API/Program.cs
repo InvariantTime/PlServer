@@ -44,9 +44,10 @@ builder.Services.RegisterHandlers();
 
 var app = builder.Build();
 
-app.UseAuthentication();
-
 app.UseCors("frontend");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapGet("ping", () => "pong");
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Options;
 using PlServer.Server.API.Options;
 using PlServer.Server.Infrastructure.Auth;
 using PlServer.Server.Services;
@@ -11,11 +12,11 @@ public class UserBinder : IModelBinder
     private readonly IAuthTokenService _tokenService;
     private readonly CookieNamesOptions _options;
 
-    public UserBinder(IUserService users, IAuthTokenService tokenService, CookieNamesOptions options)
+    public UserBinder(IUserService users, IAuthTokenService tokenService, IOptions<CookieNamesOptions> options)
     {
         _users = users;
         _tokenService = tokenService;
-        _options = options;
+        _options = options.Value;
     }
 
     public Task BindModelAsync(ModelBindingContext bindingContext)

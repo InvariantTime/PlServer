@@ -26,10 +26,12 @@ public class JwtAuthTokenService : IAuthTokenService
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
             SecurityAlgorithms.HmacSha256);
 
+        var expires = DateTime.UtcNow.AddHours(_options.ExpitesHours);
+
         var token = new JwtSecurityToken(
             claims: claims,
             signingCredentials: credentials,
-            expires: DateTime.UtcNow.AddHours(_options.ExpitesHours));
+            expires: expires);
 
         return _handler.WriteToken(token);
     }

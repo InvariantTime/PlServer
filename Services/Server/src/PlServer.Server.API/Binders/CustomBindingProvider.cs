@@ -9,7 +9,7 @@ public class CustomBindingProvider : IModelBinderProvider
 {
     public IModelBinder? GetBinder(ModelBinderProviderContext context)
     {
-        if (context.Metadata.BinderType == typeof(UserSummaryDTO))
+        if (context.Metadata.ModelType == typeof(UserSummaryDTO))
             return new BinderTypeModelBinder(typeof(UserBinder));
 
         return null;

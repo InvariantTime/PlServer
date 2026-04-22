@@ -37,6 +37,8 @@ public static class AuthExtensions
                 };
             });
 
+        services.AddAuthorization();
+
         services.Configure<AuthOptions>(configuration.GetSection(AuthOptionsSection));
         services.Configure<CookieNamesOptions>(configuration.GetSection(CookieNamesSection));
     }

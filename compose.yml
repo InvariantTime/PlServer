@@ -23,6 +23,8 @@ services:
       dockerfile: ./Services/Server/Dockerfile
     
     hostname: server-host
+    env_file:
+      - ./Services/Server/server_secrets.env
 
     container_name: server
 
