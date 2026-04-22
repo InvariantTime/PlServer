@@ -2,4 +2,15 @@
 
 namespace PlServer.Server.API.Responces;
 
-public record SessionResponse(string Name, SessionId Id, string HostName, int MaxUserCount, int UserCount);
+public record SessionResponse
+{
+    public required SessionId Id { get; init; }
+
+    public required string Name { get; init; }
+    
+    public required string HostName { get; init; }
+    
+    public required int MaxUserCount { get; init; }
+    
+    public required int UserCount { get; init; }
+}

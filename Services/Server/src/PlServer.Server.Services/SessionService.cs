@@ -36,7 +36,7 @@ public class SessionService : ISessionService
 
         await _dispatcher.DispatchEntityEventsAsync(session);
        
-        return Result.Success(new SessionSummaryDTO(session.Key, session.Name, session.Users.HostId, session.Users.MaxUserCount, session.Users.UserCount));
+        return Result.Success(new SessionSummaryDTO(session.Key, session.Name, session.Users));
     }
 
     public async Task<Result> DeleteSessionAsync(SessionId sessionId)
@@ -74,6 +74,6 @@ public class SessionService : ISessionService
     public IEnumerable<SessionSummaryDTO> GetSessionSummaryDtos()
     {
         return _repository.GetAll()
-            .Select(x => new SessionSummaryDTO(x.Key, x.Name, x.Users.HostId, x.Users.MaxUserCount, x.Users.Users.Count));
+            .Select(x => new SessionSummaryDTO(x.Key, x.Name, x.Users));
     }
 }
