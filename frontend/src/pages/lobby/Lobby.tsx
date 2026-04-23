@@ -1,12 +1,12 @@
 
 import { Plus, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSession } from "../../api/sessions/SessionContext";
-import { SessionLobbyInfo } from "../../api/sessions/SessionLobbyInfo";
-import { createSession, getSessionList } from "../../api/sessions/SessionQueries";
-import { SessionCreationRequest } from "../../api/sessions/SessionCreationRequest";
 import { SessionCreatePanel } from "../../components/sessions/SessionCreatePanel";
 import { Layout } from "../../components/modals/Layout";
+import { useConnection } from "../../api/signalR/SignalRConnection";
+import { createSession, getSessionList, SessionLobbyInfo } from "../../api/sessions/SessionQueries";
+
+const wsUrl = "/ws/lobby";
 
 type LobbyCreationInfo = {
   name: string
@@ -16,39 +16,25 @@ export const Lobby = () => {
 
   const [sessions, setSessions] = useState<SessionLobbyInfo[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const connection = useSession();
+  const {useSubscribe} = useConnection(wsUrl);
 
   useEffect(() => {
     getSessionList().then((sessions) => {
       setSessions(sessions);
     });
-
-    connection.connection.hub?.on("LobbyChangedAsync", () => {
-      getSessionList().then((sessions) => {
-        setSessions(sessions);
-      });
-    });
   }, []);
 
-
-  /*useListen<SessionLobbyInfo[]>("OnSessionListChangedAsync", (sessions) =>
-  {
+  useSubscribe("LobbyChangedAsync", async () => {
+    const sessions = await getSessionList();
     setSessions(sessions);
-  });*/
-
-
+  });
 
   const onSessionCreateClick = async () => {
     setIsCreateOpen(true);
   }
 
-  const onLayoutClick = () => {
-    setIsCreateOpen(false);
-  }
-
   const createLobby = (info: LobbyCreationInfo) => {
     setIsCreateOpen(false);
-    
     createSession({name: info.name});
   }
 
@@ -56,7 +42,7 @@ export const Lobby = () => {
     <div className="mx-auto px-6 py-36 max-w-4xl w-full">
       
       {isCreateOpen === true &&
-        <Layout onClick={onLayoutClick}>
+        <Layout onClick={() => setIsCreateOpen(false)}>
           <SessionCreatePanel creationCallback={createLobby}/>
         </Layout>
       }

@@ -1,12 +1,9 @@
 import { HubConnectionState } from "@microsoft/signalr";
-import { useSession } from "../../api/sessions/SessionContext";
 import { Check, Ellipsis, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import "./Header.css";
 
 export const Header = () => {
-
-    const session = useSession();
 
     return (
         <div className="w-full h-16 bg-slate-100 shadow-lg flex justify-between">
@@ -15,7 +12,7 @@ export const Header = () => {
             </div>
 
             <div className="items-center flex pr-6 z-50">
-                <StatusBar state={session.connection.state} />
+                //TODO: name of user
             </div>
         </div>
     );

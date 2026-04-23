@@ -3,7 +3,6 @@ import { Spinner } from "./spinner/Spinner";
 import { Navigate, Outlet } from "react-router-dom";
 import { Header } from "./header/Header";
 import { verify } from "../api/auth/AuthService";
-import { SessionProvider } from "./sessions/SessionProvider";
 
 const url = "/ws/lobby";
 
@@ -36,15 +35,13 @@ export const PrivateRoute = () => {
 
     return (
         <div className="w-full h-full">
-            <SessionProvider url={url}>
-                <div className="w-full h-[8%]">
-                    <Header />
-                </div>
+            <div className="w-full h-[8%]">
+                <Header />
+            </div>
 
-                <div className="w-full h-[92%]">
-                    <Outlet />
-                </div>
-            </SessionProvider>
+            <div className="w-full h-[92%]">
+                <Outlet />
+            </div>
         </div>
     )
 }

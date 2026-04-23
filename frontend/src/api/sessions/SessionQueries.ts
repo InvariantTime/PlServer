@@ -1,9 +1,18 @@
-import { SessionCreationRequest } from "./SessionCreationRequest";
-import { SessionLobbyInfo } from "./SessionLobbyInfo";
 
 const getSessionListUrl = "/api/sessions/all";
 const createSessionUrl = "/api/sessions";
 
+export type SessionCreationRequest = {
+    name: string
+}
+
+export type SessionLobbyInfo = {
+    name: string,
+    maxUserCount: number,
+    userCount: number,
+    hostName: string,
+    id: string
+}
 
 export const getSessionList = async () : Promise<SessionLobbyInfo[]> => {
     
