@@ -3,13 +3,21 @@ import { Check, Ellipsis, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import "./Header.css";
 
-export const Header = () => {
+interface Props {
+    setNotificationContainer: (container: HTMLElement | null) => void
+}
+
+export const Header = ({ setNotificationContainer }: Props) => {
 
     return (
-        <div className="w-full h-16 bg-slate-100 shadow-lg flex justify-between">
+        <div className="w-full h-16 bg-slate-100 shadow-lg flex justify-between relative">
             <div className="items-center flex pl-4 font-bold text-lg">
                 PlServer
             </div>
+
+            <div className="absolute translate-y-full 
+                bottom-0 -m-2 flex flex-col items-center pl-6 errorContainer"
+                ref={setNotificationContainer} />
 
             <div className="items-center flex pr-6 z-50">
                 //TODO: name of user
@@ -32,8 +40,7 @@ const StatusBar = ({ state }: StatusBarProps) => {
             setPhase('jump');
             setTimeout(() => setPhase('done'), 2000);
         }
-        else
-        {
+        else {
             setPhase('idle');
         }
 

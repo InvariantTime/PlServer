@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Spinner } from "./spinner/Spinner";
 import { Navigate, Outlet } from "react-router-dom";
 import { Header } from "./header/Header";
 import { verify } from "../api/auth/AuthService";
-
-const url = "/ws/lobby";
+import { Container } from "lucide-react";
+import { NotificationProvider } from "./notifying/NotificationProvider";
 
 export const PrivateRoute = () => {
 
     const [loading, setLoading] = useState(false);
     const [inited, setInited] = useState(false);
+
+    const [notifyContainer, setNotifyContainer] = useState<HTMLElement | null>(null);
 
     const initUser = async () => {
         const result = await verify();
@@ -36,12 +38,14 @@ export const PrivateRoute = () => {
     return (
         <div className="w-full h-full">
             <div className="w-full h-[8%]">
-                <Header />
+                <Header setNotificationContainer={setNotifyContainer}/>
             </div>
 
-            <div className="w-full h-[92%]">
-                <Outlet />
-            </div>
+            <NotificationProvider container={notifyContainer}>
+                <div className="w-full h-[92%]">
+                    <Outlet />
+                </div>
+            </NotificationProvider>
         </div>
     )
 }

@@ -1,0 +1,50 @@
+.animate-slideInLeft {
+    animation: slideInLeft 0.3s ease-in-out forwards;
+}
+
+.animate-progress {
+    animation: timeout 4s linear forwards;
+}
+
+.animate-slideOutLeft {
+    animation: slideOutLeft 0.5s ease-in-out forwards;
+}
+
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-110%); 
+        opacity: 0;
+    }
+    100% { 
+        transform: translateX(0); 
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutLeft {
+    0% {
+        transform: translateX(0); 
+        opacity: 1;
+    }
+    50% {
+
+        transform: translateX(-110%); 
+        opacity: 0;
+        max-height: 100%;
+    }
+    100% { 
+        max-height: 0%;
+        transform: translateX(-110%); 
+        opacity: 0;
+    }
+}
+
+@keyframes timeout {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
+    }
+}
+
