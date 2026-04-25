@@ -26,7 +26,6 @@ public class SessionController : ControllerBase
     public IEnumerable<SessionResponce> GetSessionList()
     {
         var dtos = _sessions.GetSessionSummaryDtos();
-
         return GetResponseAll(dtos);
     }
 
@@ -35,7 +34,7 @@ public class SessionController : ControllerBase
     {
         var result = await _sessions.CreateSessionAsync(request.Name, user.Id, 5);
 
-        if (result.IsSuccess == true)
+        if (result.IsSuccess == false)
             return Results.BadRequest(result.AsErrorResponce());
 
         return Results.Ok(new SessionCreateResponce(result.Value!.Id.Id));
