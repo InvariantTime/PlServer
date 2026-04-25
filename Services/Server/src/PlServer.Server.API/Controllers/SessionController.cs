@@ -23,7 +23,7 @@ public class SessionController : ControllerBase
     }
 
     [HttpGet("all")]
-    public IEnumerable<SessionResponse> GetSessionList()
+    public IEnumerable<SessionResponce> GetSessionList()
     {
         var dtos = _sessions.GetSessionSummaryDtos();
 
@@ -31,16 +31,19 @@ public class SessionController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<SessionId> CreateSession([FromBody]SessionCreateRequest request, [FromServices]UserSummaryDTO user)
+    public async Task<IResult> CreateSession([FromBody]SessionCreateRequest request, [FromServices]UserSummaryDTO user)
     {
         var result = await _sessions.CreateSessionAsync(request.Name, user.Id, 5);
 
-        return result.Value?.Id ?? SessionId.Empty;
+        if (result.IsSuccess == true)
+            return Results.BadRequest(result.AsErrorResponce());
+
+        return Results.Ok(new SessionCreateResponce(result.Value!.Id.Id));
     }
 
-    private IEnumerable<SessionResponse> GetResponseAll(IEnumerable<SessionSummaryDTO> sessions)
+    private IEnumerable<SessionResponce> GetResponseAll(IEnumerable<SessionSummaryDTO> sessions)
     {
-        return sessions.Select(x => new SessionResponse
+        return sessions.Select(x => new SessionResponce
         {
             Id = x.Id,
             Name = x.Name,

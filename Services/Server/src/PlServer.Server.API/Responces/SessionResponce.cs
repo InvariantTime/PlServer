@@ -2,7 +2,7 @@
 
 namespace PlServer.Server.API.Responces;
 
-public record SessionResponse
+public record SessionResponce
 {
     public required SessionId Id { get; init; }
 

@@ -45,6 +45,9 @@ export const useConnection = (url: string): Connection => {
                 hubRef.current?.onclose(() => notifyStateChanged(HubConnectionState.Disconnected));
                 hubRef.current?.onreconnected(() => notifyStateChanged(HubConnectionState.Connected));
                 hubRef.current?.onreconnecting(() => notifyStateChanged(HubConnectionState.Reconnecting));
+            })
+            .catch(() => {
+                notifyStateChanged(HubConnectionState.Disconnected);
             });
 
         return () => {

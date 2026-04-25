@@ -1,3 +1,4 @@
+import { Failure, Result, Success } from "../utils/Result";
 
 const getSessionListUrl = "/api/sessions/all";
 const createSessionUrl = "/api/sessions";
@@ -38,7 +39,7 @@ export const getSessionList = async () : Promise<SessionLobbyInfo[]> => {
     return [];
 }
 
-export const createSession = async (request: SessionCreationRequest) => {
+export const createSession = async (request: SessionCreationRequest) : Promise<Result<string>> => {
 
         const query: RequestInit = {
 
@@ -55,11 +56,16 @@ export const createSession = async (request: SessionCreationRequest) => {
         const result = await fetch(createSessionUrl, query);
 
         if (result.ok) {
-            return 1;
+            const value = await result.json();
+            return Success(value);
         }
+
+        const value = await result.json();
+
+        return Failure(value.error);
     }
-    finally
+    catch
     {
-        return 0;
+        return Failure("Unable to create session");
     }
 }

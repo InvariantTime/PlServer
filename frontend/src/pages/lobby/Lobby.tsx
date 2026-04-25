@@ -5,6 +5,8 @@ import { SessionCreatePanel } from "../../components/sessions/SessionCreatePanel
 import { Layout } from "../../components/modals/Layout";
 import { useConnection } from "../../api/signalR/SignalRConnection";
 import { createSession, getSessionList, SessionLobbyInfo } from "../../api/sessions/SessionQueries";
+import { NotificationTypes, useNotify } from "../../api/notifying/Notification";
+import { HubConnectionState } from "@microsoft/signalr";
 
 const wsUrl = "/ws/lobby";
 
@@ -16,7 +18,17 @@ export const Lobby = () => {
 
   const [sessions, setSessions] = useState<SessionLobbyInfo[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const {useSubscribe} = useConnection(wsUrl);
+  const {useSubscribe, useStateHandler} = useConnection(wsUrl);
+  const notify = useNotify();
+
+  useStateHandler((state) => {
+    if (state === HubConnectionState.Disconnected) {
+      notify("server disconnected", NotificationTypes.error);
+    }
+    else if (state === HubConnectionState.Connected) {
+      notify("Connected", NotificationTypes.message);
+    }
+  });
 
   useEffect(() => {
     getSessionList().then((sessions) => {
@@ -33,9 +45,13 @@ export const Lobby = () => {
     setIsCreateOpen(true);
   }
 
-  const createLobby = (info: LobbyCreationInfo) => {
+  const createLobby = async (info: LobbyCreationInfo) => {
     setIsCreateOpen(false);
-    createSession({name: info.name});
+    const result = await createSession({name: info.name});
+
+    if (result.state === "failure") {
+      notify(result.error, NotificationTypes.error);
+    }
   }
 
   return (
