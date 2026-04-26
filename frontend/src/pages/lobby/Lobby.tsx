@@ -1,18 +1,14 @@
 
 import { Plus, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { SessionCreatePanel } from "../../components/sessions/SessionCreatePanel";
+import { SessionCreatePanel } from "./SessionCreatePanel";
 import { Layout } from "../../components/modals/Layout";
 import { useConnection } from "../../api/signalR/SignalRConnection";
-import { createSession, getSessionList, SessionLobbyInfo } from "../../api/sessions/SessionQueries";
+import { createSession, getSessionList, SessionCreationRequest, SessionLobbyInfo } from "../../api/sessions/SessionQueries";
 import { NotificationTypes, useNotify } from "../../api/notifying/Notification";
 import { HubConnectionState } from "@microsoft/signalr";
 
 const wsUrl = "/ws/lobby";
-
-type LobbyCreationInfo = {
-  name: string
-}
 
 export const Lobby = () => {
 
@@ -45,9 +41,9 @@ export const Lobby = () => {
     setIsCreateOpen(true);
   }
 
-  const createLobby = async (info: LobbyCreationInfo) => {
+  const createLobby = async (info: SessionCreationRequest) => {
     setIsCreateOpen(false);
-    const result = await createSession({name: info.name});
+    const result = await createSession(info);
 
     if (result.state === "failure") {
       notify(result.error, NotificationTypes.error);

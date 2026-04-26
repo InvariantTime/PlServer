@@ -32,12 +32,12 @@ public class SessionController : ControllerBase
     [HttpPost]
     public async Task<IResult> CreateSession([FromBody]SessionCreateRequest request, [FromServices]UserSummaryDTO user)
     {
-        var result = await _sessions.CreateSessionAsync(request.Name, user.Id, 5);
+        var result = await _sessions.CreateSessionAsync(request.Name, user.Id, request.UsersCount);
 
         if (result.IsSuccess == false)
             return Results.BadRequest(result.AsErrorResponce());
 
-        return Results.Ok(new SessionCreateResponce(result.Value!.Id.Id));
+        return Results.Ok(new SessionCreateResponce(result.Value!.Id));
     }
 
     private IEnumerable<SessionResponce> GetResponseAll(IEnumerable<SessionSummaryDTO> sessions)

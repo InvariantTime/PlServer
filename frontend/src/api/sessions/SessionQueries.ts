@@ -4,7 +4,8 @@ const getSessionListUrl = "/api/sessions/all";
 const createSessionUrl = "/api/sessions";
 
 export type SessionCreationRequest = {
-    name: string
+    name: string,
+    usersCount: number
 }
 
 export type SessionLobbyInfo = {

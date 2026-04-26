@@ -1,0 +1,54 @@
+
+.count-item { 
+    display: inline-block;
+}
+
+.count-item input[type="radio"] {
+    display: none;
+}
+
+.count-item label {
+    display: inline;
+    cursor: pointer;
+    padding: 2px 20px;
+    border: 2px solid #064e3b;
+    border-radius: 6px;
+}
+
+.count-item input[type="radio"]:checked + label {
+    background-color: #047857;
+    color: #d1fae5;
+}
+
+.count-item input[type="radio"]:hover + label {
+    background-color: #10b981;
+}
+
+.count-label {
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 500;
+    padding-left: 8px;
+}
+
+input[type="text"] {
+    width: 100%;
+    margin-top: 4px;
+    border-radius: 6px;
+    padding: 4px;
+    outline-offset: 2px;
+    outline-width: 1px;
+    outline-color: #cbd5e1;
+}
+
+label:has(+ input[type="text"]) {
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 500;
+    padding-left: 8px;
+}
+
+input[type="text"]:focus {
+    outline-color: #10b981;
+    outline-width: 2px;
+}
