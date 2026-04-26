@@ -1,8 +1,15 @@
 import { Play } from "lucide-react"
 import { useCallback } from "react";
 import { NodeField } from "../../components/nodeSystem/NodeField";
+import { useSession } from "../../api/signalR/SessionConnection";
+import { NotificationTypes, useNotify } from "../../api/notifying/Notification";
+
+const sessionUrl = "ws/sessions?sessionId=";
 
 export const Session = () => {
+
+    const notify = useNotify();
+    const {} = useSession({url: sessionUrl, onMessage: notify });
 
     return (
         <div className="min-h-full min-w-full p-4 flex gap-4">

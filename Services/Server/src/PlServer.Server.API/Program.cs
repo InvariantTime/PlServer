@@ -7,6 +7,7 @@ using PlServer.Server.Infrastructure.Auth;
 using PlServer.Server.Infrastructure.Handlers.Sessions;
 using PlServer.Server.Infrastructure.Hashers;
 using PlServer.Server.Infrastructure.Repositories;
+using PlServer.Server.Infrastructure.Sessions;
 using PlServer.Server.Services;
 using PlServer.Server.Services.Repositories;
 
@@ -38,6 +39,8 @@ builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IAuthTokenService, JwtAuthTokenService>();
 
+builder.Services.AddSingleton<ISessionConnectionTracker, SessionConnectionTracker>();
+
 builder.Services.RegisterAuthentication(builder.Configuration);
 builder.Services.RegisterHandlers();
 
@@ -54,5 +57,6 @@ app.MapGet("ping", () => "pong");
 app.MapControllers();
 
 app.MapHub<LobbyHub>("ws/lobby");
+app.MapHub<SessionHub>("ws/sessions");
 
 app.Run();
