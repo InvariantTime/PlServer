@@ -36,8 +36,11 @@ public class JwtAuthTokenService : IAuthTokenService
         return _handler.WriteToken(token);
     }
 
-    public UserId? ValidateToken(string key)
+    public UserId? ValidateToken(string? key)
     {
+        if (key == null)
+            return null;
+
         var token = _handler.ReadJwtToken(key);
 
         var idClaim = token.Claims.FirstOrDefault(x => x.Type == _options.UserIdClaim);

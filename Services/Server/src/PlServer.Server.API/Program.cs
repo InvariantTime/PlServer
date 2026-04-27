@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.SignalR;
 using PlServer.Application;
 using PlServer.Server.API;
 using PlServer.Server.API.Binders;
@@ -13,7 +14,13 @@ using PlServer.Server.Services.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR()
+    .AddHubOptions<SessionHub>(op =>
+    {
+        op.AddFilter<SessionHubFilter>();
+    });
+
+
 builder.Services.AddControllers(op =>
 {
     op.ModelBinderProviders.Insert(0, new CustomBindingProvider());

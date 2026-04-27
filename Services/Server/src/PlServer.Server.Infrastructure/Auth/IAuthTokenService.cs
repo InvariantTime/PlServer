@@ -7,5 +7,5 @@ public interface IAuthTokenService
 {
     string GenerateToken(UserId user);
 
-    UserId? ValidateToken(string token);
+    UserId? ValidateToken(string? token);
 }
