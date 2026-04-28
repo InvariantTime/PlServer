@@ -25,15 +25,17 @@ public class SessionHub : Hub<ISessionClient>
 
     private readonly ISessionConnectionTracker _tracker;
     private readonly ISessionService _service;
+    private readonly ILogger<SessionHub> _logger;
 
     protected SessionId? SessionId => Context.Items[_sessionItemName] as SessionId?;
 
     protected UserId? UserId => Context.Items[_userItemName] as UserId?;
 
-    public SessionHub(ISessionConnectionTracker tracker, ISessionService service)
+    public SessionHub(ISessionConnectionTracker tracker, ISessionService service, ILogger<SessionHub> logger)
     {
         _tracker = tracker;
         _service = service;
+        _logger = logger;
     }
  
     public override async Task OnConnectedAsync()
@@ -46,6 +48,8 @@ public class SessionHub : Hub<ISessionClient>
 
         var session = SessionId.Value;
         var user = UserId.Value;
+
+        _logger.LogInformation(session.Id.ToString());
 
         var result = await _service.JoinAsync(session, user);
 
