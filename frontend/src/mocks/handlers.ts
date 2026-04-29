@@ -14,8 +14,7 @@ export const handlers = [
         ])
     }),
 
-    // POST /api/users/verify
-    http.post('/api/users/verify', () => {
-        return HttpResponse.json()
+    http.get('/api/users/verify', () => {
+        return HttpResponse.json({name: "user"});
     })
 ]

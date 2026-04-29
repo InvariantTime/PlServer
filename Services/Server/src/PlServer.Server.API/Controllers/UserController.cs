@@ -61,6 +61,6 @@ public class UserController : ControllerBase
     public IResult Verify(UserSummaryDTO user)//TODO: send name to client
     {
         _logger.LogInformation(user.Name);
-        return Results.Ok();
+        return Results.Ok(new UserVerifyResponce(user.Name));
     }
 }

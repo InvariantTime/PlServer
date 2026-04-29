@@ -1,4 +1,5 @@
 import exp from "constants";
+import { Failure, Result, Success } from "../utils/Result";
 
 const registerUrl = 'api/users/register';
 const loginUrl = 'api/users/login';
@@ -68,7 +69,7 @@ export async function login(name: string, password: string) : Promise<Auth> {
     return { type:"error", error: value.error };
 }
 
-export async function verify() : Promise<boolean> {
+export async function verify() : Promise<Result<string>> {
     
     const query = {
         method: "GET"
@@ -77,10 +78,18 @@ export async function verify() : Promise<boolean> {
     try
     {
         const result = await fetch(verifyUrl, query);
-        return result.ok === true;
+        
+        if (result.ok) {
+            const data = await result.json();
+            return Success(data.name);
+        }
+        else {
+            return Failure("");
+        }
     }
-    catch
+    catch (e)
     {
-        return false;
+        alert(e);
+        return Failure("");
     }
 }

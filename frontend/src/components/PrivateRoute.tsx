@@ -10,6 +10,7 @@ export const PrivateRoute = () => {
 
     const [loading, setLoading] = useState(false);
     const [inited, setInited] = useState(false);
+    const [name, setName] = useState<string | null>("");
 
     const [notifyContainer, setNotifyContainer] = useState<HTMLElement | null>(null);
 
@@ -17,7 +18,14 @@ export const PrivateRoute = () => {
         const result = await verify();
 
         setLoading(true);
-        setInited(result);
+
+        if (result.state === "success") {
+            setName(result.value);
+            setInited(true);
+        } 
+        else {
+            setInited(false);
+        }
     }
 
     useEffect(() => {
@@ -38,7 +46,7 @@ export const PrivateRoute = () => {
     return (
         <div className="w-full h-full">
             <div className="w-full h-[8%]">
-                <Header setNotificationContainer={setNotifyContainer}/>
+                <Header setNotificationContainer={setNotifyContainer} name={name}/>
             </div>
 
             <NotificationProvider container={notifyContainer}>

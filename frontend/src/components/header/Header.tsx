@@ -1,13 +1,14 @@
 import { HubConnectionState } from "@microsoft/signalr";
-import { Check, Ellipsis, X } from "lucide-react";
+import { Check, Ellipsis, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import "./Header.css";
 
 interface Props {
-    setNotificationContainer: (container: HTMLElement | null) => void
+    setNotificationContainer: (container: HTMLElement | null) => void,
+    name: string | null
 }
 
-export const Header = ({ setNotificationContainer }: Props) => {
+export const Header = ({ name, setNotificationContainer }: Props) => {
 
     return (
         <div className="w-full h-16 bg-slate-100 shadow-lg flex justify-between relative">
@@ -19,8 +20,10 @@ export const Header = ({ setNotificationContainer }: Props) => {
                 bottom-0 -m-2 flex flex-col items-center pl-6 errorContainer"
                 ref={setNotificationContainer} />
 
-            <div className="items-center flex pr-6 z-50">
-                //TODO: name of user
+            <div className="items-center flex px-4 py-2 z-50 gap-3 bg-slate-200 border-slate-300 border-2 m-2 rounded-lg">
+
+                <User size={27}/>
+                <h1 className="font-bold text-lg">{name}</h1>
             </div>
         </div>
     );
