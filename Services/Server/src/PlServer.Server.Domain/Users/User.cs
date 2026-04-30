@@ -23,4 +23,9 @@ public class User : AggregateRoot<UserId>
 
         return Result.Success(user);
     }
+
+    public static Result<User> Create(UserId id, string name, string passwordHash)
+    {
+        return Result.Success(new User(name, passwordHash, id));
+    }
 }
