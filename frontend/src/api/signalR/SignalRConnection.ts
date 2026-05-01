@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 interface Connection {
 
-    useSubscribe: (name: string, callback: (arg: any) => Promise<any>) => void,
+    useSubscribe: (name: string, callback: (arg: any) => any) => void,
     useMethod: (name: string) => void,
     useStateHandler: (callback: (state: HubConnectionState) => void) => void
 }
@@ -56,7 +56,7 @@ export const useConnection = (url: string): Connection => {
     }, []);
 
 
-    const useSubscribe = (name: string, callback: (arg: any) => Promise<any>) => {
+    const useSubscribe = (name: string, callback: (arg: any) => any) => {
 
         useEffect(() => {
             hubRef.current?.on(name, callback);

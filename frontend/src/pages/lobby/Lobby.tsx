@@ -21,10 +21,7 @@ export const Lobby = () => {
 
   useStateHandler((state) => {
     if (state === HubConnectionState.Disconnected) {
-      notify("server disconnected", NotificationTypes.error);
-    }
-    else if (state === HubConnectionState.Connected) {
-      notify("Connected", NotificationTypes.message);
+      notify("lobby disconnected", NotificationTypes.error);
     }
   });
 
@@ -56,6 +53,10 @@ export const Lobby = () => {
     navigate(`/session?sessionId=${id}`);
   }
 
+  const onSessionClick = (id: string) => {
+    navigate(`/session?sessionId=${id}`);
+  }
+
   return (
     <div className="mx-auto px-6 py-36 max-w-4xl w-full">
       
@@ -80,7 +81,8 @@ export const Lobby = () => {
 
           return (
             <div className={`bg-slate-200 border-2 rounded-xl p-2 
-             flex justify-between ${isFree ? "border-emerald-400 hover:bg-emerald-200" : "border-red-300"}`}>
+             flex justify-between ${isFree ? "border-emerald-400 hover:bg-emerald-200" : "border-red-300"}`}
+              onClick={isFree ? () => onSessionClick(session.id) : () => {}}>
               <div className="pl-3">
                 <h1 className="text-2xl">
                   {session.name}

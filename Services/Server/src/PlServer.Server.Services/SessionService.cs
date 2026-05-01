@@ -50,7 +50,7 @@ public class SessionService : ISessionService
             return Result.Failure(ErrorTypes.Common, $"There is no session with id {sessionId}");
 
         //session.Shutdown();
-
+        //TODO: shutdown logic
         return Result.Success();
     }
 

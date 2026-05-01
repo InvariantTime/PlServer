@@ -2,15 +2,14 @@ import { Play } from "lucide-react"
 import { useCallback } from "react";
 import { NodeField } from "../../components/nodeSystem/NodeField";
 import { useSession } from "../../api/signalR/SessionConnection";
-import { NotificationTypes, useNotify } from "../../api/notifying/Notification";
+import { useNotify } from "../../api/notifying/Notification";
 import { useSearchParams } from "react-router-dom";
 
 const sessionUrl = "ws/sessions?sessionId=";
 
 export const Session = () => {
 
-    const [query, setQuery] = useSearchParams();
-
+    const [query, _] = useSearchParams();
     const url = sessionUrl + query.get("sessionId");
 
     const notify = useNotify();

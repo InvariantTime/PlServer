@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using PlServer.Server.API.Responces;
 using PlServer.Server.Domain;
 using PlServer.Server.Domain.Users;
 using PlServer.Server.Infrastructure.Sessions;
@@ -10,7 +9,7 @@ namespace PlServer.Server.API.Hubs;
 
 public interface ISessionClient
 {
-    Task SendMessageAsync(ErrorResponce error);
+    Task SendMessageAsync(string message);
 
     Task ShutdownAsync(string? error = null);
 }

@@ -12,15 +12,17 @@ export const Header = ({ name, setNotificationContainer }: Props) => {
 
     return (
         <div className="w-full h-16 bg-slate-100 shadow-lg flex justify-between relative">
-            <div className="items-center flex pl-4 font-bold text-lg">
+            <a className="items-center flex" href="/">
+            <div className="pl-4 font-bold text-lg cursor-pointer">
                 PlServer
             </div>
+            </a>
 
             <div className="absolute translate-y-full 
                 bottom-0 -m-2 flex flex-col items-center pl-6 errorContainer"
                 ref={setNotificationContainer} />
 
-            <div className="items-center flex px-4 py-2 z-50 gap-3 bg-slate-200 border-slate-300 border-2 m-2 rounded-lg">
+            <div className="items-center flex px-4 py-2 z-50 gap-3 border-slate-300 border-2 m-2 rounded-lg">
 
                 <User size={27}/>
                 <h1 className="font-bold text-lg">{name}</h1>
