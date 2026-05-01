@@ -2,6 +2,8 @@
 using Microsoft.IdentityModel.Tokens;
 using PlServer.Server.API.Options;
 using PlServer.Server.Infrastructure.Auth;
+using PlServer.Server.Infrastructure.Hashers;
+using PlServer.Server.Services;
 using System.Text;
 
 namespace PlServer.Server.API;
@@ -41,5 +43,8 @@ public static class AuthExtensions
 
         services.Configure<AuthOptions>(configuration.GetSection(AuthOptionsSection));
         services.Configure<CookieNamesOptions>(configuration.GetSection(CookieNamesSection));
+
+        services.AddSingleton<IAuthTokenService, JwtAuthTokenService>();
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
     }
 }

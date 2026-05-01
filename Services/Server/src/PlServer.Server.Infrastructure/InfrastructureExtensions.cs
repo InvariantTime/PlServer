@@ -7,11 +7,13 @@ namespace PlServer.Server.Infrastructure;
 
 public static class InfrastructureExtensions
 {
-    public static void RegisterHandlers(this IServiceCollection services)//TODO: scoped
+    public static IServiceCollection RegisterHandlers(this IServiceCollection services)//TODO: scoped
     {
         RegisterEventDispatcher(services);
 
         services.AddSingleton<IDomainEventHandler<ISessionEvent>, SessionLobbyEventHandler>();
+
+        return services;
     }
 
     private static void RegisterEventDispatcher(IServiceCollection services)
