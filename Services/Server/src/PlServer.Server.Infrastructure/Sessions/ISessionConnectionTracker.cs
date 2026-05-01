@@ -13,4 +13,6 @@ public interface ISessionConnectionTracker
     SessionConnection? GetConnection(string id);
 
     ICollection<SessionConnection> GetAll(SessionId session);
+
+    void Clear(SessionId session);
 }

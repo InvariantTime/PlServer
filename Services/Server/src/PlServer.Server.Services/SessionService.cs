@@ -49,8 +49,13 @@ public class SessionService : ISessionService
         if (session == null)
             return Result.Failure(ErrorTypes.Common, $"There is no session with id {sessionId}");
 
-        //session.Shutdown();
-        //TODO: shutdown logic
+        session.Shutdown();
+
+        if (session.State == SessionStates.Shutdown)
+            _repository.RemoveSession(sessionId);
+
+        await _dispatcher.DispatchEntityEventsAsync(session);
+
         return Result.Success();
     }
 
@@ -87,11 +92,16 @@ public class SessionService : ISessionService
         if (result.IsSuccess == false)
             return result;
 
-        //TODO: handle session shutdown when host left
+        if (session.State == SessionStates.Shutdown)
+        {
+            _repository.RemoveSession(sessionId);
+        }
+        else
+        {
+            _repository.Update(session);
+        }
 
-        _repository.Update(session);
         await _dispatcher.DispatchEntityEventsAsync(session);
-
         return Result.Success<SessionErrors>();
     }
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using PlServer.Server.Infrastructure.Handlers.Sessions;
+using PlServer.Server.Infrastructure.Handlers.Lobby;
 
 namespace PlServer.Server.API.Hubs;
 

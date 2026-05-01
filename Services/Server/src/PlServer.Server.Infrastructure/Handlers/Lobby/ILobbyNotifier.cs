@@ -1,5 +1,4 @@
-﻿
-namespace PlServer.Server.Infrastructure.Handlers.Sessions;
+﻿namespace PlServer.Server.Infrastructure.Handlers.Lobby;
 
 public interface ILobbyNotifier
 {

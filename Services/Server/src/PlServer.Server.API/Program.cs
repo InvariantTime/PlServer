@@ -3,7 +3,8 @@ using PlServer.Server.API;
 using PlServer.Server.API.Binders;
 using PlServer.Server.API.Hubs;
 using PlServer.Server.Infrastructure;
-using PlServer.Server.Infrastructure.Handlers.Sessions;
+using PlServer.Server.Infrastructure.Handlers.Lobby;
+using PlServer.Server.Infrastructure.Sessions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ var configuration = builder.Configuration;
 var environment = builder.Environment;
 
 builder.Services.AddSingleton<ILobbyNotifier, SessionLobbyNotifier>();
+builder.Services.AddSingleton<ISessionNotifier, SessionNotifier>();
 
 builder.Services.AddEventHandling()
     .RegisterRepositories(environment)

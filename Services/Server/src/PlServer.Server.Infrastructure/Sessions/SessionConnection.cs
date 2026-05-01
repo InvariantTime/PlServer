@@ -4,4 +4,4 @@ using PlServer.Server.Domain.Users;
 
 namespace PlServer.Server.Infrastructure.Sessions;
 
-public record SessionConnection(SessionId Session, UserId User);
+public record SessionConnection(SessionId Session, UserId User, string Connection);

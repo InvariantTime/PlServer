@@ -1,7 +1,7 @@
 ﻿using PlServer.Application;
 using PlServer.Server.Domain.Events;
 
-namespace PlServer.Server.Infrastructure.Handlers.Sessions;
+namespace PlServer.Server.Infrastructure.Handlers.Lobby;
 
 public class SessionLobbyEventHandler : IDomainEventHandler<ISessionEvent>
 {

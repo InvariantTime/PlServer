@@ -10,7 +10,7 @@ public class SessionConnectionTracker : ISessionConnectionTracker
 
     public SessionConnection CreateConnection(string id, SessionId session, UserId user)
     {
-        var connection = new SessionConnection(session, user);
+        var connection = new SessionConnection(session, user, id);
         _connections.TryAdd(id, connection);
 
         return connection;
@@ -18,7 +18,7 @@ public class SessionConnectionTracker : ISessionConnectionTracker
 
     public ICollection<SessionConnection> GetAll(SessionId session)
     {
-        return _connections.Values;
+        return _connections.Values.Where(x => x.Session == session).ToList();
     }
 
     public SessionConnection? GetConnection(string id)
@@ -29,7 +29,16 @@ public class SessionConnectionTracker : ISessionConnectionTracker
 
     public SessionConnection? RemoveConnection(string id)
     {
-        _connections.TryRemove(id, out var connection);
+        bool result = _connections.TryRemove(id, out var connection);
+
         return connection;
+    }
+
+    public void Clear(SessionId session)
+    {
+        var outdated = _connections.Where(x => x.Value.Session == session);
+
+        foreach (var value in outdated)
+            _connections.TryRemove(value.Key, out _);
     }
 }

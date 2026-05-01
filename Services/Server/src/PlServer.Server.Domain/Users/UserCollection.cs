@@ -62,6 +62,19 @@ public class UserCollection : IDisposable, IReadOnlyUserCollection
         }
     }
 
+    public void Clear()
+    {
+        try
+        {
+            _locker.Wait();
+            _users.Clear();
+        }
+        finally
+        {
+            _locker.Release();
+        }
+    }
+
     public void Dispose()
     {
         _users.Clear();
