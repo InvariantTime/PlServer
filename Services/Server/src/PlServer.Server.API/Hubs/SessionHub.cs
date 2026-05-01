@@ -5,13 +5,11 @@ using PlServer.Server.Domain;
 using PlServer.Server.Domain.Users;
 using PlServer.Server.Infrastructure.Sessions;
 using PlServer.Server.Services;
-using PlServer.Server.Services.DTOs;
 
 namespace PlServer.Server.API.Hubs;
 
 public interface ISessionClient
 {
-
     Task SendMessageAsync(ErrorResponce error);
 
     Task ShutdownAsync(string? error = null);
@@ -20,7 +18,7 @@ public interface ISessionClient
 [Authorize]
 public class SessionHub : Hub<ISessionClient>
 {
-    private const string _sessionItemName = "sessionId";
+    private const string _sessionItemName = "sessionItem";
     private const string _userItemName = "userItem";
 
     private readonly ISessionConnectionTracker _tracker;
@@ -53,14 +51,15 @@ public class SessionHub : Hub<ISessionClient>
 
         var result = await _service.JoinAsync(session, user);
 
-        if (result.IsSuccess == false)
+        if (result.IsSuccess == false && result.Error.Name != SessionErrors.UserAlreadyExists)
         {
+            _logger.LogInformation(result.Error.Description);
             await ShutdownAsync(result.Error.Description);
             return;
         }
 
         _tracker.CreateConnection(Context.ConnectionId, SessionId.Value, UserId.Value);
-        await OnConnectedAsync();
+        await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)

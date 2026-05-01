@@ -26,7 +26,6 @@ public class SessionHubFilter : IHubFilter
 
     public Task OnConnectedAsync(HubLifetimeContext context, Func<HubLifetimeContext, Task> next)
     {
-
         var http = context.Context.GetHttpContext()!;
 
         var sessionQuery = http.Request.Query[_sessionIdQuery];

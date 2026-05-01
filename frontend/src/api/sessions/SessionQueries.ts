@@ -58,7 +58,7 @@ export const createSession = async (request: SessionCreationRequest) : Promise<R
 
         if (result.ok) {
             const value = await result.json();
-            return Success(value);
+            return Success(value.id);
         }
 
         const value = await result.json();

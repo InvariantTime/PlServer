@@ -7,6 +7,7 @@ import { useConnection } from "../../api/signalR/SignalRConnection";
 import { createSession, getSessionList, SessionCreationRequest, SessionLobbyInfo } from "../../api/sessions/SessionQueries";
 import { NotificationTypes, useNotify } from "../../api/notifying/Notification";
 import { HubConnectionState } from "@microsoft/signalr";
+import { useNavigate } from "react-router-dom";
 
 const wsUrl = "/ws/lobby";
 
@@ -16,6 +17,7 @@ export const Lobby = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const {useSubscribe, useStateHandler} = useConnection(wsUrl);
   const notify = useNotify();
+  const navigate = useNavigate();
 
   useStateHandler((state) => {
     if (state === HubConnectionState.Disconnected) {
@@ -47,7 +49,11 @@ export const Lobby = () => {
 
     if (result.state === "failure") {
       notify(result.error, NotificationTypes.error);
+      return;
     }
+
+    const id = result.value;
+    navigate(`/session?sessionId=${id}`);
   }
 
   return (
