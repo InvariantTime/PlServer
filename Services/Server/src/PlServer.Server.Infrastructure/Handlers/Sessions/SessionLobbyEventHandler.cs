@@ -12,7 +12,7 @@ public class SessionLobbyEventHandler : IDomainEventHandler<ISessionEvent>
         _notifier = notifier;
     }
 
-    public Task HandleAsync(ISessionEvent @event)
+    public Task HandleAsync(ISessionEvent @event, CancellationToken token)
     {
         return _notifier.NotifyLobbyChangedAsync();
     }

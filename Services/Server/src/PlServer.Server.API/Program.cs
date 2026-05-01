@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.SignalR;
+using PlServer.Application;
 using PlServer.Server.API;
 using PlServer.Server.API.Binders;
 using PlServer.Server.API.Hubs;
+using PlServer.Server.Domain.Events;
 using PlServer.Server.Infrastructure;
 using PlServer.Server.Infrastructure.Handlers.Sessions;
 
@@ -34,7 +36,7 @@ var configuration = builder.Configuration;
 
 builder.Services.AddSingleton<ILobbyNotifier, SessionLobbyNotifier>();
 
-builder.Services.RegisterHandlers()
+builder.Services.AddEventHandling()
     .RegisterRepositories()
     .RegisterDatabases(configuration)
     .RegisterServices()

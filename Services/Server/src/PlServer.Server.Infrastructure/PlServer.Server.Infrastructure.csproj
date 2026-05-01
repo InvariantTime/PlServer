@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Shared\PlServer.Application\PlServer.Application.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\PlServer.Domain\PlServer.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\PlServer.Infrastructure\PlServer.Infrastructure.csproj" />
     <ProjectReference Include="..\PlServer.Server.Services\PlServer.Server.Services.csproj" />
   </ItemGroup>
 

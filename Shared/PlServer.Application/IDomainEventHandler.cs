@@ -4,5 +4,5 @@ namespace PlServer.Application;
 
 public interface IDomainEventHandler<T> where T : IDomainEvent
 {
-    Task HandleAsync(T @event);
+    Task HandleAsync(T @event, CancellationToken cancellation);
 }
