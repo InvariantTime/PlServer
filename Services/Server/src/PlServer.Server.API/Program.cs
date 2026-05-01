@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using PlServer.Application;
 using PlServer.Server.API;
 using PlServer.Server.API.Binders;
@@ -7,6 +8,7 @@ using PlServer.Server.Infrastructure;
 using PlServer.Server.Infrastructure.Auth;
 using PlServer.Server.Infrastructure.Handlers.Sessions;
 using PlServer.Server.Infrastructure.Hashers;
+using PlServer.Server.Infrastructure.Persistence;
 using PlServer.Server.Infrastructure.Repositories;
 using PlServer.Server.Infrastructure.Sessions;
 using PlServer.Server.Services;
@@ -37,12 +39,18 @@ builder.Services.AddCors(options =>
     });
 });
 
+var configuration = builder.Configuration;
+builder.Services.AddDbContext<ApplicationDbContext>(op =>
+{
+    op.UseNpgsql(configuration.GetConnectionString("postgres"));
+});
+
 builder.Services.AddSingleton<ISessionRepository, InMemorySessionRepository>();
-builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+builder.Services.AddScoped<IUserRepository, EfUserRepository>();
 
 builder.Services.AddSingleton<ISessionService, SessionService>();
 builder.Services.AddSingleton<ILobbyNotifier, SessionLobbyNotifier>();
-builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IAuthTokenService, JwtAuthTokenService>();
 

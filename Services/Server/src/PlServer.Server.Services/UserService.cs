@@ -21,7 +21,7 @@ public class UserService : IUserService
 
     public async Task<Result<UserId>> LoginAsync(string name, string password)
     {
-        var user = _users.GetByName(name);
+        var user = await _users.GetByNameAsync(name);
 
         if (user == null)
             return Result.Failure<UserId>(ErrorTypes.Common, "Invalid name or password");
@@ -36,7 +36,7 @@ public class UserService : IUserService
 
     public async Task<Result<UserId>> RegisterAsync(string name, string password)
     {
-        var hasOther = _users.HasUserWithName(name);
+        var hasOther = await _users.HasUserWithNameAsync(name);
 
         if (hasOther == true)
             return Result.Failure<UserId>(ErrorTypes.Common, "User with such name already exists");
@@ -49,7 +49,7 @@ public class UserService : IUserService
         if (user.IsSuccess == false)
             return Result.Failure<UserId>(user.Error);
 
-        var added = _users.AddUser(user.Value!);
+        var added = await _users.AddUserAsync(user.Value!);
 
         if (added == false)
             return Result.Failure<UserId>(ErrorTypes.Unknown, "server error");

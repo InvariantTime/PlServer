@@ -5,15 +5,15 @@ namespace PlServer.Server.Services.Repositories;
 
 public interface IUserRepository
 {
-    bool AddUser(User user);
+    Task<bool> AddUserAsync(User user);
 
-    bool RemoveUser(UserId id, out User? user);
+    Task<User?> RemoveUserAsync(UserId id);
 
-    User? GetById(UserId id);
+    Task<User?> GetByIdAsync(UserId id);
 
-    User? GetByName(string name);
+    Task<User?> GetByNameAsync(string name);
 
-    bool HasUserWithName(string name);
+    Task<bool> HasUserWithNameAsync(string name);
 
     ICollection<User> GetAll();
 }

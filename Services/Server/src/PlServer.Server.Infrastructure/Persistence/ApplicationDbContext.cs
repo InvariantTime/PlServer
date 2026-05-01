@@ -19,7 +19,11 @@ public class ApplicationDbContext : DbContext
             .HasKey(x => x.Id);
 
         modelBuilder.Entity<UserEntity>()
-            .HasIndex(x => x.Name);
+            .HasAlternateKey(x => x.Name);
+
+        modelBuilder.Entity<UserEntity>()
+            .HasIndex(x => x.Name)
+            .IsUnique();
 
         modelBuilder.Entity<UserEntity>()
             .Property(x => x.Name)
