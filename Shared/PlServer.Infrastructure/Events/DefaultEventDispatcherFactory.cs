@@ -46,7 +46,7 @@ internal class DefaultEventDispatcherFactory : IEventDispatcherFactory, IEventLa
             return _emptyLauncher;
 
         var handlers = handlerTypes
-            .Select(x => (Type: x, Caller: _cachedHandlers.GetOrAdd(x, CreateCaller)))
+            .Select(x => (Type: x, Caller: _cachedHandlers.GetOrAdd(x, _ => CreateCaller(x, eventType))))
             .ToArray();
 
         return async (@event, scope, cancellation) =>
@@ -59,16 +59,13 @@ internal class DefaultEventDispatcherFactory : IEventDispatcherFactory, IEventLa
         };
     }
 
-    private HandlerCaller CreateCaller(Type handlerType)
+    private HandlerCaller CreateCaller(Type handlerType, Type eventType)
     {
         var handlerParameter = Expression.Parameter(typeof(object));
         var eventParameter = Expression.Parameter(typeof(IDomainEvent));
         var cancellationParameter = Expression.Parameter(typeof(CancellationToken));
 
-        var interfaces = handlerType.GetInterfaces();
-
-        var genericHandler = interfaces
-            .First(x => x.IsGenericType == true && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>));
+        var genericHandler = FindCorrectHandler(handlerType, eventType);
 
         var generic = genericHandler.GetGenericArguments().First();
         var method = genericHandler.GetMethod("HandleAsync", BindingFlags.Public | BindingFlags.Instance)!;
@@ -80,5 +77,28 @@ internal class DefaultEventDispatcherFactory : IEventDispatcherFactory, IEventLa
         var lambda = Expression.Lambda<HandlerCaller>(body, eventParameter, handlerParameter, cancellationParameter);
 
         return lambda.Compile();
+    }
+
+    private Type FindCorrectHandler(Type handlerType, Type eventType)
+    {
+        bool Predicate(Type type)
+        {
+            if (type.IsGenericType == false)
+                return false;
+
+            if (type.GetGenericTypeDefinition() != typeof(IDomainEventHandler<>))
+                return false;
+
+            var generic = type.GetGenericArguments().First();
+
+            return generic.IsAssignableFrom(eventType) == true;
+        }
+
+        var interfaces = handlerType.GetInterfaces();
+
+        var genericHandler = interfaces
+            .First(Predicate);
+
+        return genericHandler;
     }
 }
