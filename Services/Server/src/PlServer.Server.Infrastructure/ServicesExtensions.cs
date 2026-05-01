@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using PlServer.Server.Infrastructure.Persistence;
 using PlServer.Server.Infrastructure.Repositories;
 using PlServer.Server.Infrastructure.Sessions;
@@ -21,16 +23,27 @@ public static class ServicesExtensions
         return services;
     }
 
-    public static IServiceCollection RegisterRepositories(this IServiceCollection services)
+    public static IServiceCollection RegisterRepositories(this IServiceCollection services, IWebHostEnvironment environment)
     {
-        services.AddScoped<IUserRepository, EfUserRepository>();
+        if (environment.IsDevelopment() == true)
+        {
+            services.AddSingleton<IUserRepository, InMemoryUserRepository>();
+        }
+        else
+        {
+            services.AddScoped<IUserRepository, EfUserRepository>();
+        }
+
         services.AddSingleton<ISessionRepository, InMemorySessionRepository>();
 
         return services;
     }
 
-    public static IServiceCollection RegisterDatabases(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection RegisterDatabases(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
+        if (environment.IsDevelopment() == true)
+            return services;
+
         services.AddDbContext<ApplicationDbContext>(op =>
         {
             op.UseNpgsql(configuration.GetConnectionString("postgres"));

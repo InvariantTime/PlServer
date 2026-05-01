@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
-using PlServer.Application;
 using PlServer.Server.API;
 using PlServer.Server.API.Binders;
 using PlServer.Server.API.Hubs;
-using PlServer.Server.Domain.Events;
 using PlServer.Server.Infrastructure;
 using PlServer.Server.Infrastructure.Handlers.Sessions;
 
@@ -14,7 +12,6 @@ builder.Services.AddSignalR()
     {
         op.AddFilter<SessionHubFilter>();
     });
-
 
 builder.Services.AddControllers(op =>
 {
@@ -33,12 +30,13 @@ builder.Services.AddCors(options =>
 });
 
 var configuration = builder.Configuration;
+var environment = builder.Environment;
 
 builder.Services.AddSingleton<ILobbyNotifier, SessionLobbyNotifier>();
 
 builder.Services.AddEventHandling()
-    .RegisterRepositories()
-    .RegisterDatabases(configuration)
+    .RegisterRepositories(environment)
+    .RegisterDatabases(configuration, environment)
     .RegisterServices()
     .RegisterAuthentication(configuration);
 
