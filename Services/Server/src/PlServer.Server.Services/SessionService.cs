@@ -108,6 +108,8 @@ public class SessionService : ISessionService
     public IEnumerable<SessionSummaryDTO> GetSessionSummaryDtos()
     {
         return _repository.GetAll()
+            .Where(x => x.State != SessionStates.Pending && x.State != SessionStates.Shutdown)
+            .Where(x => x.Users.MaxUserCount > 1)
             .Select(x => new SessionSummaryDTO(x.Key, x.Name, x.Users));
     }
 }

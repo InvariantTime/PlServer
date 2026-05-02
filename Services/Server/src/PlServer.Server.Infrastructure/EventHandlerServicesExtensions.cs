@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using PlServer.Infrastructure.Events;
 using PlServer.Server.Domain.Events;
 using PlServer.Server.Infrastructure.Handlers.Lobby;
@@ -13,8 +12,14 @@ public static class EventHandlerServicesExtensions
     {
         services.AddEventDispatching(builder =>
         {
-            builder.AddGenericHandler<ISessionEvent, SessionLobbyEventHandler>();
+            builder.AddGenericHandler<ISessionEvent, SessionLobbyEventHandler>()
+                .AddBlackListed<SessionCreatedEvent>();
+
             builder.AddHandler<SessionClosedEvent, SessionShutdownEventHandler>();
+
+            builder.AddMultipleHandler<SessionLifetimeWatchdogHandler>()
+                .AddEventType<SessionCreatedEvent>()
+                .AddEventType<SessionConfirmedEvent>();
         });
 
         return services;

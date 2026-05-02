@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PlServer.Server.Infrastructure.BackgroundServices;
 using PlServer.Server.Infrastructure.Persistence;
 using PlServer.Server.Infrastructure.Repositories;
 using PlServer.Server.Infrastructure.Sessions;
@@ -19,7 +20,14 @@ public static class ServicesExtensions
         services.AddScoped<IUserService, UserService>();
 
         services.AddSingleton<ISessionConnectionTracker, SessionConnectionTracker>();
+        services.AddSingleton<SessionWatchdogTracker>();
 
+        return services;
+    }
+
+    public static IServiceCollection RegisterHostedServices(this IServiceCollection services)
+    {
+        services.AddHostedService<SessionLifetimeWatchdog>();
         return services;
     }
 

@@ -40,6 +40,7 @@ builder.Services.AddEventHandling()
     .RegisterRepositories(environment)
     .RegisterDatabases(configuration, environment)
     .RegisterServices()
+    .RegisterHostedServices()
     .RegisterAuthentication(configuration);
 
 

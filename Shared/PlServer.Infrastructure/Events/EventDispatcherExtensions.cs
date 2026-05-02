@@ -44,7 +44,7 @@ public static class EventDispatcherExtensions
         return descriptor;
     }
 
-    public static ManyTypedHandlerDescriptor AddMultipleHandler<T>() where T : class
+    public static ManyTypedHandlerDescriptor AddMultipleHandler<T>(this DispatcherFactoryBuilder builder) where T : class
     {
         var handlerType = typeof(T);
         var valid = handlerType.GetInterfaces()
@@ -55,6 +55,8 @@ public static class EventDispatcherExtensions
             throw new InvalidCastException($"{handlerType.FullName} is not event handler");
 
         var descriptor = new ManyTypedHandlerDescriptor(handlerType);
+        builder.AddDescriptor(descriptor);
+
         return descriptor;
     }
 }
