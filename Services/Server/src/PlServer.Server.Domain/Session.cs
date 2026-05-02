@@ -18,7 +18,7 @@ public class Session : AggregateRoot<SessionId, ISessionEvent>
     public IReadOnlyUserCollection Users => field 
         ?? new ReadOnlyUserCollection(_users);
 
-    public SessionStates State { get; private set; }//TODO: work with state
+    public SessionStates State { get; private set; }
 
     private Session(SessionId id, string name, int maxUsersCount, UserId hostId, NodeGraphId graphId) : base(id)
     {
@@ -31,7 +31,7 @@ public class Session : AggregateRoot<SessionId, ISessionEvent>
     public static Session Create(SessionCreationQuery query)
     {
         var session = new Session(query.Id, query.Name, query.MaxUsersCount, query.HostId, query.GraphId);
-        session.State = SessionStates.Ready;
+        session.State = SessionStates.Pending;
 
         session.AddEvent(new SessionCreatedEvent(query.Id, query.GraphId, query.HostId, query.Name));
 
@@ -40,10 +40,24 @@ public class Session : AggregateRoot<SessionId, ISessionEvent>
 
     public UnitResult<SessionErrors> JoinPlayer(UserId user)
     {
+        if (State == SessionStates.Shutdown)
+            return Result.Failure(SessionErrors.SessionClosed, "session is closed");
+
+        if (State == SessionStates.Pending && user != _users.HostId)
+            return Result.Failure(SessionErrors.SessionNotConfirmed, "session is not confirmed");
+
         var result = _users.TryAdd(user);
 
-        if (result.IsSuccess == true)
-            AddEvent(new UserJoinedEvent(Key, user));
+        if (result.IsSuccess == false)
+            return result;
+
+        AddEvent(new UserJoinedEvent(Key, user));
+
+        if (_users.HostId == user)
+        {
+            State = SessionStates.Ready;
+            AddEvent(new SessionConfirmedEvent(Key));
+        }
 
         return result;
     }

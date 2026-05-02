@@ -8,5 +8,6 @@ public enum SessionErrors
     UserAlreadyExists = 2,
     UserNotExists = 3,
     SessionFull = 4,
-    SessionClosed = 5
+    SessionClosed = 5,
+    SessionNotConfirmed = 6
 }

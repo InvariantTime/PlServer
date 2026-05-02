@@ -3,6 +3,7 @@
 public enum SessionStates
 {
     Loading = 0,
-    Ready = 1,
-    Shutdown = 2
+    Pending = 1,
+    Ready = 2,
+    Shutdown = 3
 }
