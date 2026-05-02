@@ -15,7 +15,7 @@ internal class DefaultEventDispatcherFactory : IEventDispatcherFactory, IEventLa
 {
     private static readonly EventHandlerLauncher _emptyLauncher = (_, _, _) => Task.CompletedTask;
 
-    private readonly ConcurrentDictionary<Type, HandlerCaller> _cachedHandlers;
+    private readonly ConcurrentDictionary<(Type HandlerType, Type EventType), HandlerCaller> _cachedHandlers;
     private readonly ConcurrentDictionary<Type, EventHandlerLauncher> _cachedLaunchers;
     private readonly ImmutableArray<IEventHandlerDescriptor> _descriptors;
 
@@ -46,7 +46,8 @@ internal class DefaultEventDispatcherFactory : IEventDispatcherFactory, IEventLa
             return _emptyLauncher;
 
         var handlers = handlerTypes
-            .Select(x => (Type: x, Caller: _cachedHandlers.GetOrAdd(x, _ => CreateCaller(x, eventType))))
+            .Select(x => (Type: x, Caller: _cachedHandlers
+            .GetOrAdd((HandlerType: x, EventType: eventType), _ => CreateCaller(x, eventType))))
             .ToArray();
 
         return async (@event, scope, cancellation) =>
