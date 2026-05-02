@@ -24,18 +24,24 @@ public static class EventDispatcherExtensions
         });
     }
 
-    public static void AddGenericHandler<TEvent, THandler>(this DispatcherFactoryBuilder builder) 
+    public static GenericHandlerDescriptor AddGenericHandler<TEvent, THandler>(this DispatcherFactoryBuilder builder) 
         where TEvent : IDomainEvent
         where THandler : IDomainEventHandler<TEvent>
     {
-        builder.AddDescriptor(new GenericHandlerDescriptor(typeof(THandler), typeof(TEvent)));
+        var descriptor = new GenericHandlerDescriptor(typeof(THandler), typeof(TEvent));
+        builder.AddDescriptor(descriptor);
+
+        return descriptor;
     }
 
-    public static void AddHandler<TEvent, THandler>(this DispatcherFactoryBuilder builder)
+    public static ConcreteTypedHandlerDescriptor AddHandler<TEvent, THandler>(this DispatcherFactoryBuilder builder)
         where TEvent : IDomainEvent
         where THandler : IDomainEventHandler<TEvent>
     {
-        builder.AddDescriptor(new ConcreteTypedHandlerDescriptor(typeof(THandler), typeof(TEvent)));
+        var descriptor = new ConcreteTypedHandlerDescriptor(typeof(THandler), typeof(TEvent));
+        builder.AddDescriptor(descriptor);
+
+        return descriptor;
     }
 
     public static ManyTypedHandlerDescriptor AddMultipleHandler<T>() where T : class
