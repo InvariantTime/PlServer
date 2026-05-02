@@ -37,4 +37,18 @@ public static class EventDispatcherExtensions
     {
         builder.AddDescriptor(new ConcreteTypedHandlerDescriptor(typeof(THandler), typeof(TEvent)));
     }
+
+    public static ManyTypedHandlerDescriptor AddMultipleHandler<T>() where T : class
+    {
+        var handlerType = typeof(T);
+        var valid = handlerType.GetInterfaces()
+            .FirstOrDefault(x => x.IsGenericType == true 
+                && x.GetGenericTypeDefinition() == typeof(IDomainEventHandler<>));
+
+        if (valid == null)
+            throw new InvalidCastException($"{handlerType.FullName} is not event handler");
+
+        var descriptor = new ManyTypedHandlerDescriptor(handlerType);
+        return descriptor;
+    }
 }
