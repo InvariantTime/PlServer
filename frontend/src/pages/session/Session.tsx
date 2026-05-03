@@ -16,7 +16,7 @@ export const Session = () => {
 
     return (
         <div className="min-h-full min-w-full p-4 flex gap-4">
-            <div className="bg-slate-200 border-emerald-900 border-2 rounded-md h-full p-2 flex-[3]">
+            <div className="bg-slate-200 border-emerald-900 border-2 rounded-md min-h-full p-2 flex flex-[3]">
                 <NodeField/>
             </div>
 

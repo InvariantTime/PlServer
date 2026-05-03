@@ -18,6 +18,7 @@ public static class ServicesExtensions
     {
         services.AddScoped<ISessionService, SessionService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<INodeGraphService, NodeGraphService>();
 
         services.AddSingleton<ISessionConnectionTracker, SessionConnectionTracker>();
         services.AddSingleton<SessionWatchdogTracker>();
@@ -43,6 +44,7 @@ public static class ServicesExtensions
         }
 
         services.AddSingleton<ISessionRepository, InMemorySessionRepository>();
+        services.AddSingleton<INodeGraphRepository, InMemoryNodeGraphRepository>();
 
         return services;
     }

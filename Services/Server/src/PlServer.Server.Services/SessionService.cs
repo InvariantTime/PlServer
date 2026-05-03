@@ -1,5 +1,5 @@
-﻿
-using PlServer.Application;
+﻿using PlServer.Application;
+using PlServer.Domain.Nodes;
 using PlServer.Domain.Results;
 using PlServer.Server.Domain;
 using PlServer.Server.Domain.Users;
@@ -11,12 +11,14 @@ namespace PlServer.Server.Services;
 public class SessionService : ISessionService
 {
     private readonly ISessionRepository _repository;
+    private readonly INodeGraphService _nodeGraphs;
     private readonly IEventDispatcher _dispatcher;
 
-    public SessionService(ISessionRepository repository, IEventDispatcher dispatcher)
+    public SessionService(ISessionRepository repository, INodeGraphService nodeGraphs, IEventDispatcher dispatcher)
     {
         _repository = repository;
         _dispatcher = dispatcher;
+        _nodeGraphs = nodeGraphs;
     }
 
     public async Task<Result<SessionSummaryDTO>> CreateSessionAsync(string name, UserId host, int maxPlayers)
@@ -24,11 +26,14 @@ public class SessionService : ISessionService
         if (_repository.CanCreateSession(host) == false)
             return Result.Failure<SessionSummaryDTO>(ErrorTypes.Common, "User is already in a session");
 
+        var nodeGraphId = NodeGraphId.New();
+
         var session = Session.Create(new SessionCreationQuery
         {
             Name = name,
             HostId = host,
-            Id = SessionId.New(),//TODO: add node graph
+            Id = SessionId.New(),
+            GraphId = nodeGraphId,
             MaxUsersCount = maxPlayers
         });
 
@@ -37,9 +42,11 @@ public class SessionService : ISessionService
         if (result == false)
             return Result.Failure<SessionSummaryDTO>(ErrorTypes.Common, "Unable to add session");
 
+        await _nodeGraphs.CreateNodeGraphAsync(nodeGraphId);
+
         await _dispatcher.DispatchEntityEventsAsync(session);
        
-        return Result.Success(new SessionSummaryDTO(session.Key, session.Name, session.Users));
+        return Result.Success(new SessionSummaryDTO(session.Key, session.GraphId, session.Name, session.Users));
     }
 
     public async Task<Result> DeleteSessionAsync(SessionId sessionId)
@@ -52,7 +59,7 @@ public class SessionService : ISessionService
         session.Shutdown();
 
         if (session.State == SessionStates.Shutdown)
-            _repository.RemoveSession(sessionId);
+            await RemoveSessionAsync(sessionId);
 
         await _dispatcher.DispatchEntityEventsAsync(session);
 
@@ -94,7 +101,7 @@ public class SessionService : ISessionService
 
         if (session.State == SessionStates.Shutdown)
         {
-            _repository.RemoveSession(sessionId);
+            await RemoveSessionAsync(sessionId);
         }
         else
         {
@@ -110,6 +117,14 @@ public class SessionService : ISessionService
         return _repository.GetAll()
             .Where(x => x.State != SessionStates.Pending && x.State != SessionStates.Shutdown)
             .Where(x => x.Users.MaxUserCount > 1)
-            .Select(x => new SessionSummaryDTO(x.Key, x.Name, x.Users));
+            .Select(x => new SessionSummaryDTO(x.Key, x.GraphId, x.Name, x.Users));
+    }
+
+    private async Task RemoveSessionAsync(SessionId sessionId)
+    {
+        var session = _repository.RemoveSession(sessionId);
+
+        if (session != null)
+            await _nodeGraphs.RemoveNodeGraphAsync(session.GraphId);
     }
 }
