@@ -1,5 +1,6 @@
 ﻿using PlServer.Application;
 using PlServer.Domain.Nodes;
+using PlServer.Server.Domain;
 using PlServer.Server.Services.Repositories;
 
 namespace PlServer.Server.Services;
@@ -20,12 +21,13 @@ public class NodeGraphService : INodeGraphService
         return Task.CompletedTask;
     }
 
-    public Task CreateNodeGraphAsync(NodeGraphId id)
+    public Task CreateNodeGraphAsync(NodeGraphId id, SessionId sessionId)
     {
         var pipeline = new NodeGraphPipeline();
         var nodeGraph = new NodeGraph(id, pipeline);
 
-        bool result = _repository.AddNodeGraph(nodeGraph);
+        var facade = new NodeGraphFacade(nodeGraph, sessionId, pipeline);
+        bool result = _repository.AddNodeGraph(facade);
 
         if (result == false)
             return Task.CompletedTask;

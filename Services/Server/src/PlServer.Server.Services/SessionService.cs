@@ -27,12 +27,13 @@ public class SessionService : ISessionService
             return Result.Failure<SessionSummaryDTO>(ErrorTypes.Common, "User is already in a session");
 
         var nodeGraphId = NodeGraphId.New();
+        var sessionId = SessionId.New();
 
         var session = Session.Create(new SessionCreationQuery
         {
             Name = name,
             HostId = host,
-            Id = SessionId.New(),
+            Id = sessionId,
             GraphId = nodeGraphId,
             MaxUsersCount = maxPlayers
         });
@@ -42,8 +43,7 @@ public class SessionService : ISessionService
         if (result == false)
             return Result.Failure<SessionSummaryDTO>(ErrorTypes.Common, "Unable to add session");
 
-        await _nodeGraphs.CreateNodeGraphAsync(nodeGraphId);
-
+        await _nodeGraphs.CreateNodeGraphAsync(nodeGraphId, sessionId);
         await _dispatcher.DispatchEntityEventsAsync(session);
        
         return Result.Success(new SessionSummaryDTO(session.Key, session.GraphId, session.Name, session.Users));

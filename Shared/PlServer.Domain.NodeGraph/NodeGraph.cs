@@ -1,9 +1,10 @@
 ﻿
+using PlServer.Domain.Nodes.Events;
 using PlServer.Domain.Results;
 
 namespace PlServer.Domain.Nodes;
 
-public class NodeGraph : AggregateRoot<NodeGraphId>
+public class NodeGraph : AggregateRoot<NodeGraphId, INodeGraphEvent>
 {
     private readonly NodeGraphPipeline _pipeline;
     private readonly NodeGraphContext _context;
