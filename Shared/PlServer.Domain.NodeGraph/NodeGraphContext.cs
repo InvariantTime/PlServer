@@ -9,6 +9,8 @@ public class NodeGraphContext //TODO: events
 
     public IReadOnlyCollection<NodeConnection> Connections => _connections.AsReadOnly();
 
+    public long Version { get; private set; } = 1;
+
     public NodeGraphContext()
     {
         _nodes = new Dictionary<NodeId, Node>();
@@ -17,17 +19,28 @@ public class NodeGraphContext //TODO: events
 
     public bool AddNode(Node node)
     {
-        return _nodes.TryAdd(node.Key, node);
+        bool result = _nodes.TryAdd(node.Key, node);
+
+        if (result == true)
+            Version++;
+
+        return result;
     }
 
     public void AddConnection(NodeConnection connection)
     {
-        _connections.Add(connection);
+        var result = _connections.Add(connection);
+
+        if (result == true)
+            Version++;
     }
 
     public void RemoveNode(NodeId node)
     {
-        _nodes.Remove(node);
+        var result = _nodes.Remove(node);
+
+        if (result == true)
+            Version++;
     }
 
     public void RemoveConnection(NodeConnectionPart target)
@@ -38,5 +51,6 @@ public class NodeGraphContext //TODO: events
             return;
 
         _connections.Remove(result);
+        Version++;
     }
 }

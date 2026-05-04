@@ -12,6 +12,8 @@ public class NodeGraph : AggregateRoot<NodeGraphId>
 
     public IReadOnlyCollection<NodeConnection> Connections => _context.Connections;
 
+    public long Version => _context.Version;
+
     public NodeGraph(NodeGraphId id, NodeGraphPipeline pipeline) : base(id)
     {
         _pipeline = pipeline;
