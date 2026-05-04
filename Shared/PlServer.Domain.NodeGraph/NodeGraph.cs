@@ -17,7 +17,7 @@ public class NodeGraph : AggregateRoot<NodeGraphId>
     public NodeGraph(NodeGraphId id, NodeGraphPipeline pipeline) : base(id)
     {
         _pipeline = pipeline;
-        _context = new NodeGraphContext();
+        _context = new NodeGraphContext(id);
     }
 
     public UnitResult<NodeErrors> ApplyCommand<T>(T command) where T : class
