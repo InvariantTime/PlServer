@@ -1,46 +1,12 @@
 import { MouseEvent, useCallback, useEffect, useRef, useState } from "react"
 import { NodeDefinition } from "../api/nodes/NodeDefinition";
-import { NodeViewport } from "../components/nodeSystem/NodeViewport";
-import { NodeConnection } from "../api/nodes/NodeConnection";
-import { NodeInstance } from "../api/nodes/NodeInstance";
+import { NodeGraphAdapter } from "../api/nodes/NodeGraphAdapter";
 
 
-export const useNodeSystem = () => {
-
-    const [nodeDefinitions, setNodeDefinitions] = useState<NodeDefinition[]>([
-        {
-            id: "AFfdsfdsfdsf",
-            inputs: [{ id: "dsadas", name: "pin 1", type: "input" }, { id: "dsdas", name: "pin 2", type: "input" }],
-            outputs: [{ id: "vvv", name: "output", type: "output" }]
-        }
-    ]);
-
-    const [nodes, setNodes] = useState<NodeInstance[]>([
-
-        {
-            collapsed: false,
-            definitionId: "AFfdsfdsfdsf",
-            id: "cccmmmvdvd",
-            name: "My node",
-            position: { x: 100, y: 400 },
-            values: []
-        },
-        {
-            collapsed: false,
-            definitionId: "AFfdsfdsfdsf",
-            id: "vncvmdfdsfdsfnm",
-            name: "My node",
-            position: { x: 600, y: 300 },
-            values: []
-        }
-    ]);
-
-    const [connections, setConnections] = useState<NodeConnection[]>([
-        {id: "jfsdlkdsjf", source: {nodeId: "vncvmdfdsfdsfnm", pinId: "vvv"}, target: {nodeId: "cccmmmvdvd", pinId: "dsdas"}}
-    ]);
+export const useNodeSystem = (adapter: NodeGraphAdapter) => {
 
     const addNode = useCallback((node: NodeDefinition) => {
-
+       // adapter.addConnection();
     }, []);
 
     const removeNode = useCallback((nodeId: string) => {
@@ -48,19 +14,19 @@ export const useNodeSystem = () => {
     }, []);
 
     const moveNode = useCallback((nodeId: string, x: number, y: number) => {
-        const node = nodes.find(x => x.id === nodeId);
+        const node = adapter.nodes.find(x => x.id === nodeId);
         
         if (node === undefined)
             return;
         
         node.position = {x: x, y: y};
         
-        setNodes(prev => {
+       /* setNodes(prev => {
 
             const nodes = prev.filter(x => x.id !== node.id);
 
             return [...nodes, node];
-        });
+        });*/
     }, []);
 
     const createEdge = useCallback((source: {nodeId: string, pinId: string}, target: {nodeId: string, pinId: string}) => {
@@ -71,18 +37,18 @@ export const useNodeSystem = () => {
             id: crypto.randomUUID()
         };
 
-        setConnections(prev => [...prev, connection]);
+        adapter.addConnection();
 
-    }, [connections]);
+    }, [adapter.nodes]);
 
     const removeEdge = useCallback((id: string) => {
-        setConnections(prev => prev.filter(x => x.id != id));
-    }, [connections]);
+       
+    }, [adapter.nodes]);
 
     return {
-        nodeDefinitions,
-        nodes,
-        connections,
+        nodeDefinitions: adapter.definitions,
+        nodes: adapter.nodes,
+        connections: adapter.connections,
         addNode,
         removeNode,
         moveNode,

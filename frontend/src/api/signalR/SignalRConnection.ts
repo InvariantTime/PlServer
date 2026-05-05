@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 interface Connection {
 
     useSubscribe: (name: string, callback: (arg: any) => any) => void,
-    useMethod: (name: string) => void,
+    useMethod: <TArg, TRet>(name: string) => ((arg: TArg) => Promise<TRet>),
     useStateHandler: (callback: (state: HubConnectionState) => void) => void
 }
 
@@ -44,7 +44,7 @@ export const useConnection = (url: string): Connection => {
 
                 hubRef.current?.onclose(() => notifyStateChanged(HubConnectionState.Disconnected));
                 hubRef.current?.onreconnected(() => notifyStateChanged(HubConnectionState.Connected));
-                hubRef.current?.onreconnecting(() => notifyStateChanged(HubConnectionState.Reconnecting));
+                hubRef.current?.onreconnecting(() => notifyStateChanged(HubConnectionState.Reconnecting));             
             })
             .catch(() => {
                 notifyStateChanged(HubConnectionState.Disconnected);
@@ -69,9 +69,9 @@ export const useConnection = (url: string): Connection => {
         }, []);
     };
 
-    const useMethod = <T>(name: string): (arg: T) => Promise<any> => {
+    const useMethod = <TArg, TRet>(name: string): (arg: TArg) => Promise<TRet> => {
 
-        const invoker = useCallback((arg: T) => {
+        const invoker = useCallback((arg: TArg) => {
             return hubRef.current?.invoke(name, arg) ?? Promise.resolve();
         }, []);
 

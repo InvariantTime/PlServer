@@ -1,14 +1,10 @@
 
 export type NodeConnection = {
-    id: string,
+    source: NodeConnectionPair,
+    target: NodeConnectionPair
+}
 
-    source: {
-        nodeId: string,
-        pinId: string
-    },
-
-    target: {
-        nodeId: string,
-        pinId: string
-    }
+export type NodeConnectionPair = {
+    pinId: string,
+    nodeId: string
 }

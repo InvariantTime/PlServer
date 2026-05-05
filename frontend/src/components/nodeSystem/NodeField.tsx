@@ -7,8 +7,13 @@ import { NodeEdge } from "./NodeEdge";
 import { NodeConnectionState, NodeConnectionStateDefault } from "../../api/nodes/NodeConnectionState";
 import { TemporaryNodeEdge } from "./TemporaryNodeEdge";
 import { useDragSystem } from "../../hooks/NodeDragSystem";
+import { NodeGraphAdapter } from "../../api/nodes/NodeGraphAdapter";
 
-export const NodeField = () => {
+interface Props {
+    adapter: NodeGraphAdapter
+}
+
+export const NodeField = ({adapter}: Props) => {
 
     const canvasRef = useRef<HTMLDivElement | null>(null);
 
@@ -20,7 +25,7 @@ export const NodeField = () => {
         removeNode,
         moveNode,
         createEdge,
-        removeEdge } = useNodeSystem();
+        removeEdge } = useNodeSystem(adapter);
 
     const {
         viewport,
