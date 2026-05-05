@@ -13,18 +13,7 @@ export const Session = () => {
     const url = sessionUrl + query.get("sessionId");
 
     const notify = useNotify();
-    const {} = useSession({url: url, onMessage: notify });
-
-    const adapter: NodeGraphAdapter = {
-        addConnection: () => {},
-        addNode: () => {},
-        removeConnection: () => {},
-        removeNode: () => {},
-        sendCommand: () => {},
-        connections: [],
-        definitions: [],
-        nodes: [],
-    }
+    const {adapter} = useSession({url: url, onMessage: notify });
 
     return (
         <div className="min-h-full min-w-full p-4 flex gap-4">

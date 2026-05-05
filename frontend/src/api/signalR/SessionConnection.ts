@@ -5,15 +5,33 @@ import { useNavigate } from "react-router-dom";
 import { useCallback, useState } from "react";
 import { NodeGraphEvent, NodeGraphEvents } from "../nodes/NodeGraphEvents";
 import { SyncSnapshot } from "../nodes/NodeGraphSync";
+import { NodeGraphAdapter } from "../nodes/NodeGraphAdapter";
+import { NodeInstance } from "../nodes/NodeInstance";
+import { NodeConnection } from "../nodes/NodeConnection";
+import { NodeDefinition } from "../nodes/NodeDefinition";
 
 interface SessionProps {
     url: string,
     onMessage: (message: string, type: NotificationTypes) => void,
 }
 
+interface Session {
+    adapter: NodeGraphAdapter
+}
 
-export const useSession = ({url, onMessage }: SessionProps) => {
+const definition : NodeDefinition = {
+    id: "abc",
+    inputs: [{id: "", name: "input 1", type: "input"}, {id: "", name: "input 2", type: "input"}],
+    outputs: [{id: "", name: "output", type: "output"}]
+};
+
+
+export const useSession = ({url, onMessage }: SessionProps) : Session => {
     
+    const [nodes, setNodes] = useState<NodeInstance[]>([]);
+    const [connections, setConnections] = useState<NodeConnection[]>([]);
+    const [nodeDefinitions, setNodeDefinitions] = useState<NodeDefinition[]>([]);
+
     const {useMethod, useStateHandler, useSubscribe} = useConnection(url);
     const navigate = useNavigate();
     const [version, setVersion] = useState(0);
@@ -22,8 +40,14 @@ export const useSession = ({url, onMessage }: SessionProps) => {
 
     const synchronize = useCallback(async () => {
         const result = await synchronizeRequest(version);
-        
-        
+
+        if (result.type === "full") {
+            setNodes(result.nodes);
+            setConnections(result.connections);
+        }
+        else if (result.type === "delta") {
+
+        }
 
     }, [version, synchronizeRequest]);
 
@@ -51,6 +75,14 @@ export const useSession = ({url, onMessage }: SessionProps) => {
     });
 
     return {
-        
+        adapter: {
+            nodes: nodes,
+            connections: connections,
+            definitions: [definition],
+            addConnection: () => {},
+            addNode: () => {},
+            removeConnection: () => {},
+            removeNode: () => {}
+        }
     };
 }

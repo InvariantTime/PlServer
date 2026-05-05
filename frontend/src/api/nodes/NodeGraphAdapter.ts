@@ -3,7 +3,6 @@ import { NodeDefinition } from "./NodeDefinition";
 import { NodeInstance } from "./NodeInstance";
 
 export interface NodeGraphAdapter {
-    sendCommand: (command: NodeGraphCommand) => void
     nodes: NodeInstance[],
     connections: NodeConnection[],
     definitions: NodeDefinition[],

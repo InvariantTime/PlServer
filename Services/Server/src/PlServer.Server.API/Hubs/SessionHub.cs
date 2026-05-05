@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using PlServer.Server.Domain;
 using PlServer.Server.Domain.Users;
+using PlServer.Server.Infrastructure.NodeGraphs;
 using PlServer.Server.Infrastructure.Sessions;
 using PlServer.Server.Services;
 
@@ -33,6 +34,12 @@ public class SessionHub : Hub<ISessionClient>
         _tracker = tracker;
         _service = service;
         _logger = logger;
+    }
+
+    [HubMethodName("Synchronize")]
+    public Task<SynchronizeSnapshot> SyncronizeAsync(long version)
+    {
+        return Task.FromResult<SynchronizeSnapshot>(SynchronizeSnapshot.CreateFullSync(100));
     }
  
     public override async Task OnConnectedAsync()

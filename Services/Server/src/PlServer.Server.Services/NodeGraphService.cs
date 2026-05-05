@@ -9,11 +9,13 @@ public class NodeGraphService : INodeGraphService
 {
     private readonly INodeGraphRepository _repository;
     private readonly IEventDispatcher _dispatcher;
+    private readonly INodeGraphPipelineBuilder _builder;
 
-    public NodeGraphService(INodeGraphRepository repository, IEventDispatcher dispatcher)
+    public NodeGraphService(INodeGraphRepository repository, IEventDispatcher dispatcher, INodeGraphPipelineBuilder builder)
     {
         _repository = repository;
         _dispatcher = dispatcher;
+        _builder = builder;
     }
 
     public Task ApplyCommandAsync(NodeGraphId id, object command)
@@ -23,7 +25,7 @@ public class NodeGraphService : INodeGraphService
 
     public Task CreateNodeGraphAsync(NodeGraphId id, SessionId sessionId)
     {
-        var pipeline = new NodeGraphPipeline();
+        var pipeline = _builder.Build();
         var nodeGraph = new NodeGraph(id, pipeline);
 
         var facade = new NodeGraphFacade(nodeGraph, sessionId, pipeline);

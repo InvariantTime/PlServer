@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
 using PlServer.Server.API;
 using PlServer.Server.API.Binders;
+using PlServer.Server.API.Converters;
 using PlServer.Server.API.Hubs;
 using PlServer.Server.Infrastructure;
 using PlServer.Server.Infrastructure.Handlers.Lobby;
@@ -9,6 +10,11 @@ using PlServer.Server.Infrastructure.Sessions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR()
+    .AddJsonProtocol(op =>
+    {
+        op.PayloadSerializerOptions.Converters.Add(new NodeIdConverter());
+        op.PayloadSerializerOptions.Converters.Add(new PinIdConverter());
+    })
     .AddHubOptions<SessionHub>(op =>
     {
         op.AddFilter<SessionHubFilter>();
