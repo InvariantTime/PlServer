@@ -19,16 +19,18 @@ AddNodeCommand
 | RemoveConnectionCommand;
 
 export type AddNodeCommand = {
-    type: "addNode"
+    type: "add_node",
+    position: {x: number, y: number},
+    definition: string
 }
 
 export type RemoveNodeCommand = {
-    type: "removeNode",
+    type: "remove_node",
     nodeId: string
 }
 
 export type AddConnectionCommand = {
-    type: "addConnection",
+    type: "add_connection",
     connection: {target: {nodeId: string, pinId: string}, source: {nodeId: string, pinId: string}}
 }
 

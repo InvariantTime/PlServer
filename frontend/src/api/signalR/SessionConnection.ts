@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useCallback, useState } from "react";
 import { NodeGraphEvent, NodeGraphEvents } from "../nodes/NodeGraphEvents";
 import { SyncSnapshot } from "../nodes/NodeGraphSync";
-import { NodeGraphAdapter } from "../nodes/NodeGraphAdapter";
+import { NodeGraphAdapter, NodeGraphCommand } from "../nodes/NodeGraphAdapter";
 import { NodeInstance } from "../nodes/NodeInstance";
 import { NodeConnection } from "../nodes/NodeConnection";
 import { NodeDefinition } from "../nodes/NodeDefinition";
@@ -37,6 +37,7 @@ export const useSession = ({url, onMessage }: SessionProps) : Session => {
     const [version, setVersion] = useState(0);
 
     const synchronizeRequest = useMethod<number, SyncSnapshot>("Synchronize");
+    const handleCommandRequest = useMethod<NodeGraphCommand, void>("HandleCommand");
 
     const synchronize = useCallback(async () => {
         const result = await synchronizeRequest(version);
@@ -55,6 +56,7 @@ export const useSession = ({url, onMessage }: SessionProps) : Session => {
         if (state === HubConnectionState.Connected) {
             onMessage("Connected", NotificationTypes.message);
             synchronize();
+            handleCommandRequest({type: "add_node", position: {x: 100, y: 200}, definition: "aaa"});
         }
     });
 
