@@ -1,4 +1,5 @@
-﻿using PlServer.Server.Domain;
+﻿using PlServer.Domain.Nodes;
+using PlServer.Server.Domain;
 using PlServer.Server.Domain.Users;
 using System.Collections.Concurrent;
 
@@ -8,9 +9,9 @@ public class SessionConnectionTracker : ISessionConnectionTracker
 {
     private readonly ConcurrentDictionary<string, SessionConnection> _connections = new();
 
-    public SessionConnection CreateConnection(string id, SessionId session, UserId user)
+    public SessionConnection CreateConnection(string id, SessionId session, NodeGraphId nodeGraph, UserId user)
     {
-        var connection = new SessionConnection(session, user, id);
+        var connection = new SessionConnection(session, nodeGraph, user, id);
         _connections.TryAdd(id, connection);
 
         return connection;

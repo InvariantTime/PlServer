@@ -44,7 +44,7 @@ public class SessionHub : Hub<ISessionClient>
         if (connection == null)
             return Task.FromResult<SynchronizeSnapshot>(null!);//TODO: handle
 
-        return _nodeGraphs.SyncAsync(connection.Session, version);
+        return _nodeGraphs.SyncAsync(connection.NodeGraph, version);
     }
 
     [HubMethodName("HandleCommand")]
@@ -55,7 +55,7 @@ public class SessionHub : Hub<ISessionClient>
         if (connection == null)
             return Task.CompletedTask;
 
-        return _nodeGraphs.ApplyCommandAsync(command, connection.Session, connection.User);
+        return _nodeGraphs.ApplyCommandAsync(command, connection.NodeGraph, connection.User);
     }
 
     public override async Task OnConnectedAsync()
@@ -77,7 +77,9 @@ public class SessionHub : Hub<ISessionClient>
             return;
         }
 
-        _tracker.CreateConnection(Context.ConnectionId, SessionId.Value, UserId.Value);
+        var nodeGraph = _service.GetSessionSummaryDtos().First(x => x.Id == SessionId).NodeGraph;
+
+        _tracker.CreateConnection(Context.ConnectionId, SessionId.Value, nodeGraph, UserId.Value);
         await base.OnConnectedAsync();
     }
 

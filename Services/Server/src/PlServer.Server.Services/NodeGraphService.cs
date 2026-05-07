@@ -1,6 +1,7 @@
 ﻿using PlServer.Application;
 using PlServer.Domain.Nodes;
 using PlServer.Server.Domain;
+using PlServer.Server.Services.DTOs;
 using PlServer.Server.Services.Repositories;
 
 namespace PlServer.Server.Services;
@@ -35,6 +36,16 @@ public class NodeGraphService : INodeGraphService
             return Task.CompletedTask;
 
         return _dispatcher.DispatchEntityEventsAsync(nodeGraph);
+    }
+
+    public NodeGraphSummaryDTO? GetNodeGraphDto(NodeGraphId id)
+    {
+        var graph = _repository.GetNodeGraphById(id);
+
+        if (graph == null)
+            return null;
+
+        return NodeGraphSummaryDTO.Create(graph.NodeGraph);
     }
 
     public Task RemoveNodeGraphAsync(NodeGraphId id)

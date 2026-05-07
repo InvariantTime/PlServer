@@ -1,4 +1,5 @@
 ﻿
+using PlServer.Domain.Nodes;
 using PlServer.Server.Domain;
 using PlServer.Server.Domain.Users;
 
@@ -6,7 +7,7 @@ namespace PlServer.Server.Infrastructure.Sessions;
 
 public interface ISessionConnectionTracker
 {
-    SessionConnection CreateConnection(string id, SessionId session, UserId user);
+    SessionConnection CreateConnection(string id, SessionId session, NodeGraphId nodeGraph, UserId user);
 
     SessionConnection? RemoveConnection(string id);
 

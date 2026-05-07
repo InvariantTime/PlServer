@@ -1,9 +1,9 @@
 ﻿using PlServer.Domain.Nodes;
 using System.Numerics;
 
-namespace PlServer.Server.Infrastructure.NodeGraphs;
+namespace PlServer.Server.Services.DTOs;
 
-public class NodeDescription
+public class NodeSummaryDTO
 {
     public NodeId Id { get; }
 
@@ -13,7 +13,7 @@ public class NodeDescription
 
     public string DefinitionId { get; }
 
-    public NodeDescription(NodeId id, string name, string definitionId, Vector2 position)
+    public NodeSummaryDTO(NodeId id, string name, string definitionId, Vector2 position)
     {
         Id = id;
         Name = name;

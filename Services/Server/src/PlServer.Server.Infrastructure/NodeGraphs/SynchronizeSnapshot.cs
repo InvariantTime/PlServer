@@ -1,6 +1,7 @@
 ﻿using PlServer.Domain;
 using PlServer.Domain.Nodes;
 using PlServer.Domain.Nodes.Events;
+using PlServer.Server.Services.DTOs;
 using System.Numerics;
 
 namespace PlServer.Server.Infrastructure.NodeGraphs;
@@ -11,24 +12,18 @@ public abstract record SynchronizeSnapshot
 
     public abstract string Type { get; }
 
+    public static SynchronizeSnapshot Empty => EmptySnapshot.Instance;
+
     public SynchronizeSnapshot(long version)
     {
         Version = version;
     }
 
-    public static FullSynchronizeSnapshot CreateFullSync(long version)
+    public static FullSynchronizeSnapshot CreateFullSync(
+        IEnumerable<NodeSummaryDTO> nodes, 
+        IEnumerable<NodeConnection> connections, 
+        long version)
     {
-        NodeConnection[] connections = [
-            new NodeConnection(
-                new NodeConnectionPart(NodePinId.New(), NodeId.New()),
-                new NodeConnectionPart(NodePinId.New(), NodeId.New()))
-        ];
-
-        NodeDescription[] nodes = [
-            new NodeDescription(NodeId.New(), "vasya", "abc", new Vector2(100, 0)),
-            new NodeDescription(NodeId.New(), "petya", "abc", new Vector2(0, 0)),
-            new NodeDescription(NodeId.New(), "grisha", "abc", new Vector2(-100, 0)),
-        ];
 
         return new FullSynchronizeSnapshot(version, nodes, connections);
     }
@@ -40,16 +35,27 @@ public abstract record SynchronizeSnapshot
     }
 }
 
+public record EmptySnapshot : SynchronizeSnapshot
+{
+    public static readonly EmptySnapshot Instance = new();
+
+    public override string Type => "empty";
+
+    private EmptySnapshot() : base(1)
+    {
+    }
+}
+
 public record FullSynchronizeSnapshot : SynchronizeSnapshot
 {
     public override string Type => "full";
 
     public NodeConnection[] Connections { get; }
 
-    public NodeDescription[] Nodes { get; }
+    public NodeSummaryDTO[] Nodes { get; }
 
     public FullSynchronizeSnapshot(long value, 
-        IEnumerable<NodeDescription> nodes, 
+        IEnumerable<NodeSummaryDTO> nodes, 
         IEnumerable<NodeConnection> connections) : base(value)
     {
         Connections = connections.ToArray();
