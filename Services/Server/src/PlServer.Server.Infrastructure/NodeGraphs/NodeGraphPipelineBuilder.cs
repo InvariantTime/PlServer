@@ -1,5 +1,4 @@
-﻿
-using PlServer.Domain.Nodes;
+﻿using PlServer.Domain.Nodes.Pipeline;
 using PlServer.Server.Services;
 
 namespace PlServer.Server.Infrastructure.NodeGraphs;

@@ -1,4 +1,4 @@
-﻿using PlServer.Domain.Nodes;
+﻿using PlServer.Domain.Nodes.Pipeline;
 
 namespace PlServer.Server.Services;
 

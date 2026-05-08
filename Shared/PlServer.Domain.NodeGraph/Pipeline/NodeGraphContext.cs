@@ -1,7 +1,7 @@
 ﻿using PlServer.Domain.Nodes.Events;
 using System.Numerics;
 
-namespace PlServer.Domain.Nodes;
+namespace PlServer.Domain.Nodes.Pipeline;
 
 public class NodeGraphContext
 {
