@@ -21,7 +21,7 @@ public class NodeGraphPipeline
         var handlers = _sources
             .Select(x => x.GetHandlers())
             .SelectMany(x => x)
-            .Distinct(EqualityComparer<INodeGraphHandler>.Create((left, right) => left?.CommandType == right?.CommandType))
+            .DistinctBy(x => x.CommandType)
             .ToArray();
 
         var policies = _sources
