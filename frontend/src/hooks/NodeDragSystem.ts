@@ -27,11 +27,12 @@ export type ViewportDragState = {
 
 interface Props {
     createEdge: (source: { nodeId: string, pinId: string }, target: { nodeId: string, pinId: string }) => void,
-    moveNode: (nodeId: string, x: number, y: number) => void
+    moveNode: (nodeId: string, x: number, y: number) => void,
+    onFieldClick: (e: React.MouseEvent) => void
 }
 
 
-export const useDragSystem = ({ createEdge, moveNode }: Props) => {
+export const useDragSystem = ({ createEdge, moveNode, onFieldClick }: Props) => {
 
     const [state, setState] = useState<DragState>({ type: "none" });
     const [viewport, setViewport] = useState<NodeViewport>({ x: 0, y: 0, zoom: 1 });
@@ -77,6 +78,9 @@ export const useDragSystem = ({ createEdge, moveNode }: Props) => {
 
         if (state.type === "connection") {
             setState({ type: "none" });
+        }
+        else if (state.type === "none") {
+            onFieldClick(e);
         }
 
     }, [state.type]);

@@ -19,6 +19,7 @@ export const Session = () => {
         <div className="min-h-full min-w-full p-4 flex gap-4">
             <div className="bg-slate-200 border-emerald-900 border-2 rounded-md min-h-full p-2 flex flex-[3]">
                 <NodeField adapter={adapter}/>
+                
             </div>
 
             <div className="bg-slate-200 border-emerald-900 border-2 rounded-md flex-[1] min-h-full">

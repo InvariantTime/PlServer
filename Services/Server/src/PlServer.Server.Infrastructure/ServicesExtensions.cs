@@ -20,6 +20,7 @@ public static class ServicesExtensions
         services.AddScoped<ISessionService, SessionService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<INodeGraphService, NodeGraphService>();
+        services.AddSingleton<INodeGraphProvider, NodeGraphProvider>();
 
         services.AddSingleton<ISessionConnectionTracker, SessionConnectionTracker>();
         services.AddSingleton<SessionWatchdogTracker>();

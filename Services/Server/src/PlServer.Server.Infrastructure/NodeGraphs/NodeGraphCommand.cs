@@ -1,5 +1,6 @@
 ﻿
 using PlServer.Domain.Nodes;
+using PlServer.Server.Services.DTOs;
 using System.Text.Json.Serialization;
 
 namespace PlServer.Server.Infrastructure.NodeGraphs;

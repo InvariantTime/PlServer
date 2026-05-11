@@ -76,13 +76,18 @@ export const useSession = ({url, onMessage }: SessionProps) : Session => {
         }
     });
 
+    const addNode = useCallback((position: {x: number, y: number}, definition: string) => {
+
+        handleCommandRequest({type: "add_node", position: position, definition: definition});
+    }, [handleCommandRequest]);
+
     return {
         adapter: {
             nodes: nodes,
             connections: connections,
             definitions: [definition],
             addConnection: () => {},
-            addNode: () => {},
+            addNode: addNode,
             removeConnection: () => {},
             removeNode: () => {}
         }

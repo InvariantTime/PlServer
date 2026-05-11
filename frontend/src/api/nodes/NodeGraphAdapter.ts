@@ -6,7 +6,7 @@ export interface NodeGraphAdapter {
     nodes: NodeInstance[],
     connections: NodeConnection[],
     definitions: NodeDefinition[],
-    addNode: () => void,
+    addNode: (position: {x: number, y: number}, definitionId: string) => void,
     addConnection: () => void,
     removeNode: (id: string) => void,
     removeConnection: (targetNode: string, targetPin: string) => void

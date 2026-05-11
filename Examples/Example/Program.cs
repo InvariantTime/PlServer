@@ -12,7 +12,7 @@ var id = NodeGraphId.New();
 NodeGraph graph = new NodeGraph(id, pipeline);
 graph.Rebuild();
 
-graph.ApplyCommand(new AddNodeCommand("Node 1", new Vector2(400, 200)));
+var result = graph.ApplyCommand(new AddNodeCommand("Nod 1", new Vector2(400, 200)));
 
 Console.WriteLine();
 
@@ -25,7 +25,7 @@ class NodeGraphSource : INodeGraphPipelineSource
 
     public IEnumerable<INodeGraphPolicy> GetPolicies()
     {
-        return [];
+        return [new NamingPolicy()];
     }
 }
 
@@ -44,6 +44,17 @@ class AddNodeCommandHandler : NodeGraphHandler<AddNodeCommand>
 
         if (result == false)
             return Result.Failure(NodeErrors.Common);
+
+        return Result.Success<NodeErrors>();
+    }
+}
+
+class NamingPolicy : NodeGraphPolicy<AddNodeCommand>
+{
+    protected override UnitResult<NodeErrors> Validate(NodeGraphContext context, AddNodeCommand command)
+    {
+        if (command.Name.Contains("Node", StringComparison.InvariantCultureIgnoreCase) == true)
+            return Result.Failure(NodeErrors.Common, "Node's name cannot contains 'Node'");
 
         return Result.Success<NodeErrors>();
     }

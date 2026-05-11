@@ -4,13 +4,14 @@ import "./Node.css"
 
 interface Props {
     connection: NodeConnection,
+    id: string,
     getPinPosition: (nodeId: string, pinId: string) => ({x: number, y: number} | null),
     onEdgeClick: (e: React.MouseEvent, id: string) => void
 }
 
 const defaultColor = "#3b82f6";
 
-export const NodeEdge = ({ connection, getPinPosition, onEdgeClick }: Props) => {
+export const NodeEdge = ({ connection, id, getPinPosition, onEdgeClick }: Props) => {
 
     const source = getPinPosition(connection.target.nodeId, connection.target.pinId);
     const target = getPinPosition(connection.source.nodeId, connection.source.pinId);
@@ -52,7 +53,7 @@ export const NodeEdge = ({ connection, getPinPosition, onEdgeClick }: Props) => 
             <path
                 d={pathData}
                 className="edge-hover cursor-pointer"
-                onClick={(e) => onEdgeClick(e, connection.id)} />
+                onClick={(e) => onEdgeClick(e, id)} />
 
             <path
                 d={pathData}

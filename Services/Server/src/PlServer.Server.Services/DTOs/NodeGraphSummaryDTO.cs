@@ -23,6 +23,10 @@ public record NodeGraphSummaryDTO
 
     public static NodeGraphSummaryDTO Create(NodeGraph graph)
     {
-        return new NodeGraphSummaryDTO(graph.Connections.ToArray(), [], graph.Version, graph.Key);//TODO: nodes
+        var nodes = graph.Nodes
+            .Select(x => new NodeSummaryDTO(x.Key, x.DisplayName, x.Definition.GetType().FullName!, x.Position))
+            .ToArray();
+
+        return new NodeGraphSummaryDTO(graph.Connections.ToArray(), nodes, graph.Version, graph.Key);//TODO: node definition
     }
 }

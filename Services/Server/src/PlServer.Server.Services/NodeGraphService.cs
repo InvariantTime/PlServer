@@ -21,13 +21,20 @@ public class NodeGraphService : INodeGraphService
 
     public Task ApplyCommandAsync(NodeGraphId id, object command)
     {
+        var facade = _repository.GetNodeGraphById(id);
+
+        if (facade == null)
+            return Task.CompletedTask;
+
+        var result = facade.NodeGraph.ApplyCommand(command);//TODO: handle result
+
         return Task.CompletedTask;
     }
 
     public Task CreateNodeGraphAsync(NodeGraphId id, SessionId sessionId)
     {
         var pipeline = _builder.Build();
-        var nodeGraph = new NodeGraph(id, pipeline);
+        var nodeGraph = NodeGraph.Create(id, pipeline);
 
         var facade = new NodeGraphFacade(nodeGraph, sessionId, pipeline);
         bool result = _repository.AddNodeGraph(facade);

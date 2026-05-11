@@ -27,6 +27,12 @@ export const NodeField = ({adapter}: Props) => {
         createEdge,
         removeEdge } = useNodeSystem(adapter);
 
+
+    const onFieldClick = (e: MouseEvent) => {
+        const position = {x: e.clientX, y: e.clientY};
+        addNode(position, "definition");
+    }
+
     const {
         viewport,
         state: dragState,
@@ -40,7 +46,7 @@ export const NodeField = ({adapter}: Props) => {
         registerPin,
         getPinPosition,
         setCanvasRef: registerCanvas
-    } = useDragSystem({createEdge, moveNode});
+    } = useDragSystem({createEdge, moveNode, onFieldClick});
 
 
     const setCanvasRef = useCallback((el: HTMLDivElement | null) => {
@@ -74,6 +80,7 @@ export const NodeField = ({adapter}: Props) => {
                         return (
                             <NodeEdge 
                                 connection={connection}
+                                id={`${connection.target.nodeId}_${connection.target.pinId}`}
                                 onEdgeClick={onEdgeClick}
                                 getPinPosition={getPinPosition} />
                         )

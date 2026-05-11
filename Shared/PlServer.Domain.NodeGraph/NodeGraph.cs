@@ -16,10 +16,18 @@ public class NodeGraph : AggregateRoot<NodeGraphId, INodeGraphEvent>
 
     public long Version => _context.Version;
 
-    public NodeGraph(NodeGraphId id, NodeGraphPipeline pipeline) : base(id)
+    private NodeGraph(NodeGraphId id, NodeGraphPipeline pipeline) : base(id)
     {
         _pipeline = pipeline;
         _context = new NodeGraphContext(id);
+    }
+
+    public static NodeGraph Create(NodeGraphId id, NodeGraphPipeline pipeline)
+    {
+        var graph = new NodeGraph(id, pipeline);
+        graph.Rebuild();
+
+        return graph;
     }
 
     public UnitResult<NodeErrors> ApplyCommand<T>(T command) where T : class

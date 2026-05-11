@@ -5,9 +5,9 @@ using PlServer.Domain.Results;
 
 namespace PlServer.Server.Infrastructure.NodeGraphs.Handlers;
 
-public class AddNodeHandler : INodeGraphHandler<AddNodeCommand>
+public class AddNodeHandler : NodeGraphHandler<AddNodeCommand>
 {
-    public UnitResult<NodeErrors> Handle(AddNodeCommand command, NodeGraphContext context)
+    protected override UnitResult<NodeErrors> Handle(AddNodeCommand command, NodeGraphContext context)
     {
         var id = NodeId.New();
         var node = new Node(command.Definition, null!, id);//TODO: get definition

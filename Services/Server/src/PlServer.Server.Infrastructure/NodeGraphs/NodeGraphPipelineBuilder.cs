@@ -7,6 +7,10 @@ public class NodeGraphPipelineBuilder : INodeGraphPipelineBuilder
 {
     public NodeGraphPipeline Build()
     {
-        return new NodeGraphPipeline();
+        INodeGraphPipelineSource[] sources = [
+            new DefaultNodeGraphSource()
+        ];
+
+        return new NodeGraphPipeline(sources);
     }
 }

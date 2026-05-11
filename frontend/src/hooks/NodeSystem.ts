@@ -1,12 +1,11 @@
-import { MouseEvent, useCallback, useEffect, useRef, useState } from "react"
-import { NodeDefinition } from "../api/nodes/NodeDefinition";
+import { useCallback } from "react"
 import { NodeGraphAdapter } from "../api/nodes/NodeGraphAdapter";
 
 
 export const useNodeSystem = (adapter: NodeGraphAdapter) => {
 
-    const addNode = useCallback((node: NodeDefinition) => {
-       // adapter.addConnection();
+    const addNode = useCallback((position: {x: number, y: number}, definitionId: string) => {
+       adapter.addNode(position, definitionId);
     }, []);
 
     const removeNode = useCallback((nodeId: string) => {
