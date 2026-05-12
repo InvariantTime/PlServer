@@ -28,7 +28,7 @@ export type ViewportDragState = {
 interface Props {
     createEdge: (source: { nodeId: string, pinId: string }, target: { nodeId: string, pinId: string }) => void,
     moveNode: (nodeId: string, x: number, y: number) => void,
-    onFieldClick: (e: React.MouseEvent) => void
+    onFieldClick: (e: React.MouseEvent, x: number, y: number) => void
 }
 
 
@@ -56,7 +56,9 @@ export const useDragSystem = ({ createEdge, moveNode, onFieldClick }: Props) => 
     const getViewportPoint = useCallback((x: number, y: number): { x: number, y: number } => {
 
         const canvasRect = canvasRef.current?.getBoundingClientRect() ?? { x: 0, y: 0 };
-        return { x: x - canvasRect.x, y: y - canvasRect.y };//TODO: viewport
+        const offset = { x: x - canvasRect.x, y: y - canvasRect.y };//TODO: viewport
+
+        return {x: offset.x, y: offset.y};
 
     }, [canvasRef, viewport]);
 
@@ -80,10 +82,10 @@ export const useDragSystem = ({ createEdge, moveNode, onFieldClick }: Props) => 
             setState({ type: "none" });
         }
         else if (state.type === "none") {
-            onFieldClick(e);
+            onFieldClick(e, e.clientX + viewport.x, e.clientY + viewport.y);
         }
 
-    }, [state.type]);
+    }, [state.type, viewport]);
 
     const onMouseDown = useCallback((e: React.MouseEvent) => {
         if (state.type === "none") {
@@ -149,7 +151,6 @@ export const useDragSystem = ({ createEdge, moveNode, onFieldClick }: Props) => 
     }, [state.type, getViewportPoint]);
 
     const onScroll = useCallback((e: React.UIEvent) => {
-        console.debug("scroll");
         setViewport(prev => ({...prev, zoom: prev.zoom + e.currentTarget.scrollTop}));
     }, []);
 

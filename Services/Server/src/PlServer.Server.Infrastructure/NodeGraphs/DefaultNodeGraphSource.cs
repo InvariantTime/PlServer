@@ -9,7 +9,8 @@ public class DefaultNodeGraphSource : INodeGraphPipelineSource
 {
     private readonly INodeGraphHandler[] _handlers = [
         new AddNodeHandler(),
-        new RemoveNodeHandler()
+        new RemoveNodeHandler(),
+        new MoveNodeHandler()
     ];
 
     public IEnumerable<INodeGraphHandler> GetHandlers()

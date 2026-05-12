@@ -6,17 +6,15 @@ export interface NodeGraphAdapter {
     nodes: NodeInstance[],
     connections: NodeConnection[],
     definitions: NodeDefinition[],
-    addNode: (position: {x: number, y: number}, definitionId: string) => void,
-    addConnection: () => void,
-    removeNode: (id: string) => void,
-    removeConnection: (targetNode: string, targetPin: string) => void
+    handleCommand: (command: NodeGraphCommand) => void
 }
 
 export type NodeGraphCommand = 
 AddNodeCommand
 | RemoveNodeCommand
 | AddConnectionCommand
-| RemoveConnectionCommand;
+| RemoveConnectionCommand
+| MoveNodeCommand;
 
 export type AddNodeCommand = {
     type: "add_node",
@@ -35,6 +33,12 @@ export type AddConnectionCommand = {
 }
 
 export type RemoveConnectionCommand = {
-    type: "removeConnection",
+    type: "remove_connection",
     target: {nodeId: string, pinId: string}
+}
+
+export type MoveNodeCommand = {
+    type: "move_node",
+    nodeId: string,
+    position: {x: number, y: number}
 }

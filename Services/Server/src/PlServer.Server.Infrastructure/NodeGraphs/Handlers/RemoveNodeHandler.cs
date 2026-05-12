@@ -9,7 +9,7 @@ public class RemoveNodeHandler : NodeGraphHandler<RemoveNodeCommand>
 {
     protected override UnitResult<NodeErrors> Handle(RemoveNodeCommand command, NodeGraphContext context)
     {
-        context.RemoveNode(command.Id);
+        context.RemoveNode(command.NodeId);
         return Result.Success<NodeErrors>();
     }
 }

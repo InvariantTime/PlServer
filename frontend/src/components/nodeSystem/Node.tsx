@@ -17,6 +17,7 @@ export const Node = ({ instance, definition, headerMouseDownCallback, registerPi
 
     return (
         <div className="w-48 flex flex-col shadow-xl border-[1px] rounded-md border-slate-400 select-none">
+
             <div className="bg-red-600 w-full rounded-t-md h-10 border-b-[1px] border-red-700 flex items-center px-2 gap-3"
                 onMouseDown={e => headerMouseDownCallback(e, instance.id, instance.position.x, instance.position.y)}>
 

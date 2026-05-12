@@ -4,7 +4,6 @@ import "./Node.css";
 import { useNodeSystem } from "../../hooks/NodeSystem";
 import { NodeFieldBackground } from "./NodeFieldBackground";
 import { NodeEdge } from "./NodeEdge";
-import { NodeConnectionState, NodeConnectionStateDefault } from "../../api/nodes/NodeConnectionState";
 import { TemporaryNodeEdge } from "./TemporaryNodeEdge";
 import { useDragSystem } from "../../hooks/NodeDragSystem";
 import { NodeGraphAdapter } from "../../api/nodes/NodeGraphAdapter";
@@ -28,9 +27,8 @@ export const NodeField = ({adapter}: Props) => {
         removeEdge } = useNodeSystem(adapter);
 
 
-    const onFieldClick = (e: MouseEvent) => {
-        const position = {x: e.clientX, y: e.clientY};
-        addNode(position, "definition");
+    const onFieldClick = (e: MouseEvent, x: number, y: number) => {
+       // addNode({x: x, y: y}, "abc");
     }
 
     const {
@@ -48,6 +46,8 @@ export const NodeField = ({adapter}: Props) => {
         setCanvasRef: registerCanvas
     } = useDragSystem({createEdge, moveNode, onFieldClick});
 
+    const onNodeClick = (e: React.MouseEvent, nodeId: string, x: number, y: number) => {
+    }
 
     const setCanvasRef = useCallback((el: HTMLDivElement | null) => {
         canvasRef.current = el;
@@ -104,7 +104,8 @@ export const NodeField = ({adapter}: Props) => {
                         return null;
 
                     return (
-                        <div className="absolute" style={{ transform: `translate(${node.position.x}px, ${node.position.y}px)` }}>
+                        <div className="absolute" style={{ transform: `translate(${node.position.x}px, ${node.position.y}px)` }}
+                            onClick={e => onNodeClick(e, node.id, node.position.x, node.position.y)}>
                             <Node
                                 key={node.id}
                                 definition={definition}
