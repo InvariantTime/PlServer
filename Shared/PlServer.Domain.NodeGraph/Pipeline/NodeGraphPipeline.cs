@@ -35,9 +35,9 @@ public class NodeGraphPipeline
             _activators.Add(activator.Key, activator.Value);
     }
 
-    public UnitResult<NodeErrors> ApplyCommand<T>(NodeGraphContext context, T command) where T : class
+    public UnitResult<NodeErrors> ApplyCommand(NodeGraphContext context, object command)
     {
-        var result = _activators.TryGetValue(typeof(T), out var activator);
+        var result = _activators.TryGetValue(command.GetType(), out var activator);
 
         if (result == false)
             return Result.Failure(NodeErrors.UnknownCommand, $"{command} is not supporting");

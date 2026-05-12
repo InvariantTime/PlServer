@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using PlServer.Domain.Nodes.Events;
 using PlServer.Infrastructure.Events;
 using PlServer.Server.Domain.Events;
 using PlServer.Server.Infrastructure.Handlers.Lobby;
@@ -20,6 +21,8 @@ public static class EventHandlerServicesExtensions
             builder.AddMultipleHandler<SessionLifetimeWatchdogHandler>()
                 .AddEventType<SessionCreatedEvent>()
                 .AddEventType<SessionConfirmedEvent>();
+
+            builder.AddGenericHandler<INodeGraphEvent, NodeGraphEventHandler>();
         });
 
         return services;

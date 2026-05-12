@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using PlServer.Domain.Nodes.Events;
 using PlServer.Server.Domain;
 using PlServer.Server.Domain.Users;
 using PlServer.Server.Infrastructure.NodeGraphs;
@@ -13,6 +14,8 @@ public interface ISessionClient
     Task SendMessageAsync(string message);
 
     Task ShutdownAsync(string? error = null);
+
+    Task SendEventAsync(INodeGraphEvent @event);
 }
 
 [Authorize]
@@ -42,7 +45,7 @@ public class SessionHub : Hub<ISessionClient>
         var connection = _tracker.GetConnection(Context.ConnectionId);
 
         if (connection == null)
-            return Task.FromResult<SynchronizeSnapshot>(null!);//TODO: handle
+            return Task.FromResult(SynchronizeSnapshot.Empty);
 
         return _nodeGraphs.SyncAsync(connection.NodeGraph, version);
     }
@@ -78,8 +81,10 @@ public class SessionHub : Hub<ISessionClient>
         }
 
         var nodeGraph = _service.GetSessionSummaryDtos().First(x => x.Id == SessionId).NodeGraph;
-
         _tracker.CreateConnection(Context.ConnectionId, SessionId.Value, nodeGraph, UserId.Value);
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, session.ToString());
+
         await base.OnConnectedAsync();
     }
 

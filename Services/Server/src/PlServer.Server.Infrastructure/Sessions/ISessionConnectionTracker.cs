@@ -15,5 +15,7 @@ public interface ISessionConnectionTracker
 
     ICollection<SessionConnection> GetAll(SessionId session);
 
+    SessionId? GetSessionIdByGraph(NodeGraphId graph);
+
     void Clear(SessionId session);
 }

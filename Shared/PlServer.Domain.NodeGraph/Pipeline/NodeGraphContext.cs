@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace PlServer.Domain.Nodes.Pipeline;
 
-public class NodeGraphContext
+public class NodeGraphContext : IEventSource<INodeGraphEvent>
 {
     private readonly Dictionary<NodeId, Node> _nodes;
     private readonly HashSet<NodeConnection> _connections;
@@ -15,7 +15,10 @@ public class NodeGraphContext
 
     public IReadOnlyCollection<NodeConnection> Connections => _connections.AsReadOnly();
 
+    public IReadOnlyCollection<INodeGraphEvent> Events => _events.AsReadOnly();
+
     public long Version { get; private set; } = 1;
+
 
     public NodeGraphContext(NodeGraphId graphId)
     {
@@ -89,5 +92,16 @@ public class NodeGraphContext
     public void ChangeParameter()//TODO
     {
 
+    }
+
+    public IReadOnlyCollection<INodeGraphEvent> PullEvents()
+    {
+        if (_events.Count == 0)
+            return [];
+
+        var events = _events.ToArray();
+        _events.Clear();
+
+        return events;
     }
 }

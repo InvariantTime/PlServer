@@ -28,7 +28,10 @@ public class NodeGraphService : INodeGraphService
 
         var result = facade.NodeGraph.ApplyCommand(command);//TODO: handle result
 
-        return Task.CompletedTask;
+        if (result.IsSuccess == false)
+            return Task.CompletedTask;
+
+        return _dispatcher.DispatchEntityEventsAsync(facade.NodeGraph);
     }
 
     public Task CreateNodeGraphAsync(NodeGraphId id, SessionId sessionId)

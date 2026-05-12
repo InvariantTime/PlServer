@@ -69,11 +69,8 @@ export const useSession = ({url, onMessage }: SessionProps) : Session => {
         navigate("/");
     });
 
-    useSubscribe("OnNodeGraphChanged", (event: NodeGraphEvent) => {
-        if (event.version !== version + 1) {
-            synchronize();
-            return;
-        }
+    useSubscribe("SendEventAsync", async (event: NodeGraphEvent) => {
+        await synchronize();
     });
 
     const addNode = useCallback((position: {x: number, y: number}, definition: string) => {

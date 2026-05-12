@@ -1,13 +1,13 @@
 ﻿
 namespace PlServer.Domain;
 
-public class AggregateRoot<TKey, TEvent> : Entity<TKey>, IEventSource<TEvent> 
+public class AggregateRoot<TKey, TEvent> : AggregateRootBase<TKey, TEvent>
     where TKey : notnull
     where TEvent : IDomainEvent
 {
     private readonly List<TEvent> _events;
 
-    public IReadOnlyCollection<TEvent> Events => _events.AsReadOnly();
+    public override IReadOnlyCollection<TEvent> Events => _events.AsReadOnly();
 
     protected AggregateRoot(TKey id) : base(id)
     {
@@ -19,7 +19,7 @@ public class AggregateRoot<TKey, TEvent> : Entity<TKey>, IEventSource<TEvent>
         _events.Add(@event);
     }
 
-    public IReadOnlyCollection<TEvent> PullEvents()
+    public override IReadOnlyCollection<TEvent> PullEvents()
     {
         var events = _events.AsReadOnly();
         _events.Clear();

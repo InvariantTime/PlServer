@@ -35,6 +35,11 @@ public class SessionConnectionTracker : ISessionConnectionTracker
         return connection;
     }
 
+    public SessionId? GetSessionIdByGraph(NodeGraphId graph)
+    {
+        return _connections.FirstOrDefault(x => x.Value.NodeGraph == graph).Value?.Session;
+    }
+
     public void Clear(SessionId session)
     {
         var outdated = _connections.Where(x => x.Value.Session == session);

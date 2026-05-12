@@ -3,7 +3,7 @@ using PlServer.Domain;
 
 namespace PlServer.Infrastructure.Events;
 
-public class BlackListHandlerDescriptor : IEventHandlerDescriptor
+public class BlackListHandlerDescriptor : IEventHandlerDescriptor//TODO: Blacklist is not working, stupid mistake
 {
     private readonly IEventHandlerDescriptor _base;
     private readonly List<Type> _blackList;

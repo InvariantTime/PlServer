@@ -24,7 +24,7 @@ public record NodeGraphSummaryDTO
     public static NodeGraphSummaryDTO Create(NodeGraph graph)
     {
         var nodes = graph.Nodes
-            .Select(x => new NodeSummaryDTO(x.Key, x.DisplayName, x.Definition.GetType().FullName!, x.Position))
+            .Select(x => new NodeSummaryDTO(x.Key, x.DisplayName, "abc", x.Position))
             .ToArray();
 
         return new NodeGraphSummaryDTO(graph.Connections.ToArray(), nodes, graph.Version, graph.Key);//TODO: node definition

@@ -5,7 +5,7 @@ using PlServer.Domain.Results;
 
 namespace PlServer.Domain.Nodes;
 
-public class NodeGraph : AggregateRoot<NodeGraphId, INodeGraphEvent>
+public class NodeGraph : AggregateRootBase<NodeGraphId, INodeGraphEvent>
 {
     private readonly NodeGraphPipeline _pipeline;
     private readonly NodeGraphContext _context;
@@ -15,6 +15,8 @@ public class NodeGraph : AggregateRoot<NodeGraphId, INodeGraphEvent>
     public IReadOnlyCollection<NodeConnection> Connections => _context.Connections;
 
     public long Version => _context.Version;
+
+    public override IReadOnlyCollection<INodeGraphEvent> Events => _context.Events;
 
     private NodeGraph(NodeGraphId id, NodeGraphPipeline pipeline) : base(id)
     {
@@ -38,5 +40,10 @@ public class NodeGraph : AggregateRoot<NodeGraphId, INodeGraphEvent>
     public void Rebuild()
     {
         _pipeline.Rebuild();
+    }
+
+    public override IReadOnlyCollection<INodeGraphEvent> PullEvents()
+    {
+        return _context.PullEvents();
     }
 }

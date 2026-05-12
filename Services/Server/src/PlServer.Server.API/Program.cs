@@ -5,6 +5,7 @@ using PlServer.Server.API.Converters;
 using PlServer.Server.API.Hubs;
 using PlServer.Server.Infrastructure;
 using PlServer.Server.Infrastructure.Handlers.Lobby;
+using PlServer.Server.Infrastructure.NodeGraphs;
 using PlServer.Server.Infrastructure.Sessions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,6 +42,7 @@ var environment = builder.Environment;
 
 builder.Services.AddSingleton<ILobbyNotifier, SessionLobbyNotifier>();
 builder.Services.AddSingleton<ISessionNotifier, SessionNotifier>();
+builder.Services.AddSingleton<INodeGraphNotifier, NodeGraphNotifier>();
 
 builder.Services.AddEventHandling()
     .RegisterRepositories(environment)
