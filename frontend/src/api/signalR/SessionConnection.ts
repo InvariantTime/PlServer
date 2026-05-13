@@ -21,8 +21,9 @@ interface Session {
 
 const definition : NodeDefinition = {
     id: "abc",
-    inputs: [{id: "", name: "input 1", type: "input"}, {id: "", name: "input 2", type: "input"}],
-    outputs: [{id: "", name: "output", type: "output"}]
+    inputs: [{id: "9e7c0e27-48f5-471e-8a03-9cf44ad93770", name: "input 1", type: "input"}, 
+        {id: "b79958ba-8e48-486c-a5e5-ac4d2771761f", name: "input 2", type: "input"}],
+    outputs: [{id: "5fab6c67-2627-4b24-8fe4-b34cb68b0fe6", name: "output", type: "output"}]
 };
 
 

@@ -10,7 +10,7 @@ public class MoveNodeHandler : NodeGraphHandler<MoveNodeCommand>
 {
     protected override UnitResult<NodeErrors> Handle(MoveNodeCommand command, NodeGraphContext context)
     {
-        context.MoveNode(command.NodeId, new Vector2(command.NewPosition.X, command.NewPosition.Y));
+        context.MoveNode(command.NodeId, new Vector2(command.Position.X, command.Position.Y));
         return Result.Success<NodeErrors>();
     }
 }

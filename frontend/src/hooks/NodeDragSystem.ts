@@ -28,11 +28,13 @@ export type ViewportDragState = {
 interface Props {
     createEdge: (source: { nodeId: string, pinId: string }, target: { nodeId: string, pinId: string }) => void,
     moveNode: (nodeId: string, x: number, y: number) => void,
-    onFieldClick: (e: React.MouseEvent, x: number, y: number) => void
+    onFieldClick: (e: React.MouseEvent, x: number, y: number) => void,
+    lockNode: (node: string) => void,
+    unlockNode: () => void
 }
 
 
-export const useDragSystem = ({ createEdge, moveNode, onFieldClick }: Props) => {
+export const useDragSystem = ({ createEdge, moveNode, onFieldClick, lockNode, unlockNode }: Props) => {
 
     const [state, setState] = useState<DragState>({ type: "none" });
     const [viewport, setViewport] = useState<NodeViewport>({ x: 0, y: 0, zoom: 1 });
@@ -99,6 +101,7 @@ export const useDragSystem = ({ createEdge, moveNode, onFieldClick }: Props) => 
 
             const start = { x: e.clientX, y: e.clientY };
             setState({ type: "node", nodeId: nodeId, offset: { x: x - start.x, y: y - start.y } });
+            lockNode(nodeId);
         }
 
     }, [state.type]);
@@ -158,6 +161,7 @@ export const useDragSystem = ({ createEdge, moveNode, onFieldClick }: Props) => 
 
         if (state.type === "viewport" || state.type === "node") {
             setState({ type: "none" });
+            unlockNode();
         }
 
     }, [state.type]);

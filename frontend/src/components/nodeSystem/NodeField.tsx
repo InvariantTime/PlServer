@@ -24,7 +24,9 @@ export const NodeField = ({adapter}: Props) => {
         removeNode,
         moveNode,
         createEdge,
-        removeEdge } = useNodeSystem(adapter);
+        removeEdge,
+        lockNode,
+        unlockNode } = useNodeSystem(adapter);
 
 
     const onFieldClick = (e: MouseEvent, x: number, y: number) => {
@@ -44,7 +46,7 @@ export const NodeField = ({adapter}: Props) => {
         registerPin,
         getPinPosition,
         setCanvasRef: registerCanvas
-    } = useDragSystem({createEdge, moveNode, onFieldClick});
+    } = useDragSystem({createEdge, moveNode, onFieldClick, unlockNode, lockNode});
 
     const onNodeClick = (e: React.MouseEvent, nodeId: string, x: number, y: number) => {
     }
@@ -75,7 +77,7 @@ export const NodeField = ({adapter}: Props) => {
                 style={{ transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})` }}>
 
                 <svg className="absolute w-full h-full pointer-events-auto inset-0">
-                    {connections.map((connection) => {
+                    {connections.values().map((connection) => {
 
                         return (
                             <NodeEdge 
