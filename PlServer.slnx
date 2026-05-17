@@ -8,12 +8,18 @@
   </Folder>
   <Folder Name="/Services/Worker/">
     <Project Path="Services/Worker/src/PlServer.Worker.API/PlServer.Worker.API.csproj" Id="6530027c-5407-4075-9bc0-d2dd5db383b9" />
+    <Project Path="Services/Worker/src/PlServer.Worker.Infrastructure/PlServer.Worker.Infrastructure.csproj" Id="11ea57a6-c970-4669-b48c-5ba3f1986b6e" />
+    <Project Path="Services/Worker/src/PlServer.Worker.Process/PlServer.Worker.Process.csproj" Id="b823a0bb-acb4-4132-af3c-8f916c9ed6f9" />
   </Folder>
   <Folder Name="/Shared/">
     <Project Path="Shared/PlServer.Application/PlServer.Application.csproj" Id="d9e094aa-eb06-4b3b-81cc-e9891763591f" />
     <Project Path="Shared/PlServer.Domain.NodeGraph/PlServer.Domain.Nodes.csproj" Id="29ad70e8-3d6e-451e-bbca-478ea57efe3e" />
     <Project Path="Shared/PlServer.Domain/PlServer.Domain.csproj" />
+    <Project Path="Shared/PlServer.gRPC/PlServer.gRPC.csproj" Id="5f16b539-a0bd-474b-8413-a6d83a99e93c" />
     <Project Path="Shared/PlServer.Infrastructure/PlServer.Infrastructure.csproj" Id="19f28e65-e423-4413-8a64-343fc22c5a7a" />
+    <Project Path="Shared/PlServer.Nodes.Defenition/PlServer.Nodes.Defenition.csproj" Id="0411918b-275e-47d6-ab8e-73551f842519" />
+    <Project Path="Shared/PlServer.Nodes.Execution/PlServer.Nodes.Execution.csproj" Id="b9a0d2eb-b870-4186-97bc-54de2dde46ec" />
   </Folder>
   <Folder Name="/Solution Items/" />
+  <Project Path="Examples/Example/Example.csproj" Id="ccfad4d1-a217-4f56-b72a-f13536cd78ad" />
 </Solution>

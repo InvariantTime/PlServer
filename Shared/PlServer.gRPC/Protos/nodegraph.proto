@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package plserver.grpc;
+
+option csharp_namespace = "PlServer.gRPC.Protos";
+
+message ExecutionChainData {
+    repeated ExecutionStepData steps = 1;
+}
+
+message ExecutionStepData {
+    string definition_name = 1;
+    repeated StepInputData inputs = 2;
+}
+
+message StepInputData {
+    oneof value {
+        ConstantInputData constant = 1;
+        ReferenceInputData reference = 2;
+    }
+}
+
+message ConstantInputData {
+    string value = 1;
+    string type = 2;
+}
+
+message ReferenceInputData {
+    string source_node_id = 1;
+    string source_pin_id = 2;
+}
+
+message NodeDefinitionData {
+    string name = 1;
+    repeated NodePinData inputs = 2;
+    repeated NodePinData outputs = 3;
+    bool is_launch_node = 4;
+}
+
+message NodePinData {
+    string id = 1;
+    string name = 2;
+    string type = 3;
+}
