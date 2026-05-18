@@ -20,6 +20,7 @@ message ExecutionRequest
 
 message ExecutionResponse
 {
+    plserver.grpc.ExecutionChainResult result = 1;
 }
 
 message StatusRequest {}

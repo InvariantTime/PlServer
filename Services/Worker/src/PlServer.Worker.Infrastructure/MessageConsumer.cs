@@ -16,7 +16,7 @@ public class MessageConsumer : WorkerService.WorkerServiceBase
 
     public override async Task<ExecutionResponse> Execute(ExecutionRequest request, ServerCallContext context)
     {
-        var awaiter = _processor.AddWorkToQueue(request.Chain);
+        var awaiter = _processor.AddWorkToQueueAsync(request.Chain);
 
         var result = await awaiter;
 

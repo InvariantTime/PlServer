@@ -42,3 +42,7 @@ message NodePinData {
     string name = 2;
     string type = 3;
 }
+
+message ExecutionChainResult {
+
+}
