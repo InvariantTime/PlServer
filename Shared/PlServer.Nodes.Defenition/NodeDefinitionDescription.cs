@@ -6,14 +6,20 @@ public class NodeDefinitionDescription
 {
     public string Name { get; }
 
-    public NodeDefinitionId Id { get; }
+    public string Id { get; }
 
     public ImmutableArray<NodePin> Inputs { get; }
 
     public ImmutableArray<NodePin> Outputs { get; }
 
+    public ImmutableDictionary<string, NodeValueType> Values { get; }
+
+    public VisualGraph Graph { get; }
+
     public NodeDefinitionDescription(
-        string name, NodeDefinitionId id, IEnumerable<NodePin> pins)
+        string name, string id, 
+        IEnumerable<NodePin> pins, 
+        IDictionary<string, NodeValueType> values)
     {
         Name = name;
         Id = id;
@@ -24,5 +30,11 @@ public class NodeDefinitionDescription
         Outputs = pins
             .Where(x => x.Direction == PinDirections.Output)
             .ToImmutableArray();
+
+        Values = values.ToImmutableDictionary();
     }
 }
+
+public record struct NodeValueType();
+
+public record struct VisualGraph();

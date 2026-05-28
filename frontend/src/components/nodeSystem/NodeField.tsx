@@ -7,14 +7,43 @@ import { NodeEdge } from "./NodeEdge";
 import { TemporaryNodeEdge } from "./TemporaryNodeEdge";
 import { useDragSystem } from "../../hooks/NodeDragSystem";
 import { NodeGraphAdapter } from "../../api/nodes/NodeGraphAdapter";
+import { NodeDefinition } from "../../api/nodes/NodeDefinition";
 
 interface Props {
     adapter: NodeGraphAdapter
 }
 
-export const NodeField = ({adapter}: Props) => {
+interface ContextProps {
+    definitions: NodeDefinition[],
+    onClick: (position: {x: number, y: number}, definition: NodeDefinition) => void,
+    position: {x: number, y: number}
+}
+
+export const NodeContext = ({ definitions, position, onClick }: ContextProps) => {
+
+    const onChoose = useCallback((e: MouseEvent, def: NodeDefinition) => {
+        e.stopPropagation();
+        onClick(position, def);
+    }, [definitions, position, onClick]);
+
+    return (
+        <menu className="border-emerald-300 border-2 rounded-lg flex flex-col items-center justify-center p-1 bg-slate-200">
+            {definitions.map(def => {
+                return (
+                    <div className="bg-slate-200 w-full text-center p-2 px-4 font-medium hover:bg-slate-300"
+                        onClick={(e) => onChoose(e, def)}>
+                        {def.name}
+                    </div>
+                )
+            })}
+        </menu>
+    )
+}
+
+export const NodeField = ({ adapter }: Props) => {
 
     const canvasRef = useRef<HTMLDivElement | null>(null);
+    const [contextState, setContextState] = useState<{ x: number, y: number } | null>(null);
 
     const {
         nodeDefinitions,
@@ -30,7 +59,7 @@ export const NodeField = ({adapter}: Props) => {
 
 
     const onFieldClick = (e: MouseEvent, x: number, y: number) => {
-       // addNode({x: x, y: y}, "abc");
+        setContextState(null);
     }
 
     const {
@@ -46,7 +75,7 @@ export const NodeField = ({adapter}: Props) => {
         registerPin,
         getPinPosition,
         setCanvasRef: registerCanvas
-    } = useDragSystem({createEdge, moveNode, onFieldClick, unlockNode, lockNode});
+    } = useDragSystem({ createEdge, moveNode, onFieldClick, unlockNode, lockNode });
 
     const onNodeClick = (e: React.MouseEvent, nodeId: string, x: number, y: number) => {
     }
@@ -60,6 +89,22 @@ export const NodeField = ({adapter}: Props) => {
         removeEdge(id);
     }, [removeEdge]);
 
+    const onContext = useCallback((e: MouseEvent) => {
+        e.preventDefault();
+        setContextState({ x: e.clientX, y: e.clientY });
+    }, [adapter]);
+
+    const onContextClick = useCallback((position: {x: number, y: number}, def: NodeDefinition) => {
+        adapter.handleCommand({
+            type: "add_node",
+            definition: def.id,
+            position: position
+        });
+
+        console.debug(def.name);
+        setContextState(null);
+    }, [adapter])
+
     return (
         <div className="overflow-hidden relative touch-none w-full h-full origin-top-left bg-[#e0e0e0] select-none"
             onMouseDown={onMouseDown}
@@ -68,7 +113,8 @@ export const NodeField = ({adapter}: Props) => {
             onMouseUp={onUnfocus}
             onBlur={onUnfocus}
             onScroll={onScroll}
-            onMouseLeave={onUnfocus}>
+            onMouseLeave={onUnfocus}
+            onContextMenu={onContext}>
 
             <NodeFieldBackground viewport={viewport} />
 
@@ -80,7 +126,7 @@ export const NodeField = ({adapter}: Props) => {
                     {connections.values().map((connection) => {
 
                         return (
-                            <NodeEdge 
+                            <NodeEdge
                                 connection={connection}
                                 id={`${connection.target.nodeId}_${connection.target.pinId}`}
                                 onEdgeClick={onEdgeClick}
@@ -88,10 +134,10 @@ export const NodeField = ({adapter}: Props) => {
                         )
                     })}
 
-                    {dragState.type === "connection"  &&
+                    {dragState.type === "connection" &&
                         <TemporaryNodeEdge
-                            sourceX={dragState.sourcePosition.x} 
-                            sourceY={dragState.sourcePosition.y} 
+                            sourceX={dragState.sourcePosition.x}
+                            sourceY={dragState.sourcePosition.y}
                             targetX={dragState.targetPosition.x}
                             targetY={dragState.targetPosition.y}
                         />
@@ -119,6 +165,18 @@ export const NodeField = ({adapter}: Props) => {
                     )
                 })}
             </div>
+
+            {contextState !== null &&
+                <div className="fixed"
+                    style={{
+                        left: contextState.x,
+                        top: contextState.y
+                    }}>
+                    <NodeContext definitions={adapter.definitions} 
+                        onClick={onContextClick}
+                        position={{x: contextState.x, y: contextState.y}}/>
+                </div>
+            }
         </div>
     )
 }

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PlServer.Domain\PlServer.Domain.csproj" />
+    <ProjectReference Include="..\PlServer.Nodes.Defenition\PlServer.Nodes.Defenition.csproj" />
   </ItemGroup>
 
 </Project>

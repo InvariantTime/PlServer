@@ -3,6 +3,8 @@
 export type NodeDefinition = {
   
     id: string,
+    name: string,
+    isFinal: boolean,
     inputs: NodePinDefinition[],
     outputs: NodePinDefinition[]
 }

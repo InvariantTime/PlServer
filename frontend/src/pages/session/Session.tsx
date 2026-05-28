@@ -27,7 +27,11 @@ export const Session = () => {
                     <Play size={34} strokeWidth={2} color="#2cc352" />
                 </div>
 
-                <div className="">
+                <div className="px-4 py-6">
+                    <div className="font-bold border-emerald-300 border-2 py-2 rounded-lg px-2
+                        text-lg">
+                        [13.06.2026 13:48] Result: 823 
+                    </div>
                 </div>
             </div>
         </div>
